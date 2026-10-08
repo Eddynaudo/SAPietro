@@ -905,7 +905,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('messag
 const isAdmin=()=>!!(user&&user.email&&user.email.toLowerCase()===ADMIN_EMAIL);
 function openUsr(){
   $('#uem').textContent=user?user.email:'';
-  $('#adm').hidden=!isAdmin();resetNew();pendingBadge();
+  $('#adm').hidden=!isAdmin();$('#adb').hidden=!ADMIN_REFERRAL_UI;flags();resetNew();pendingBadge();
   $('#usr').classList.add('on');
 }
 $('#ubtn').onclick=openUsr;
@@ -1078,11 +1078,13 @@ $('#pmf').onclick=async()=>{
   try{const {error}=await sb.rpc('admin_refund_purchase',{p_external:id});if(error)throw error;toast(t_('pmRf'));loadAdmin();pendingBadge()}
   catch(err){toast(String(err.message||err))}
 };
+const ADMIN_REFERRAL_UI=false; // l'amministratore non vede i pulsanti referral finché i pagamenti non sono collegati
 async function flags(){
+  if(isAdmin()&&!ADMIN_REFERRAL_UI){$('#rfb').hidden=true;return}
   try{const {data}=await sb.rpc('my_flags');$('#rfb').hidden=!!(data&&data.referral===false)}catch(e){}
 }
 async function pendingBadge(){
-  if(!isAdmin()||!sb)return;
+  if(!isAdmin()||!sb||!ADMIN_REFERRAL_UI)return;
   try{const {data}=await sb.rpc('admin_pending_rewards');const n=+data||0;$('#adn').hidden=!n;$('#adn').textContent=n;$('#ubtn').textContent=n?'👤•':'👤'}catch(e){}
 }
 /* attribuzione referral: il codice del link resta salvato fino al primo accesso */
