@@ -201,7 +201,9 @@ select option{color:#0B1230}
   <h2 id="ft">New task</h2>
   <label for="title" data-i="lTitle">Titolo</label><input type="text" id="title" maxlength="120" data-ph="phTitle" placeholder="Cosa devi fare?">
   <label for="note" data-i="lNote">Note</label><textarea id="note" data-ph="phNote" placeholder="Dettagli (facoltativo)"></textarea>
-  <label data-i="lDue">Avviso</label>
+  <label for="due" data-i="lMain">Activity date and time</label>
+  <input type="datetime-local" id="due">
+  <label data-i="lDue">Reminders</label>
   <div id="rl"></div>
   <button type="button" class="btn" id="radd" data-i="radd">+ Add reminder</button>
   <label data-i="lAtt">Allegati</label>
@@ -354,7 +356,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
-radd:'+ Add reminder',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+radd:'+ Add reminder',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
@@ -387,7 +389,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
-radd:'+ Aggiungi promemoria',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+radd:'+ Aggiungi promemoria',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
@@ -498,7 +500,7 @@ addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(drawStars,200)});
 
 /* ---------- stato ---------- */
 let user=null,items=[],tomb=[],view='cal',filter='all',cur=new Date(),sel=todayKey(),draft=null,mr=null,rt=null,actx=null;
-let syncing=false,again=false,synced=false,started=false,pendingNote=null,nvId=null,nvRem=false;
+let syncing=false,again=false,synced=false,started=false,pendingNote=null,pendingKind=null,nvId=null,nvKind=null;
 const KEYU=()=>'promemoria.v2.'+user.id;
 
 /* ---------- salvataggio locale ---------- */
@@ -509,7 +511,7 @@ function persist(){
   catch(e){toast(t_('full'))}
 }
 function loadLocal(){
-  try{const d=JSON.parse(localStorage.getItem(KEYU())||'{}');items=(d.items||[]).map(t=>{t={imgs:[],audio:null,srv:[],...t};if(!t.alerts)t.alerts=t.due?[{id:uuid(),at:t.due,sent:!!t.alerted,srv:false}]:[];return t});tomb=d.tomb||[]}
+  try{const d=JSON.parse(localStorage.getItem(KEYU())||'{}');items=(d.items||[]).map(t=>{t={imgs:[],audio:null,srv:[],...t};if(!t.alerts)t.alerts=t.due?[{id:uuid(),at:t.due,sent:!!t.alerted,srv:false,kind:'main'}]:[];if(t.alerts.length&&!t.alerts.some(a=>a.kind)){t.alerts.sort((x,y)=>x.at<y.at?-1:1);t.alerts.forEach((a,i)=>a.kind=i?'remind':'main')}return t});tomb=d.tomb||[]}
   catch(e){items=[];tomb=[]}
 }
 const sig=()=>JSON.stringify(items.map(strip));
@@ -542,15 +544,17 @@ async function upload(t,a){
 }
 
 /* ---------- sincronizzazione ---------- */
-const firstAt=t=>t.alerts&&t.alerts.length?t.alerts.map(a=>a.at).sort()[0]:'';
+const mainOf=t=>(t.alerts||[]).find(a=>a.kind==='main');
+const remOf=t=>(t.alerts||[]).filter(a=>a.kind!=='main');
+const firstAt=t=>{const m=mainOf(t);return m?m.at:(t.alerts&&t.alerts.length?t.alerts.map(a=>a.at).sort()[0]:'')};
 const lastAt=t=>t.alerts&&t.alerts.length?t.alerts.map(a=>a.at).sort().slice(-1)[0]:(t.due||'');
-const snap=t=>JSON.stringify([rowOf(t),t.alerts.map(a=>[a.id,a.at,a.sent])]);
+const snap=t=>JSON.stringify([rowOf(t),t.alerts.map(a=>[a.id,a.at,a.sent,a.kind])]);
 function fromRow(r,local,al){
   const old=new Map((local?[...local.imgs,...(local.audio?[local.audio]:[])]:[]).filter(a=>a.path).map(a=>[a.path,a.url]));
   const mk=p=>({path:p,url:old.get(p)||blobs.get(p)||''});
   const ip=r.img_paths||[];
-  const alerts=(al||[]).map(a=>{const at=loc(new Date(a.at));return{id:a.id,at,sent:a.sent,srv:true,atSrv:at,sentSrv:a.sent}}).sort((x,y)=>x.at<y.at?-1:1);
-  return{id:r.id,title:r.title,note:r.note||'',due:alerts.length?alerts[0].at:(r.due?loc(new Date(r.due)):''),done:r.done,alerts,
+  const alerts=(al||[]).map(a=>{const at=loc(new Date(a.at));return{id:a.id,at,sent:a.sent,kind:a.kind||'remind',srv:true,atSrv:at,sentSrv:a.sent}}).sort((x,y)=>x.at<y.at?-1:1);
+  return{id:r.id,title:r.title,note:r.note||'',due:(alerts.find(a=>a.kind==='main')||alerts[0]||{}).at||(r.due?loc(new Date(r.due)):''),done:r.done,alerts,
     imgs:ip.map(mk),audio:r.audio_path?mk(r.audio_path):null,dirty:false,srv:[...ip,...(r.audio_path?[r.audio_path]:[])]};
 }
 const rowOf=t=>({id:t.id,title:t.title,note:t.note||'',due:firstAt(t)?new Date(firstAt(t)).toISOString():null,done:!!t.done,alerted:true,
@@ -574,7 +578,7 @@ async function sync(){
       if(error)throw error;
       const wr=t.alerts.filter(a=>!a.srv||a.at!==a.atSrv||(a.sent&&!a.sentSrv)).map(a=>({a,at:a.at,sent:a.sent}));
       if(wr.length){
-        const {error:e2}=await sb.from('reminder_alerts').upsert(wr.map(w=>({id:w.a.id,reminder_id:t.id,at:new Date(w.at).toISOString(),sent:w.sent})),{onConflict:'id'});
+        const {error:e2}=await sb.from('reminder_alerts').upsert(wr.map(w=>({id:w.a.id,reminder_id:t.id,at:new Date(w.at).toISOString(),sent:w.sent,kind:w.a.kind==='main'?'main':'remind'})),{onConflict:'id'});
         if(e2)throw e2;
       }
       {const ids=t.alerts.map(a=>a.id);
@@ -591,7 +595,7 @@ async function sync(){
     }
     const {data,error}=await sb.from('reminders').select('*');
     if(error)throw error;
-    const {data:ald,error:ae}=await sb.from('reminder_alerts').select('id,reminder_id,at,sent');
+    const {data:ald,error:ae}=await sb.from('reminder_alerts').select('id,reminder_id,at,sent,kind');
     if(ae)throw ae;
     const byR={};ald.forEach(a=>(byR[a.reminder_id]=byR[a.reminder_id]||[]).push(a));
     const before=sig(),ids=new Set(data.map(r=>r.id));
@@ -627,7 +631,7 @@ function cardHTML(t,now){
 <article class="card ${t.done?'done':late?'late':''}" tabindex="0">
 <input type="checkbox" class="chk" data-a="chk" aria-label="${t_('mark')}" ${t.done?'checked':''}>
 <div><div class="t">${esc(t.title)}</div>${t.note?`<div class="n">${esc(t.note)}</div>`:''}
-${t.due?`<div class="due">⏰ ${fmt(t.due)}${t.alerts.length>1?' · 🔔 '+t.alerts.length:''}${late?`<span class="bd">${t_('late')}</span>`:''}</div>`:''}
+${t.due?`<div class="due">⏰ ${fmt(t.due)}${remOf(t).length?' · 🔔 '+remOf(t).length:''}${late?`<span class="bd">${t_('late')}</span>`:''}</div>`:''}
 ${t.imgs.length?`<div class="th">${t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="${t_('attN',{n:i+1})}" data-a="img" data-i="${i}">`:`<span class="ph" aria-label="${t_('loadAtt')}"></span>`).join('')}</div>`:''}
 ${t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<div class="n">${t_('audLoading')}</div>`):''}</div></article></div>`;
 }
@@ -748,10 +752,10 @@ $('#list').addEventListener('keydown',e=>{
 $('#lb').onclick=()=>$('#lb').classList.remove('on');
 
 /* ---------- nota a schermo intero (anche dalla notifica) ---------- */
-function openNote(id,rem){
+function openNote(id,kind){
   const t=items.find(x=>x.id===id);
   if(!t){pendingNote=id;return false}
-  pendingNote=null;nvId=id;nvRem=!!rem;renderNote();
+  pendingNote=null;nvId=id;nvKind=kind||null;renderNote();
   $('#nv').classList.add('on');$('#nv').scrollTop=0;
   document.body.style.overflow='hidden';
   $('#nvt').focus();hydrate(t);
@@ -763,12 +767,12 @@ function renderNote(){
     +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
-  const ok=$('#nvok');if(nvRem){ok.textContent=t_('ok');ok.disabled=false}else{ok.textContent=t.done?t_('done'):t_('complete');ok.disabled=!!t.done}
+  const ok=$('#nvok');if(nvKind==='remind'){ok.textContent=t_('ok');ok.disabled=false}else{ok.textContent=t.done?t_('done'):nvKind==='main'?t_('confirmed'):t_('complete');ok.disabled=!!t.done}
 }
 function closeNote(){nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
-  if(nvRem){closeNote();return}
+  if(nvKind==='remind'){closeNote();return}
   const t=items.find(x=>x.id===nvId);if(!t||t.done)return;
   t.done=true;t.dirty=true;closeNote();commit();toast(t_('doneToast'));
 };
@@ -784,7 +788,7 @@ addEventListener('keydown',e=>{
 function openF(t){
   draft=t?{...t,imgs:t.imgs.map(a=>({...a})),audio:t.audio?{...t.audio}:null,alerts:t.alerts.map(a=>({...a}))}:{id:null,title:'',note:'',due:'',imgs:[],audio:null,alerts:[]};
   $('#ft').textContent=t?t_('fEdit'):t_('fNew');
-  $('#title').value=draft.title;$('#note').value=draft.note||'';drawRl(draft.alerts.length?draft.alerts:[{id:null,at:''}]);
+  $('#title').value=draft.title;$('#note').value=draft.note||'';$('#due').value=(mainOf(draft)||{}).at||'';drawRl(remOf(draft).length?remOf(draft):[{id:null,at:''}]);
   drawAtt();$('#ov').classList.add('on');setTimeout(()=>$('#title').focus(),50);
 }
 function closeF(){stopRec();$('#ov').classList.remove('on');draft=null}
@@ -795,21 +799,23 @@ function drawRl(list){
 const rlVals=()=>[...document.querySelectorAll('#rl input')].map(i=>({id:i.dataset.id||null,at:i.value}));
 $('#radd').onclick=()=>{const v=rlVals();if(v.length>=5){toast(t_('maxRem'));return}v.push({id:null,at:''});drawRl(v)};
 $('#rl').onclick=e=>{const b=e.target.closest('[data-rm]');if(!b)return;const rows=[...document.querySelectorAll('#rl .rl')],i=rows.indexOf(b.parentElement),v=rlVals();v.splice(i,1);drawRl(v.length?v:[{id:null,at:''}])};
-$('#add').onclick=()=>{openF();const day=(view==='cal'&&sel)?sel:todayKey(),n=new Date();drawRl([{id:null,at:day+'T'+p2(n.getHours())+':'+p2(n.getMinutes())}])};
+$('#add').onclick=()=>{openF();const day=(view==='cal'&&sel)?sel:todayKey(),n=new Date();$('#due').value=day+'T'+p2(n.getHours())+':'+p2(n.getMinutes());drawRl([{id:null,at:''}])};
 $('#cancel').onclick=closeF;
 $('#ok').onclick=()=>{
   const title=$('#title').value.trim();
   if(!title){toast(t_('needTitle'));$('#title').focus();return}
   stopRec();
   const old=draft.id?items.find(x=>x.id===draft.id):null;
-  const seen=new Set(),alerts=[];
+  const alerts=[],mv=$('#due').value,exAll=draft.alerts||[];
+  const mk=(ex,at,kind)=>ex?(ex.at===at?{...ex,kind}:{...ex,at,sent:false,kind}):{id:uuid(),at,sent:false,srv:false,kind};
+  if(mv)alerts.push(mk(exAll.find(a=>a.kind==='main'),mv,'main'));
+  const seen=new Set(mv?[mv]:[]);
   for(const v of rlVals()){
-    if(!v.at||seen.has(v.at))continue;seen.add(v.at);
-    const ex=v.id&&(draft.alerts||[]).find(a=>a.id===v.id);
-    alerts.push(ex?(ex.at===v.at?{...ex}:{...ex,at:v.at,sent:false}):{id:uuid(),at:v.at,sent:false,srv:false});
+    if(!v.at||seen.has(v.at)||alerts.filter(a=>a.kind==='remind').length>=5)continue;seen.add(v.at);
+    alerts.push(mk(v.id&&exAll.find(a=>a.id===v.id&&a.kind!=='main'),v.at,'remind'));
   }
-  alerts.sort((x,y)=>x.at<y.at?-1:1);alerts.splice(5);
-  const due=alerts.length?alerts[0].at:'';
+  alerts.sort((x,y)=>x.at<y.at?-1:1);
+  const due=mv||(alerts[0]?alerts[0].at:'');
   const t={...draft,title,note:$('#note').value.trim(),due,alerts,dirty:true};
   if(old)Object.assign(old,t);else{t.id=uuid();t.done=false;t.srv=[];items.push(t)}
   if(due){sel=due.slice(0,10);cur=new Date(+due.slice(0,4),+due.slice(5,7)-1,1)}
@@ -867,17 +873,18 @@ function beep(){
 function fire(t,a){
   beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
   const el=document.createElement('div');el.className='al';el.dataset.id=t.id;if(a)el.dataset.aid=a.id;
-  el.innerHTML=`<button class="lk" data-b="open">⏰ ${esc(t.title)}</button><div class="row"><button class="sm" data-b="done">${t_('fDone2')}</button><button class="sm" data-b="snz">${t_('snooze')}</button><button class="sm" data-b="x">${t_('close')}</button></div>`;
+  const main=!a||a.kind==='main';el.dataset.kind=main?'main':'remind';
+  el.innerHTML=`<button class="lk" data-b="open">${main?'⏰':'🔔'} ${esc(t.title)}</button><div class="row">${main?`<button class="sm" data-b="done">${t_('confirmed')}</button><button class="sm" data-b="snz">${t_('snooze')}</button><button class="sm" data-b="x">${t_('close')}</button>`:`<button class="sm" data-b="x">${t_('ok')}</button>`}</div>`;
   $('#alerts').append(el);
   try{if('Notification' in window&&Notification.permission==='granted'){
-    const o={body:t.title,tag:t.id,icon:'icon-192.png',data:{id:t.id}},sw=navigator.serviceWorker;
+    const o={body:t.title,tag:t.id,icon:'icon-192.png',data:{id:t.id,kind:main?'main':'remind'}},sw=navigator.serviceWorker;
     (sw?sw.getRegistration():Promise.resolve()).then(r=>r?r.showNotification('DayMarck',o):new Notification('DayMarck',o)).catch(()=>{});
   }}catch(e){}
 }
 $('#alerts').onclick=e=>{
   const b=e.target.closest('[data-b]');if(!b)return;
   const el=b.closest('.al'),t=items.find(x=>x.id===el.dataset.id);
-  if(b.dataset.b==='open'){el.remove();if(t)openNote(t.id,true);return}
+  if(b.dataset.b==='open'){el.remove();if(t)openNote(t.id,el.dataset.kind);return}
   if(t&&b.dataset.b==='done'){t.done=true;t.dirty=true}
   if(t&&b.dataset.b==='snz'){
     const at=loc(new Date(Date.now()+600000)),a=t.alerts.find(x=>x.id===el.dataset.aid);
@@ -933,7 +940,7 @@ async function ensurePush(){
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{
   const d=e.data||{};
   if(d.type==='push')sync();
-  if(d.type==='open-note'&&d.id){pendingNote=d.id;if(user)sync().then(()=>{if(pendingNote)openNote(pendingNote,true)})}
+  if(d.type==='open-note'&&d.id){pendingNote=d.id;pendingKind=d.kind||null;if(user)sync().then(()=>{if(pendingNote)openNote(pendingNote,pendingKind||'remind')})}
 });
 
 /* ---------- area utente ---------- */
@@ -1224,7 +1231,7 @@ async function start(u){
   render();items.forEach(hydrate);
   await sync();ensurePush();check();claimRef();pendingBadge();flags();
   if(fresh){fresh=false;unlocked=true;offerBio()}
-  if(pendingNote)openNote(pendingNote,true);
+  if(pendingNote)openNote(pendingNote,pendingKind||'remind');
   if(!started){
     started=true;
     setInterval(check,15000);
@@ -1247,7 +1254,7 @@ if(sb){
 /* ---------- avvio ---------- */
 (function(){
   const q=new URLSearchParams(location.search).get('note');
-  if(q){pendingNote=q;try{history.replaceState(null,'',location.pathname)}catch(e){}}
+  if(q){pendingNote=q;pendingKind=new URLSearchParams(location.search).get('k');try{history.replaceState(null,'',location.pathname)}catch(e){}}
 })();
 $('#lang').onclick=()=>{
   LANG=LANG==='en'?'it':'en';
