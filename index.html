@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="it"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DayMarck</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -223,11 +223,14 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
     <h3 data-i="aNew">Nuovo account</h3>
     <p class="sub" data-i="aHint" style="margin:0 0 4px;color:#fff;text-shadow:none">Crea l’accesso per un’altra persona.</p>
     <label for="nem" data-i="aEm">Email della persona</label><input type="email" id="nem" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email">
-    <button type="button" class="btn" id="nsd" style="margin-top:8px" data-i="aSend">Send code</button>
+    <label for="npw" data-i="aPw">Password</label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
+    <div class="row" style="margin-top:10px">
+      <button type="button" class="btn pri" id="mku" data-i="aMku">Create now</button>
+      <button type="button" class="btn" id="nsd" data-i="aSend">Send code</button>
+    </div>
     <div id="ncw" hidden>
-      <div id="ncdw"><label for="ncd" data-i="aCode">Code received by email</label><input type="text" id="ncd" inputmode="numeric" autocomplete="off" maxlength="6"></div>
-      <label for="npw" data-i="aPw">Password</label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
-      <button type="button" class="btn pri" id="mk" style="margin-top:10px" data-i="aMk">Crea account</button>
+      <label for="ncd" data-i="aCode">Code received by email</label><input type="text" id="ncd" inputmode="numeric" autocomplete="off" maxlength="6">
+      <button type="button" class="btn" id="mk" style="margin-top:10px" data-i="aMk">Confirm and create</button>
     </div>
     <p class="am" id="amk" role="status" style="color:#fff"></p>
   </div>
@@ -316,8 +319,8 @@ const TX={
 en:{
 radd:'+ Add reminder',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
-aSend:'Send code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
-aNoMail:'Email service not set up yet. You can create the account without the email check.',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
+aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
+aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
 rfT:'Invite friends and earn',rfH:'Share your personal link. Every 10 friends who sign up and complete a confirmed purchase earn you a 10 € / 10 $ Amazon gift card, with no limit. Clicks and registrations do not count.',
 rfLink:'Your link',rfCopy:'Copy link',rfShare:'Share',rfCopied:'Copied.',rfInv:'Friends registered',rfVal:'Valid referrals (purchases)',rfPend:'Registered, not purchased',rfEarn:'Rewards earned',rfRecv:'Rewards received',
 rfProg:'{n}/10 friends',rfLeft:'You need {n} more friends for the next Amazon gift card!',rfLeft1:'You need 1 more friend for the next Amazon gift card!',rfCongrats:'Congratulations! You reached 10 valid referrals. Your reward is being prepared.',
@@ -329,7 +332,7 @@ pmT:'Manual purchases',pmH:'Until payments are connected, record a confirmed pur
 cal:'Calendar',all:'All tasks',fAll:'All',fTodo:'To do',fDone:'Done',add:'+ New',lTitle:'Title',phTitle:'What do you need to do?',lNote:'Notes',phNote:'Details (optional)',
 lAtt:'Attachments',bcam:'📷 Take photo',bgal:'🖼️ Choose images',brec:'🎙️ Record audio',baud:'🎵 Upload audio',
 cancel:'Cancel',save:'Save',uTitle:'User area',uAcc:'Account',uSt:'Status',syn:'Sync now',exp:'Add to phone calendar',aNew:'New account',
-aEm:"Person's email",aMk:'Create account',
+aEm:"Person's email",aMk:'Confirm and create',
 out:'Log out',close:'Close',lgT:'Log in to DayMarck',lgH:"Don't have an account? Ask the administrator.",lgE:'Email',lgP:'Password',lgB:'Log in',
 bellOn:'Notifications on: tap for a test',bellOff:'Turn on notifications',
 today:'Today',tomorrow:'Tomorrow',noDate:'No date',late:'overdue',edit:'Edit',del:'Delete',sure:'Sure?',mark:'Mark as done',
@@ -349,8 +352,8 @@ lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes ar
 it:{
 radd:'+ Aggiungi promemoria',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
-aSend:'Invia codice',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
-aNoMail:'Servizio email non ancora configurato. Puoi creare l’account senza il controllo email.',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
+aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
+aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
 rfT:'Invita amici e guadagna',rfH:'Condividi il tuo link personale. Ogni 10 amici che si registrano e completano un acquisto confermato ti fanno guadagnare un buono Amazon da 10 € / 10 $, senza limiti. Clic e registrazioni non contano.',
 rfLink:'Il tuo link',rfCopy:'Copia link',rfShare:'Condividi',rfCopied:'Copiato.',rfInv:'Amici registrati',rfVal:'Referral validi (acquisti)',rfPend:'Registrati, senza acquisto',rfEarn:'Premi maturati',rfRecv:'Premi ricevuti',
 rfProg:'{n}/10 amici',rfLeft:'Ti mancano {n} amici per il prossimo buono Amazon!',rfLeft1:'Ti manca 1 amico per il prossimo buono Amazon!',rfCongrats:'Complimenti! Hai raggiunto 10 referral validi. Il tuo premio è in preparazione.',
@@ -362,7 +365,7 @@ pmT:'Acquisti manuali',pmH:'Finché i pagamenti non sono collegati, registra a m
 cal:'Calendario',all:'Tutti gli impegni',fAll:'Tutti',fTodo:'Da fare',fDone:'Fatti',add:'+ Nuovo',lTitle:'Titolo',phTitle:'Cosa devi fare?',lNote:'Note',phNote:'Dettagli (facoltativo)',
 lAtt:'Allegati',bcam:'📷 Scatta foto',bgal:'🖼️ Scegli immagini',brec:'🎙️ Registra audio',baud:'🎵 Carica audio',
 cancel:'Annulla',save:'Salva',uTitle:'Area utente',uAcc:'Account',uSt:'Stato',syn:'Sincronizza ora',exp:'Aggiungi al calendario del telefono',aNew:'Nuovo account',
-aEm:'Email della persona',aMk:'Crea account',
+aEm:'Email della persona',aMk:'Conferma e crea',
 out:'Esci',close:'Chiudi',lgT:'Accedi a DayMarck',lgH:'Non hai un account? Chiedilo all’amministratore.',lgE:'Email',lgP:'Password',lgB:'Accedi',
 bellOn:'Notifiche attive: tocca per una prova',bellOff:'Attiva le notifiche',
 today:'Oggi',tomorrow:'Domani',noDate:'Senza data',late:'scaduto',edit:'Modifica',del:'Elimina',sure:'Sicuro?',mark:'Segna come completato',
@@ -380,7 +383,7 @@ icsNone:'Nessun impegno con data da esportare.',icsOk:'File creato: aprilo per a
 lgNet:'Servizio di accesso non raggiungibile. Controlla la connessione e ricarica.',lgBad:'Email o password non corretti.',lgConf:'Questo indirizzo non è ancora confermato: chiedi all’amministratore.',lgRate:'Troppi tentativi: riprova tra qualche minuto.',lgNo:'Nessuna connessione: riprova.',lgFail:'Accesso non riuscito: ',
 lgNeed:'Inserisci email e password.',lgWait:'Un attimo…',leave:'Alcune modifiche non sono ancora sincronizzate e andranno perse. Esci comunque?',appName:'DayMarck',pushBody:'Promemoria'}
 };
-let LANG='en';
+let LANG='it';
 try{const l=localStorage.getItem('dm.lang');if(l==='it'||l==='en')LANG=l}catch(e){}
 const t_=(k,v)=>{let x=(TX[LANG]||TX.en)[k];if(x===undefined)x=TX.en[k];if(v)for(const q in v)x=x.replace('{'+q+'}',v[q]);return x};
 function applyLang(){
@@ -919,32 +922,33 @@ async function callFn(name,body){
   if(data&&data.error)throw new Error(data.error);
   return data;
 }
-let mailMode='code';
-function resetNew(){mailMode='code';$('#ncw').hidden=true;$('#ncdw').hidden=false;$('#nsd').hidden=false;$('#nem').value='';$('#ncd').value='';$('#npw').value='';$('#mk').textContent=t_('aMk');amk('')}
+function resetNew(){$('#ncw').hidden=true;$('#nem').value='';$('#ncd').value='';$('#npw').value='';amk('')}
+const okEmail=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 $('#nsd').onclick=async()=>{
   if(!isAdmin()||!sb)return;
   const email=$('#nem').value.trim().toLowerCase();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){amk(t_('aBad'));return}
+  if(!okEmail(email)){amk(t_('aBad'));return}
   amk(t_('aSending'));$('#nsd').disabled=true;
   try{
     await callFn('admin-create-user',{action:'start',email});
-    mailMode='code';$('#ncw').hidden=false;$('#ncdw').hidden=false;$('#mk').textContent=t_('aMk');amk(t_('aCodeSent',{e:email}));
-  }catch(e){
-    if(String(e.message)==='mail_not_configured'){mailMode='direct';$('#ncw').hidden=false;$('#ncdw').hidden=true;$('#mk').textContent=t_('aMkU');amk(t_('aNoMail'))}
-    else amk(String(e.message||e));
-  }finally{$('#nsd').disabled=false}
+    $('#ncw').hidden=false;amk(t_('aCodeSent',{e:email}));
+  }catch(e){amk(String(e.message)==='mail_not_configured'?t_('aNoMail'):String(e.message||e))}
+  finally{$('#nsd').disabled=false}
 };
-$('#mk').onclick=async()=>{
+async function mkUser(body,btn){
+  const email=$('#nem').value.trim().toLowerCase(),password=$('#npw').value;
   if(!isAdmin()||!sb)return;
-  const email=$('#nem').value.trim().toLowerCase(),password=$('#npw').value,code=$('#ncd').value.trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8){amk(t_('aBad'));return}
-  if(mailMode==='code'&&!/^\d{6}$/.test(code)){amk(t_('aNeedCode'));return}
-  amk(t_('aWork'));$('#mk').disabled=true;
-  try{
-    await callFn('admin-create-user',mailMode==='code'?{action:'confirm',email,code,password}:{action:'create_unverified',email,password});
-    resetNew();amk(t_('aOk',{e:email}));
-  }catch(e){amk(String(e&&e.message||e))}
-  finally{$('#mk').disabled=false}
+  if(!okEmail(email)||password.length<8){amk(t_('aBad'));return}
+  amk(t_('aWork'));btn.disabled=true;
+  try{await callFn('admin-create-user',{...body,email,password});resetNew();amk(t_('aOk',{e:email}))}
+  catch(e){amk(String(e&&e.message||e))}
+  finally{btn.disabled=false}
+}
+$('#mku').onclick=()=>mkUser({action:'create_unverified'},$('#mku'));
+$('#mk').onclick=()=>{
+  const code=$('#ncd').value.trim();
+  if(!/^\d{6}$/.test(code)){amk(t_('aNeedCode'));return}
+  mkUser({action:'confirm',code},$('#mk'));
 };
 
 /* ---------- elenco utenti (solo amministratore) ---------- */
