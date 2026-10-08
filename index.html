@@ -210,7 +210,6 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
   <div class="ur"><span data-i="uSt">Stato</span><b id="sy" role="status"></b></div>
   <div class="stack">
     <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
-    <button type="button" class="btn" id="exp" data-i="exp">Aggiungi al calendario del telefono</button>
     <button type="button" class="btn" id="rfb"><span data-i="rfb">Invite</span></button>
   </div>
   <div id="adm" hidden>
@@ -1087,27 +1086,6 @@ async function claimRef(){
     if(!error)localStorage.removeItem('dm.ref');
   }catch(e){}
 }
-
-/* ---------- calendario del telefono (.ics) ---------- */
-function icsFold(l){const o=[];while(l.length>72){o.push(l.slice(0,72));l=' '+l.slice(72)}o.push(l);return o.join('\r\n')}
-$('#exp').onclick=()=>{
-  const L=items.filter(t=>t.due&&!t.done);
-  if(!L.length){toast(t_('icsNone'));return}
-  const z=s=>s.replace(/[-:]/g,'')+'00';
-  const e=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/[,;]/g,'\\$&');
-  const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
-  const o=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//DayMarck//EN','CALSCALE:GREGORIAN'];
-  L.forEach(t=>{
-    o.push('BEGIN:VEVENT','UID:'+t.id+'@daymarck','DTSTAMP:'+stamp,'DTSTART:'+z(t.due),'DTEND:'+z(loc(new Date(+new Date(t.due)+1800000))),'SUMMARY:'+e(t.title));
-    if(t.note)o.push('DESCRIPTION:'+e(t.note));
-    o.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+e(t.title),'TRIGGER:PT0S','END:VALARM','END:VEVENT');
-  });
-  o.push('END:VCALENDAR');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([o.map(icsFold).join('\r\n')],{type:'text/calendar'}));
-  a.download='daymarck.ics';document.body.append(a);a.click();a.remove();
-  toast(t_('icsOk'));
-};
 
 /* ---------- accesso ---------- */
 const amsg=m=>{$('#am').textContent=m};
