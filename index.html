@@ -114,6 +114,22 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
 .lg{display:inline-flex;border:1px solid rgba(255,255,255,.25);background:var(--glass2);border-radius:999px;padding:2px;cursor:pointer;color:#fff;font:700 12px/1 system-ui;align-items:center}
 .lg span{padding:7px 9px;border-radius:999px;opacity:.65}
 html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;color:#0B1230;opacity:1}
+.rl{display:flex;gap:8px;margin:0 0 8px}.rl input{flex:1}.rl .sm{flex:none}
+.pbar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:10px 0 6px}
+.pbar i{height:14px;border-radius:4px;background:var(--field);border:1px solid var(--line)}
+.pbar i.on{background:linear-gradient(180deg,#9db2ff,var(--acc));border-color:transparent}
+.big2{font-size:22px;font-weight:800;margin:4px 0}
+.box{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;background:rgba(255,255,255,.04)}
+.box b{overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.kv div{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
+.kv b{display:block;font-size:22px}.kv span{font-size:13px;color:var(--mute)}
+.pill{display:inline-block;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:700;background:var(--field);border:1px solid var(--line)}
+.pill.ok{background:var(--ok);color:#06210f;border-color:transparent}.pill.wa{background:var(--warn);color:#1b1200;border-color:transparent}
+.dot{display:inline-block;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:12px;line-height:18px;text-align:center;margin-left:6px;padding:0 5px}
+.cp{background:rgba(111,207,151,.15);border:1px solid var(--ok);border-radius:14px;padding:12px;margin:10px 0}
+.code{font:700 20px/1.2 ui-monospace,monospace;letter-spacing:.04em;overflow-wrap:anywhere;margin:6px 0}
+.lnk{width:100%;margin:6px 0}
 .nv{position:fixed;inset:0;z-index:15;display:none;overflow:auto;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%)}
 .nv.on{display:block}
 .nvw{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(32px + env(safe-area-inset-bottom,0px))}
@@ -168,8 +184,9 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
   <h2 id="ft">New task</h2>
   <label for="title" data-i="lTitle">Titolo</label><input type="text" id="title" maxlength="120" data-ph="phTitle" placeholder="Cosa devi fare?">
   <label for="note" data-i="lNote">Note</label><textarea id="note" data-ph="phNote" placeholder="Dettagli (facoltativo)"></textarea>
-  <label for="due" data-i="lDue">Avviso <small>arriva come notifica all'ora indicata</small></label>
-  <input type="datetime-local" id="due">
+  <label data-i="lDue">Avviso</label>
+  <div id="rl"></div>
+  <button type="button" class="btn" id="radd" data-i="radd">+ Add reminder</button>
   <label data-i="lAtt">Allegati</label>
   <div class="row">
     <button type="button" class="btn" id="bcam" data-i="bcam">📷 Scatta foto</button>
@@ -194,21 +211,59 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
   <div class="stack">
     <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
     <button type="button" class="btn" id="exp" data-i="exp">Aggiungi al calendario del telefono</button>
+    <button type="button" class="btn" id="rfb"><span data-i="rfb">Invite</span></button>
   </div>
   <div id="adm" hidden>
     <hr>
+    <div class="stack" style="margin-top:0">
+      <button type="button" class="btn" id="adb"><span data-i="adb">Referral &amp; Rewards</span><span class="dot" id="adn" hidden></span></button>
+      <button type="button" class="btn" id="usb" data-i="usb">Users</button>
+    </div>
+    <hr>
     <h3 data-i="aNew">Nuovo account</h3>
-    <p class="sub" data-i="aHint" style="margin:0 0 4px;color:#fff;text-shadow:none">Crea l’accesso per un’altra persona e comunicale email e password.</p>
+    <p class="sub" data-i="aHint" style="margin:0 0 4px;color:#fff;text-shadow:none">Crea l’accesso per un’altra persona.</p>
     <label for="nem" data-i="aEm">Email della persona</label><input type="email" id="nem" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email">
-    <label for="npw" data-i="aPw">Password <small>almeno 8 caratteri</small></label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
-    <p class="am" id="amk" role="status"></p>
-    <button type="button" class="btn pri" id="mk" style="margin-top:6px" data-i="aMk">Crea account</button>
+    <button type="button" class="btn" id="nsd" style="margin-top:8px" data-i="aSend">Send code</button>
+    <div id="ncw" hidden>
+      <div id="ncdw"><label for="ncd" data-i="aCode">Code received by email</label><input type="text" id="ncd" inputmode="numeric" autocomplete="off" maxlength="6"></div>
+      <label for="npw" data-i="aPw">Password</label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
+      <button type="button" class="btn pri" id="mk" style="margin-top:10px" data-i="aMk">Crea account</button>
+    </div>
+    <p class="am" id="amk" role="status" style="color:#fff"></p>
   </div>
   <hr>
   <div class="row" style="justify-content:space-between;margin-top:12px">
     <button type="button" class="btn out" id="out" data-i="out">Esci</button>
     <button type="button" class="btn" id="ucl" data-i="close">Chiudi</button>
   </div>
+</div></div>
+
+<div class="ov" id="rf"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rft">
+  <h2 id="rft" data-i="rfT">Invite friends and earn</h2>
+  <p class="sub" data-i="rfH" style="color:#fff;text-shadow:none;margin:0 0 8px"></p>
+  <div id="rfb2"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn" id="rfx" data-i="close">Close</button></div>
+</div></div>
+
+<div class="ov" id="usl"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ult">
+  <h2 id="ult" data-i="usb">Users</h2>
+  <p class="am" id="ulm" role="status" style="color:#fff"></p>
+  <div id="ulb"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn" id="ulx" data-i="close">Close</button></div>
+</div></div>
+
+<div class="ov" id="adr"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="art">
+  <h2 id="art" data-i="adb">Referral &amp; Rewards</h2>
+  <div class="tabs" style="margin:10px 0"><button type="button" id="adf" aria-pressed="false" data-i="adf">Users with rewards to deliver</button></div>
+  <p class="am" id="adm2" role="status" style="color:#fff"></p>
+  <div id="adbd"></div>
+  <hr>
+  <h3 data-i="pmT">Manual purchases</h3>
+  <p class="sub" data-i="pmH" style="color:#fff;text-shadow:none;margin:0 0 4px"></p>
+  <label for="pme" data-i="aEm">Email</label><input type="email" id="pme" autocapitalize="none" autocomplete="off">
+  <label for="pmi" data-i="pmId">Purchase reference</label><input type="text" id="pmi" autocomplete="off">
+  <div class="row" style="margin-top:10px"><button type="button" class="btn pri" id="pmr" data-i="pmR">Record purchase</button><button type="button" class="btn out" id="pmf" data-i="pmF">Refund purchase</button></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn" id="adx" data-i="close">Close</button></div>
 </div></div>
 
 <div class="ov" id="auth"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="at">
@@ -258,10 +313,23 @@ let syncKey='';
 const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
-en:{cal:'Calendar',all:'All tasks',fAll:'All',fTodo:'To do',fDone:'Done',add:'+ New',lTitle:'Title',phTitle:'What do you need to do?',lNote:'Notes',phNote:'Details (optional)',
-lDue:'Alert <small>arrives as a notification at the chosen time</small>',lAtt:'Attachments',bcam:'📷 Take photo',bgal:'🖼️ Choose images',brec:'🎙️ Record audio',baud:'🎵 Upload audio',
+en:{
+radd:'+ Add reminder',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
+aSend:'Send code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
+aNoMail:'Email service not set up yet. You can create the account without the email check.',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
+rfT:'Invite friends and earn',rfH:'Share your personal link. Every 10 friends who sign up and complete a confirmed purchase earn you a 10 € / 10 $ Amazon gift card, with no limit. Clicks and registrations do not count.',
+rfLink:'Your link',rfCopy:'Copy link',rfShare:'Share',rfCopied:'Copied.',rfInv:'Friends registered',rfVal:'Valid referrals (purchases)',rfPend:'Registered, not purchased',rfEarn:'Rewards earned',rfRecv:'Rewards received',
+rfProg:'{n}/10 friends',rfLeft:'You need {n} more friends for the next Amazon gift card!',rfLeft1:'You need 1 more friend for the next Amazon gift card!',rfCongrats:'Congratulations! You reached 10 valid referrals. Your reward is being prepared.',
+rwT:'My rewards',rwNone:'No rewards yet.',rwPrep:'In preparation',rwAvail:'Available',rwDel:'Delivered',rwItem:'Amazon gift card {v}',rwDone:'Congratulations! You received your Amazon gift card of {v}!',
+rwShow:'Show code',rwCopy:'Copy code',rwDate:'Assigned on {d}',rwHow:'Redeem it on Amazon from “Redeem a gift card”. DayMarck cannot know whether it has been used.',rwErr:'Could not load. Try again.',
+usEdit:'Change email',usPw:'Reset password',usVer:'verified',usUn:'not verified',usNewE:'New email for this user:',usNewP:'New password for this user (min 8 characters):',usOk:'Saved.',usLoad:'Loading…',usSelf:'You',
+adf:'Users with rewards to deliver',adNone:'Nothing to show.',adReg:'registered',adVal:'valid',adEarn:'earned',adDel:'delivered',adTo:'to deliver',adCode:'Amazon code',adAssign:'Confirm assignment',adWho:'Assigned by {a} on {d}',adNeed:'Enter the gift card code.',adSure:'Assign this code to {e}? It becomes visible to them.',adDone:'Reward assigned.',
+pmT:'Manual purchases',pmH:'Until payments are connected, record a confirmed purchase by hand to test or to register one. Refunds remove it from the count.',pmId:'Purchase reference',pmR:'Record purchase',pmF:'Refund purchase',pmOk:'Purchase recorded.',pmRf:'Purchase refunded.',pmNeed:'Enter the email and the purchase reference.',
+cal:'Calendar',all:'All tasks',fAll:'All',fTodo:'To do',fDone:'Done',add:'+ New',lTitle:'Title',phTitle:'What do you need to do?',lNote:'Notes',phNote:'Details (optional)',
+lAtt:'Attachments',bcam:'📷 Take photo',bgal:'🖼️ Choose images',brec:'🎙️ Record audio',baud:'🎵 Upload audio',
 cancel:'Cancel',save:'Save',uTitle:'User area',uAcc:'Account',uSt:'Status',syn:'Sync now',exp:'Add to phone calendar',aNew:'New account',
-aHint:'Create a login for another person and share the email and password with them.',aEm:"Person's email",aPw:'Password <small>at least 8 characters</small>',aMk:'Create account',
+aEm:"Person's email",aMk:'Create account',
 out:'Log out',close:'Close',lgT:'Log in to DayMarck',lgH:"Don't have an account? Ask the administrator.",lgE:'Email',lgP:'Password',lgB:'Log in',
 bellOn:'Notifications on: tap for a test',bellOff:'Turn on notifications',
 today:'Today',tomorrow:'Tomorrow',noDate:'No date',late:'overdue',edit:'Edit',del:'Delete',sure:'Sure?',mark:'Mark as done',
@@ -278,10 +346,23 @@ aBad:'Enter a valid email and a password of at least 8 characters.',aWork:'Creat
 icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the tasks to your phone calendar.',
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
-it:{cal:'Calendario',all:'Tutti gli impegni',fAll:'Tutti',fTodo:'Da fare',fDone:'Fatti',add:'+ Nuovo',lTitle:'Titolo',phTitle:'Cosa devi fare?',lNote:'Note',phNote:'Dettagli (facoltativo)',
-lDue:"Avviso <small>arriva come notifica all'ora indicata</small>",lAtt:'Allegati',bcam:'📷 Scatta foto',bgal:'🖼️ Scegli immagini',brec:'🎙️ Registra audio',baud:'🎵 Carica audio',
+it:{
+radd:'+ Aggiungi promemoria',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
+aSend:'Invia codice',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
+aNoMail:'Servizio email non ancora configurato. Puoi creare l’account senza il controllo email.',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
+rfT:'Invita amici e guadagna',rfH:'Condividi il tuo link personale. Ogni 10 amici che si registrano e completano un acquisto confermato ti fanno guadagnare un buono Amazon da 10 € / 10 $, senza limiti. Clic e registrazioni non contano.',
+rfLink:'Il tuo link',rfCopy:'Copia link',rfShare:'Condividi',rfCopied:'Copiato.',rfInv:'Amici registrati',rfVal:'Referral validi (acquisti)',rfPend:'Registrati, senza acquisto',rfEarn:'Premi maturati',rfRecv:'Premi ricevuti',
+rfProg:'{n}/10 amici',rfLeft:'Ti mancano {n} amici per il prossimo buono Amazon!',rfLeft1:'Ti manca 1 amico per il prossimo buono Amazon!',rfCongrats:'Complimenti! Hai raggiunto 10 referral validi. Il tuo premio è in preparazione.',
+rwT:'I miei premi',rwNone:'Ancora nessun premio.',rwPrep:'In preparazione',rwAvail:'Disponibile',rwDel:'Consegnato',rwItem:'Buono Amazon da {v}',rwDone:'Complimenti! Hai ricevuto il tuo buono Amazon da {v}!',
+rwShow:'Mostra codice',rwCopy:'Copia codice',rwDate:'Assegnato il {d}',rwHow:'Riscattalo su Amazon da “Riscatta un buono regalo”. DayMarck non può sapere se è stato usato.',rwErr:'Impossibile caricare. Riprova.',
+usEdit:'Cambia email',usPw:'Reimposta password',usVer:'verificato',usUn:'non verificato',usNewE:'Nuova email per questo utente:',usNewP:'Nuova password per questo utente (min. 8 caratteri):',usOk:'Salvato.',usLoad:'Caricamento…',usSelf:'Tu',
+adf:'Utenti con premi da erogare',adNone:'Niente da mostrare.',adReg:'registrati',adVal:'validi',adEarn:'maturati',adDel:'consegnati',adTo:'da erogare',adCode:'Codice Amazon',adAssign:'Conferma assegnazione',adWho:'Assegnato da {a} il {d}',adNeed:'Inserisci il codice del buono.',adSure:'Assegnare questo codice a {e}? Diventa visibile a lui/lei.',adDone:'Premio assegnato.',
+pmT:'Acquisti manuali',pmH:'Finché i pagamenti non sono collegati, registra a mano un acquisto confermato per provare o per inserirne uno. I rimborsi lo tolgono dal conteggio.',pmId:'Riferimento acquisto',pmR:'Registra acquisto',pmF:'Rimborsa acquisto',pmOk:'Acquisto registrato.',pmRf:'Acquisto rimborsato.',pmNeed:'Inserisci email e riferimento acquisto.',
+cal:'Calendario',all:'Tutti gli impegni',fAll:'Tutti',fTodo:'Da fare',fDone:'Fatti',add:'+ Nuovo',lTitle:'Titolo',phTitle:'Cosa devi fare?',lNote:'Note',phNote:'Dettagli (facoltativo)',
+lAtt:'Allegati',bcam:'📷 Scatta foto',bgal:'🖼️ Scegli immagini',brec:'🎙️ Registra audio',baud:'🎵 Carica audio',
 cancel:'Annulla',save:'Salva',uTitle:'Area utente',uAcc:'Account',uSt:'Stato',syn:'Sincronizza ora',exp:'Aggiungi al calendario del telefono',aNew:'Nuovo account',
-aHint:'Crea l’accesso per un’altra persona e comunicale email e password.',aEm:'Email della persona',aPw:'Password <small>almeno 8 caratteri</small>',aMk:'Crea account',
+aEm:'Email della persona',aMk:'Crea account',
 out:'Esci',close:'Chiudi',lgT:'Accedi a DayMarck',lgH:'Non hai un account? Chiedilo all’amministratore.',lgE:'Email',lgP:'Password',lgB:'Accedi',
 bellOn:'Notifiche attive: tocca per una prova',bellOff:'Attiva le notifiche',
 today:'Oggi',tomorrow:'Domani',noDate:'Senza data',late:'scaduto',edit:'Modifica',del:'Elimina',sure:'Sicuro?',mark:'Segna come completato',
@@ -377,7 +458,7 @@ addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(drawStars,200)});
 
 /* ---------- stato ---------- */
 let user=null,items=[],tomb=[],view='cal',filter='all',cur=new Date(),sel=todayKey(),draft=null,mr=null,rt=null,actx=null;
-let syncing=false,again=false,synced=false,started=false,pendingNote=null,nvId=null;
+let syncing=false,again=false,synced=false,started=false,pendingNote=null,nvId=null,nvRem=false;
 const KEYU=()=>'promemoria.v2.'+user.id;
 
 /* ---------- salvataggio locale ---------- */
@@ -388,7 +469,7 @@ function persist(){
   catch(e){toast(t_('full'))}
 }
 function loadLocal(){
-  try{const d=JSON.parse(localStorage.getItem(KEYU())||'{}');items=(d.items||[]).map(t=>({imgs:[],audio:null,srv:[],...t}));tomb=d.tomb||[]}
+  try{const d=JSON.parse(localStorage.getItem(KEYU())||'{}');items=(d.items||[]).map(t=>{t={imgs:[],audio:null,srv:[],...t};if(!t.alerts)t.alerts=t.due?[{id:uuid(),at:t.due,sent:!!t.alerted,srv:false}]:[];return t});tomb=d.tomb||[]}
   catch(e){items=[];tomb=[]}
 }
 const sig=()=>JSON.stringify(items.map(strip));
@@ -421,14 +502,18 @@ async function upload(t,a){
 }
 
 /* ---------- sincronizzazione ---------- */
-function fromRow(r,local){
+const firstAt=t=>t.alerts&&t.alerts.length?t.alerts.map(a=>a.at).sort()[0]:'';
+const lastAt=t=>t.alerts&&t.alerts.length?t.alerts.map(a=>a.at).sort().slice(-1)[0]:(t.due||'');
+const snap=t=>JSON.stringify([rowOf(t),t.alerts.map(a=>[a.id,a.at,a.sent])]);
+function fromRow(r,local,al){
   const old=new Map((local?[...local.imgs,...(local.audio?[local.audio]:[])]:[]).filter(a=>a.path).map(a=>[a.path,a.url]));
   const mk=p=>({path:p,url:old.get(p)||blobs.get(p)||''});
   const ip=r.img_paths||[];
-  return{id:r.id,title:r.title,note:r.note||'',due:r.due?loc(new Date(r.due)):'',done:r.done,alerted:r.alerted,
+  const alerts=(al||[]).map(a=>{const at=loc(new Date(a.at));return{id:a.id,at,sent:a.sent,srv:true,atSrv:at,sentSrv:a.sent}}).sort((x,y)=>x.at<y.at?-1:1);
+  return{id:r.id,title:r.title,note:r.note||'',due:alerts.length?alerts[0].at:(r.due?loc(new Date(r.due)):''),done:r.done,alerts,
     imgs:ip.map(mk),audio:r.audio_path?mk(r.audio_path):null,dirty:false,srv:[...ip,...(r.audio_path?[r.audio_path]:[])]};
 }
-const rowOf=t=>({id:t.id,title:t.title,note:t.note||'',due:t.due?new Date(t.due).toISOString():null,done:!!t.done,alerted:!!t.alerted,
+const rowOf=t=>({id:t.id,title:t.title,note:t.note||'',due:firstAt(t)?new Date(firstAt(t)).toISOString():null,done:!!t.done,alerted:true,
   img_paths:t.imgs.map(a=>a.path).filter(Boolean),audio_path:t.audio&&t.audio.path?t.audio.path:null});
 async function sync(){
   if(!sb||!user)return;
@@ -443,23 +528,37 @@ async function sync(){
     }
     for(const t of items.filter(x=>x.dirty)){
       for(const a of [...t.imgs,...(t.audio?[t.audio]:[])]){if(!a.path&&a.url)a.path=await upload(t,a)}
-      const row=rowOf(t),sent=JSON.stringify(row);
+      t.due=firstAt(t);
+      const row=rowOf(t),sent=snap(t);
       const {error}=await sb.from('reminders').upsert(row,{onConflict:'id'});
       if(error)throw error;
+      const wr=t.alerts.filter(a=>!a.srv||a.at!==a.atSrv||(a.sent&&!a.sentSrv)).map(a=>({a,at:a.at,sent:a.sent}));
+      if(wr.length){
+        const {error:e2}=await sb.from('reminder_alerts').upsert(wr.map(w=>({id:w.a.id,reminder_id:t.id,at:new Date(w.at).toISOString(),sent:w.sent})),{onConflict:'id'});
+        if(e2)throw e2;
+      }
+      {const ids=t.alerts.map(a=>a.id);
+        const q=sb.from('reminder_alerts').delete().eq('reminder_id',t.id);
+        const {error:e3}=await (ids.length?q.not('id','in','('+ids.join(',')+')'):q);
+        if(e3)throw e3;}
+      wr.forEach(w=>{w.a.srv=true;w.a.atSrv=w.at;w.a.sentSrv=w.sent});
       const keep=new Set([...row.img_paths,...(row.audio_path?[row.audio_path]:[])]);
       const gone=(t.srv||[]).filter(p=>!keep.has(p));
       if(gone.length)await sb.storage.from('attachments').remove(gone);
       t.srv=[...keep];
-      t.dirty=JSON.stringify(rowOf(t))!==sent;   // se è cambiato durante l'invio, resta da sincronizzare
+      t.dirty=snap(t)!==sent;   // se è cambiato durante l'invio, resta da sincronizzare
       persist();
     }
     const {data,error}=await sb.from('reminders').select('*');
     if(error)throw error;
+    const {data:ald,error:ae}=await sb.from('reminder_alerts').select('id,reminder_id,at,sent');
+    if(ae)throw ae;
+    const byR={};ald.forEach(a=>(byR[a.reminder_id]=byR[a.reminder_id]||[]).push(a));
     const before=sig(),ids=new Set(data.map(r=>r.id));
     for(const r of data){
       const local=items.find(x=>x.id===r.id);
       if(local&&local.dirty)continue;
-      const n=fromRow(r,local);
+      const n=fromRow(r,local,byR[r.id]);
       if(local)Object.assign(local,n);else items.push(n);
     }
     items=items.filter(t=>t.dirty||ids.has(t.id));
@@ -483,12 +582,12 @@ function dayLabel(k){
   return k===todayKey()?t_('today'):k===tm?t_('tomorrow'):cap(fmtDay(k));
 }
 function cardHTML(t,now){
-  const late=!t.done&&t.due&&new Date(t.due)<now;
+  const late=!t.done&&t.due&&new Date(lastAt(t))<now;
   return `<div class="sw" data-id="${t.id}"><div class="acts"><button class="ab ed" data-a="edit">${t_('edit')}</button><button class="ab dl" data-a="del">${t_('del')}</button></div>
 <article class="card ${t.done?'done':late?'late':''}" tabindex="0">
 <input type="checkbox" class="chk" data-a="chk" aria-label="${t_('mark')}" ${t.done?'checked':''}>
 <div><div class="t">${esc(t.title)}</div>${t.note?`<div class="n">${esc(t.note)}</div>`:''}
-${t.due?`<div class="due">⏰ ${fmt(t.due)}${late?`<span class="bd">${t_('late')}</span>`:''}</div>`:''}
+${t.due?`<div class="due">⏰ ${fmt(t.due)}${t.alerts.length>1?' · 🔔 '+t.alerts.length:''}${late?`<span class="bd">${t_('late')}</span>`:''}</div>`:''}
 ${t.imgs.length?`<div class="th">${t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="${t_('attN',{n:i+1})}" data-a="img" data-i="${i}">`:`<span class="ph" aria-label="${t_('loadAtt')}"></span>`).join('')}</div>`:''}
 ${t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<div class="n">${t_('audLoading')}</div>`):''}</div></article></div>`;
 }
@@ -609,10 +708,10 @@ $('#list').addEventListener('keydown',e=>{
 $('#lb').onclick=()=>$('#lb').classList.remove('on');
 
 /* ---------- nota a schermo intero (anche dalla notifica) ---------- */
-function openNote(id){
+function openNote(id,rem){
   const t=items.find(x=>x.id===id);
   if(!t){pendingNote=id;return false}
-  pendingNote=null;nvId=id;renderNote();
+  pendingNote=null;nvId=id;nvRem=!!rem;renderNote();
   $('#nv').classList.add('on');$('#nv').scrollTop=0;
   document.body.style.overflow='hidden';
   $('#nvt').focus();hydrate(t);
@@ -624,16 +723,18 @@ function renderNote(){
     +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
-  const ok=$('#nvok');ok.textContent=t.done?t_('done'):t_('complete');ok.disabled=!!t.done;
+  const ok=$('#nvok');if(nvRem){ok.textContent=t_('ok');ok.disabled=false}else{ok.textContent=t.done?t_('done'):t_('complete');ok.disabled=!!t.done}
 }
 function closeNote(){nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
+  if(nvRem){closeNote();return}
   const t=items.find(x=>x.id===nvId);if(!t||t.done)return;
   t.done=true;t.dirty=true;closeNote();commit();toast(t_('doneToast'));
 };
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
+  for(const id of ['#rf','#usl','#adr'])if($(id).classList.contains('on')){shut(id);return}
   if($('#lb').classList.contains('on'))$('#lb').classList.remove('on');
   else if(nvId)closeNote();
   else if($('#usr').classList.contains('on'))$('#usr').classList.remove('on');
@@ -641,21 +742,35 @@ addEventListener('keydown',e=>{
 
 /* ---------- modulo ---------- */
 function openF(t){
-  draft=t?{...t,imgs:t.imgs.map(a=>({...a})),audio:t.audio?{...t.audio}:null}:{id:null,title:'',note:'',due:'',imgs:[],audio:null};
+  draft=t?{...t,imgs:t.imgs.map(a=>({...a})),audio:t.audio?{...t.audio}:null,alerts:t.alerts.map(a=>({...a}))}:{id:null,title:'',note:'',due:'',imgs:[],audio:null,alerts:[]};
   $('#ft').textContent=t?t_('fEdit'):t_('fNew');
-  $('#title').value=draft.title;$('#note').value=draft.note||'';$('#due').value=draft.due||'';
+  $('#title').value=draft.title;$('#note').value=draft.note||'';drawRl(draft.alerts.length?draft.alerts:[{id:null,at:''}]);
   drawAtt();$('#ov').classList.add('on');setTimeout(()=>$('#title').focus(),50);
 }
 function closeF(){stopRec();$('#ov').classList.remove('on');draft=null}
-$('#add').onclick=()=>{openF();if(view==='cal'&&sel)$('#due').value=sel+'T09:00'};
+function drawRl(list){
+  $('#rl').innerHTML=list.map(a=>`<div class="rl"><input type="datetime-local" data-id="${a.id||''}" value="${esc(a.at||'')}"><button type="button" class="sm" data-rm aria-label="${t_('rmRem')}">×</button></div>`).join('');
+  $('#radd').hidden=list.length>=5;
+}
+const rlVals=()=>[...document.querySelectorAll('#rl input')].map(i=>({id:i.dataset.id||null,at:i.value}));
+$('#radd').onclick=()=>{const v=rlVals();if(v.length>=5){toast(t_('maxRem'));return}v.push({id:null,at:''});drawRl(v)};
+$('#rl').onclick=e=>{const b=e.target.closest('[data-rm]');if(!b)return;const rows=[...document.querySelectorAll('#rl .rl')],i=rows.indexOf(b.parentElement),v=rlVals();v.splice(i,1);drawRl(v.length?v:[{id:null,at:''}])};
+$('#add').onclick=()=>{openF();if(view==='cal'&&sel)drawRl([{id:null,at:sel+'T09:00'}])};
 $('#cancel').onclick=closeF;
 $('#ok').onclick=()=>{
   const title=$('#title').value.trim();
   if(!title){toast(t_('needTitle'));$('#title').focus();return}
   stopRec();
-  const due=$('#due').value,old=draft.id?items.find(x=>x.id===draft.id):null;
-  const t={...draft,title,note:$('#note').value.trim(),due,dirty:true};
-  t.alerted=old&&old.due===due?old.alerted:false;
+  const old=draft.id?items.find(x=>x.id===draft.id):null;
+  const seen=new Set(),alerts=[];
+  for(const v of rlVals()){
+    if(!v.at||seen.has(v.at))continue;seen.add(v.at);
+    const ex=v.id&&(draft.alerts||[]).find(a=>a.id===v.id);
+    alerts.push(ex?(ex.at===v.at?{...ex}:{...ex,at:v.at,sent:false}):{id:uuid(),at:v.at,sent:false,srv:false});
+  }
+  alerts.sort((x,y)=>x.at<y.at?-1:1);alerts.splice(5);
+  const due=alerts.length?alerts[0].at:'';
+  const t={...draft,title,note:$('#note').value.trim(),due,alerts,dirty:true};
   if(old)Object.assign(old,t);else{t.id=uuid();t.done=false;t.srv=[];items.push(t)}
   if(due){sel=due.slice(0,10);cur=new Date(+due.slice(0,4),+due.slice(5,7)-1,1)}
   closeF();commit();check();
@@ -709,9 +824,9 @@ function beep(){
   if(!actx)return;
   [0,.35,.7].forEach(d=>{const o=actx.createOscillator(),g=actx.createGain(),t=actx.currentTime+d;o.frequency.value=880;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.25);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.3)});
 }
-function fire(t){
+function fire(t,a){
   beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
-  const el=document.createElement('div');el.className='al';el.dataset.id=t.id;
+  const el=document.createElement('div');el.className='al';el.dataset.id=t.id;if(a)el.dataset.aid=a.id;
   el.innerHTML=`<button class="lk" data-b="open">⏰ ${esc(t.title)}</button><div class="row"><button class="sm" data-b="done">${t_('fDone2')}</button><button class="sm" data-b="snz">${t_('snooze')}</button><button class="sm" data-b="x">${t_('close')}</button></div>`;
   $('#alerts').append(el);
   try{if('Notification' in window&&Notification.permission==='granted'){
@@ -722,15 +837,19 @@ function fire(t){
 $('#alerts').onclick=e=>{
   const b=e.target.closest('[data-b]');if(!b)return;
   const el=b.closest('.al'),t=items.find(x=>x.id===el.dataset.id);
-  if(b.dataset.b==='open'){el.remove();if(t)openNote(t.id);return}
+  if(b.dataset.b==='open'){el.remove();if(t)openNote(t.id,true);return}
   if(t&&b.dataset.b==='done'){t.done=true;t.dirty=true}
-  if(t&&b.dataset.b==='snz'){t.due=loc(new Date(Date.now()+600000));t.alerted=false;t.dirty=true}
+  if(t&&b.dataset.b==='snz'){
+    const at=loc(new Date(Date.now()+600000)),a=t.alerts.find(x=>x.id===el.dataset.aid);
+    if(a){a.at=at;a.sent=false}else if(t.alerts.length<5)t.alerts.push({id:uuid(),at,sent:false,srv:false});
+    t.alerts.sort((x,y)=>x.at<y.at?-1:1);t.due=firstAt(t);t.dirty=true;
+  }
   el.remove();commit();
 };
 function check(){
   if(!user||!(synced||!navigator.onLine))return;
   let ch=false;const n=Date.now();
-  items.forEach(t=>{if(!t.done&&t.due&&!t.alerted&&+new Date(t.due)<=n){t.alerted=true;t.dirty=true;ch=true;fire(t)}});
+  items.forEach(t=>{if(t.done)return;t.alerts.forEach(a=>{if(!a.sent&&+new Date(a.at)<=n){a.sent=true;t.dirty=true;ch=true;fire(t,a)}})});
   if(ch)commit();
 }
 
@@ -774,14 +893,14 @@ async function ensurePush(){
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{
   const d=e.data||{};
   if(d.type==='push')sync();
-  if(d.type==='open-note'&&d.id){pendingNote=d.id;if(user)sync().then(()=>{if(pendingNote)openNote(pendingNote)})}
+  if(d.type==='open-note'&&d.id){pendingNote=d.id;if(user)sync().then(()=>{if(pendingNote)openNote(pendingNote,true)})}
 });
 
 /* ---------- area utente ---------- */
 const isAdmin=()=>!!(user&&user.email&&user.email.toLowerCase()===ADMIN_EMAIL);
 function openUsr(){
   $('#uem').textContent=user?user.email:'';
-  $('#adm').hidden=!isAdmin();$('#amk').textContent='';
+  $('#adm').hidden=!isAdmin();resetNew();pendingBadge();
   $('#usr').classList.add('on');
 }
 $('#ubtn').onclick=openUsr;
@@ -790,24 +909,180 @@ $('#usr').onclick=e=>{if(e.target===$('#usr'))$('#usr').classList.remove('on')};
 $('#syn').onclick=()=>sync();
 
 const amk=m=>{$('#amk').textContent=m};
+async function callFn(name,body){
+  const {data,error}=await sb.functions.invoke(name,{body});
+  if(error){
+    let m=error.message;
+    try{const j=await error.context.json();if(j&&j.error)m=j.error}catch(_){}
+    throw new Error(m);
+  }
+  if(data&&data.error)throw new Error(data.error);
+  return data;
+}
+let mailMode='code';
+function resetNew(){mailMode='code';$('#ncw').hidden=true;$('#ncdw').hidden=false;$('#nsd').hidden=false;$('#nem').value='';$('#ncd').value='';$('#npw').value='';$('#mk').textContent=t_('aMk');amk('')}
+$('#nsd').onclick=async()=>{
+  if(!isAdmin()||!sb)return;
+  const email=$('#nem').value.trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){amk(t_('aBad'));return}
+  amk(t_('aSending'));$('#nsd').disabled=true;
+  try{
+    await callFn('admin-create-user',{action:'start',email});
+    mailMode='code';$('#ncw').hidden=false;$('#ncdw').hidden=false;$('#mk').textContent=t_('aMk');amk(t_('aCodeSent',{e:email}));
+  }catch(e){
+    if(String(e.message)==='mail_not_configured'){mailMode='direct';$('#ncw').hidden=false;$('#ncdw').hidden=true;$('#mk').textContent=t_('aMkU');amk(t_('aNoMail'))}
+    else amk(String(e.message||e));
+  }finally{$('#nsd').disabled=false}
+};
 $('#mk').onclick=async()=>{
   if(!isAdmin()||!sb)return;
-  const email=$('#nem').value.trim().toLowerCase(),password=$('#npw').value;
+  const email=$('#nem').value.trim().toLowerCase(),password=$('#npw').value,code=$('#ncd').value.trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8){amk(t_('aBad'));return}
+  if(mailMode==='code'&&!/^\d{6}$/.test(code)){amk(t_('aNeedCode'));return}
   amk(t_('aWork'));$('#mk').disabled=true;
   try{
-    const {data,error}=await sb.functions.invoke('admin-create-user',{body:{email,password}});
-    if(error){
-      let m=error.message;
-      try{const j=await error.context.json();if(j&&j.error)m=j.error}catch(_){}
-      throw new Error(m);
-    }
-    if(data&&data.error)throw new Error(data.error);
-    amk(t_('aOk',{e:email}));
-    $('#nem').value='';$('#npw').value='';
+    await callFn('admin-create-user',mailMode==='code'?{action:'confirm',email,code,password}:{action:'create_unverified',email,password});
+    resetNew();amk(t_('aOk',{e:email}));
   }catch(e){amk(String(e&&e.message||e))}
   finally{$('#mk').disabled=false}
 };
+
+/* ---------- elenco utenti (solo amministratore) ---------- */
+const shut=(id)=>$(id).classList.remove('on');
+function fdate(s){return s?new Date(s).toLocaleDateString(LOC(),{day:'numeric',month:'short',year:'numeric'}):''}
+async function loadUsers(){
+  $('#ulm').textContent=t_('usLoad');
+  try{
+    const d=await callFn('admin-users',{action:'list'});
+    $('#ulm').textContent='';
+    $('#ulb').innerHTML=d.users.sort((x,y)=>(x.email||'')<(y.email||'')?-1:1).map(u=>`<div class="box" data-id="${esc(u.id)}" data-em="${esc(u.email)}"><b>${esc(u.email)}</b>${u.id===user.id?' <span class="pill">'+t_('usSelf')+'</span>':''}
+<span class="pill ${u.verified?'ok':'wa'}">${t_(u.verified?'usVer':'usUn')}</span>
+<div class="row" style="margin-top:8px">${u.id===user.id?'':`<button type="button" class="sm" data-u="em">${t_('usEdit')}</button>`}<button type="button" class="sm" data-u="pw">${t_('usPw')}</button></div></div>`).join('');
+  }catch(e){$('#ulm').textContent=String(e.message||e)}
+}
+$('#ulb').onclick=async e=>{
+  const b=e.target.closest('[data-u]');if(!b)return;
+  const box=b.closest('.box'),id=box.dataset.id;
+  try{
+    if(b.dataset.u==='em'){
+      const v=prompt(t_('usNewE'),box.dataset.em);if(!v)return;
+      await callFn('admin-users',{action:'update_email',id,email:v.trim()});
+    }else{
+      const v=prompt(t_('usNewP'));if(!v)return;
+      await callFn('admin-users',{action:'set_password',id,password:v});
+    }
+    toast(t_('usOk'));loadUsers();
+  }catch(err){toast(String(err.message||err))}
+};
+$('#usb').onclick=()=>{$('#usl').classList.add('on');loadUsers()};
+$('#ulx').onclick=()=>shut('#usl');
+$('#usl').onclick=e=>{if(e.target===$('#usl'))shut('#usl')};
+
+/* ---------- invita amici e premi ---------- */
+const money=c=>c==='USD'?'10 $':'10 €';
+const refLink=c=>location.origin+location.pathname.replace(/index\.html$/,'')+'?ref='+c;
+async function copyText(x){
+  try{await navigator.clipboard.writeText(x);toast(t_('rfCopied'))}
+  catch(e){const i=document.createElement('input');i.value=x;document.body.append(i);i.select();try{document.execCommand('copy');toast(t_('rfCopied'))}catch(_){}i.remove()}
+}
+let RF=null;
+async function loadRef(){
+  $('#rfb2').innerHTML='<p class="am" style="color:#fff">'+t_('usLoad')+'</p>';
+  try{
+    const {data,error}=await sb.rpc('my_referral');if(error)throw error;
+    RF=data;renderRef();
+  }catch(e){$('#rfb2').innerHTML='<p class="am" style="color:#fff">'+t_('rwErr')+'</p>'}
+}
+function renderRef(){
+  const d=RF,link=refLink(d.code),m=d.valid%10,left=10-m;
+  const prep=d.rewards.some(r=>r.status==='to_deliver');
+  const recv=d.rewards.filter(r=>r.status!=='to_deliver').length;
+  let h=`<div class="box"><label style="margin-top:0">${t_('rfLink')}</label><input type="text" readonly class="lnk" id="rfl" value="${esc(link)}">
+<div class="row"><button type="button" class="btn" id="rfc">${t_('rfCopy')}</button>${navigator.share?`<button type="button" class="btn pri" id="rfs">${t_('rfShare')}</button>`:''}</div></div>
+<div class="kv"><div><b>${d.registered}</b><span>${t_('rfInv')}</span></div><div><b>${d.valid}</b><span>${t_('rfVal')}</span></div><div><b>${d.pending}</b><span>${t_('rfPend')}</span></div><div><b>${d.rewards.length}</b><span>${t_('rfEarn')}</span></div><div><b>${recv}</b><span>${t_('rfRecv')}</span></div></div>
+<div class="box"><div class="big2">${t_('rfProg',{n:m})}</div><div class="pbar" role="img" aria-label="${t_('rfProg',{n:m})}">${Array.from({length:10},(_,i)=>`<i class="${i<m?'on':''}"></i>`).join('')}</div>
+<div>${left===1?t_('rfLeft1'):t_('rfLeft',{n:left})}</div>${prep&&m===0?`<p style="margin:8px 0 0"><b>🎉 ${t_('rfCongrats')}</b></p>`:''}</div>
+<h3>${t_('rwT')}</h3>`;
+  if(!d.rewards.length)h+=`<p class="am" style="color:#fff">${t_('rwNone')}</p>`;
+  for(const r of d.rewards.slice().reverse()){
+    const st=r.status==='to_deliver'?['rwPrep','wa']:r.status==='available'?['rwAvail','ok']:['rwDel','ok'];
+    h+=`<div class="${r.status==='to_deliver'?'box':'cp'}" data-rid="${esc(r.id)}"><b>${t_('rwItem',{v:money(r.currency)})}</b> <span class="pill ${st[1]}">${t_(st[0])}</span>`;
+    if(r.status!=='to_deliver')h+=`<p style="margin:6px 0 0">${t_('rwDone',{v:money(r.currency)})}</p><div class="rcode"></div><div class="row"><button type="button" class="btn pri" data-rv>${t_('rwShow')}</button></div><p class="sub" style="margin:8px 0 0;color:#fff;text-shadow:none;font-size:14px">${t_('rwDate',{d:fdate(r.assigned_at)})}<br>${t_('rwHow')}</p>`;
+    h+='</div>';
+  }
+  $('#rfb2').innerHTML=h;
+  $('#rfc').onclick=()=>copyText(link);
+  const sh=$('#rfs');if(sh)sh.onclick=()=>navigator.share({title:'DayMarck',text:'DayMarck',url:link}).catch(()=>{});
+}
+$('#rfb2').onclick=async e=>{
+  const b=e.target.closest('[data-rv],[data-cc]');if(!b)return;
+  const box=b.closest('[data-rid]');
+  if(b.dataset.cc!==undefined){copyText(box.querySelector('.code').textContent);return}
+  try{
+    const {data,error}=await sb.rpc('reveal_reward',{p_id:box.dataset.rid});if(error)throw error;
+    if(!data){toast(t_('rwErr'));return}
+    box.querySelector('.rcode').innerHTML='<div class="code"></div>';box.querySelector('.code').textContent=data;
+    b.textContent=t_('rwCopy');b.removeAttribute('data-rv');b.setAttribute('data-cc','');
+  }catch(err){toast(t_('rwErr'))}
+};
+$('#rfb').onclick=()=>{shut('#usr');$('#rf').classList.add('on');loadRef()};
+$('#rfx').onclick=()=>shut('#rf');
+$('#rf').onclick=e=>{if(e.target===$('#rf'))shut('#rf')};
+
+/* ---------- Referral & Rewards (solo amministratore) ---------- */
+let ADF=false,ADR=[];
+const adMsg=m=>{$('#adm2').textContent=m};
+async function loadAdmin(){
+  adMsg(t_('usLoad'));
+  try{const {data,error}=await sb.rpc('admin_referral_table');if(error)throw error;ADR=data;adMsg('');renderAdmin()}
+  catch(e){adMsg(String(e.message||e))}
+}
+function renderAdmin(){
+  $('#adf').setAttribute('aria-pressed',ADF);
+  const L=ADR.filter(r=>!ADF||r.to_deliver>0);
+  $('#adbd').innerHTML=L.length?L.map(r=>`<div class="box" data-em="${esc(r.email)}"><b>${esc(r.email)}</b> <span class="pill">${esc(r.code||'')}</span>
+<div class="kv"><div><b>${r.registered}</b><span>${t_('adReg')}</span></div><div><b>${r.valid}</b><span>${t_('adVal')}</span></div><div><b>${r.earned}</b><span>${t_('adEarn')}</span></div><div><b>${r.delivered}</b><span>${t_('adDel')}</span></div><div><b>${r.to_deliver}</b><span>${t_('adTo')}</span></div></div>
+${r.rewards.map(w=>`<div class="rw" data-id="${esc(w.id)}" style="margin-top:6px">#${w.seq} · ${esc(w.currency)} · ${fdate(w.earned_at)} <span class="pill ${w.status==='to_deliver'?'wa':'ok'}">${t_(w.status==='to_deliver'?'rwPrep':w.status==='available'?'rwAvail':'rwDel')}</span>
+${w.status==='to_deliver'?`<div class="row" style="margin-top:6px"><input type="text" class="ac" placeholder="${t_('adCode')}" autocomplete="off" autocapitalize="none" spellcheck="false" style="flex:1 1 160px"><button type="button" class="btn pri" data-as>${t_('adAssign')}</button></div>`:`<div class="sub" style="margin:2px 0 0;color:#fff;text-shadow:none;font-size:14px">${t_('adWho',{a:esc(w.assigned_by||'?'),d:fdate(w.assigned_at)})}</div>`}</div>`).join('')}</div>`).join(''):`<p class="am" style="color:#fff">${t_('adNone')}</p>`;
+}
+$('#adbd').onclick=async e=>{
+  const b=e.target.closest('[data-as]');if(!b)return;
+  const w=b.closest('.rw'),box=b.closest('.box'),code=w.querySelector('.ac').value.trim();
+  if(code.length<6){toast(t_('adNeed'));return}
+  if(!confirm(t_('adSure',{e:box.dataset.em})))return;
+  b.disabled=true;
+  try{const {error}=await sb.rpc('admin_assign_reward',{p_id:w.dataset.id,p_code:code});if(error)throw error;toast(t_('adDone'));loadAdmin();pendingBadge()}
+  catch(err){toast(String(err.message||err));b.disabled=false}
+};
+$('#adf').onclick=()=>{ADF=!ADF;renderAdmin()};
+$('#adb').onclick=()=>{shut('#usr');$('#adr').classList.add('on');loadAdmin()};
+$('#adx').onclick=()=>shut('#adr');
+$('#adr').onclick=e=>{if(e.target===$('#adr'))shut('#adr')};
+$('#pmr').onclick=async()=>{
+  const em=$('#pme').value.trim(),id=$('#pmi').value.trim();
+  if(!em||!id){toast(t_('pmNeed'));return}
+  try{const {error}=await sb.rpc('admin_record_purchase',{p_email:em,p_external:id,p_cents:0,p_currency:'EUR'});if(error)throw error;toast(t_('pmOk'));loadAdmin();pendingBadge()}
+  catch(err){toast(String(err.message||err))}
+};
+$('#pmf').onclick=async()=>{
+  const id=$('#pmi').value.trim();if(!id){toast(t_('pmNeed'));return}
+  try{const {error}=await sb.rpc('admin_refund_purchase',{p_external:id});if(error)throw error;toast(t_('pmRf'));loadAdmin();pendingBadge()}
+  catch(err){toast(String(err.message||err))}
+};
+async function pendingBadge(){
+  if(!isAdmin()||!sb)return;
+  try{const {data}=await sb.rpc('admin_pending_rewards');const n=+data||0;$('#adn').hidden=!n;$('#adn').textContent=n;$('#ubtn').textContent=n?'👤•':'👤'}catch(e){}
+}
+/* attribuzione referral: il codice del link resta salvato fino al primo accesso */
+(function(){
+  try{const r=new URLSearchParams(location.search).get('ref');if(r&&/^[A-Za-z0-9]{4,16}$/.test(r)){localStorage.setItem('dm.ref',r.toUpperCase());const u=new URL(location.href);u.searchParams.delete('ref');history.replaceState(null,'',u.pathname+u.search)}}catch(e){}
+})();
+async function claimRef(){
+  try{const c=localStorage.getItem('dm.ref');if(!c||!sb)return;
+    const {data,error}=await sb.rpc('claim_referral',{p_code:c});
+    if(!error)localStorage.removeItem('dm.ref');
+  }catch(e){}
+}
 
 /* ---------- calendario del telefono (.ics) ---------- */
 function icsFold(l){const o=[];while(l.length>72){o.push(l.slice(0,72));l=' '+l.slice(72)}o.push(l);return o.join('\r\n')}
@@ -865,8 +1140,8 @@ async function start(u){
   user=u;synced=false;loadLocal();
   document.body.classList.remove('guest');$('#auth').classList.remove('on');
   render();items.forEach(hydrate);
-  await sync();ensurePush();check();
-  if(pendingNote)openNote(pendingNote);
+  await sync();ensurePush();check();claimRef();pendingBadge();
+  if(pendingNote)openNote(pendingNote,true);
   if(!started){
     started=true;
     setInterval(check,15000);
@@ -894,7 +1169,7 @@ if(sb){
 $('#lang').onclick=()=>{
   LANG=LANG==='en'?'it':'en';
   try{localStorage.setItem('dm.lang',LANG)}catch(e){}
-  applyLang();setSync(syncKey);bellState();render();if(nvId)renderNote();
+  applyLang();setSync(syncKey);bellState();render();if(nvId)renderNote();if($('#rf').classList.contains('on')&&RF)renderRef();
 };
 applyLang();
 applySky();drawStars();setInterval(()=>applySky(),60000);

@@ -27,7 +27,7 @@ self.addEventListener('push',e=>{
   e.waitUntil((async()=>{
     await self.registration.showNotification(d.title||'DayMarck',{
       body:d.body||'',
-      tag:d.id||'daymarck',
+      tag:d.aid||d.id||'daymarck',
       icon:'icon-192.png',
       badge:'icon-192.png',
       data:{id:d.id},
