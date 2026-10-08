@@ -114,6 +114,8 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
 .lg{display:inline-flex;border:1px solid rgba(255,255,255,.25);background:var(--glass2);border-radius:999px;padding:2px;cursor:pointer;color:#fff;font:700 12px/1 system-ui;align-items:center}
 .lg span{padding:7px 9px;border-radius:999px;opacity:.65}
 html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;color:#0B1230;opacity:1}
+select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink)}
+select option{color:#0B1230}
 .rl{display:flex;gap:8px;margin:0 0 8px}.rl input{flex:1}.rl .sm{flex:none}
 .pbar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:10px 0 6px}
 .pbar i{height:14px;border-radius:4px;background:var(--field);border:1px solid var(--line)}
@@ -222,6 +224,7 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
     <h3 data-i="aNew">Nuovo account</h3>
     <p class="sub" data-i="aHint" style="margin:0 0 4px;color:#fff;text-shadow:none">Crea l’accesso per un’altra persona.</p>
     <label for="nem" data-i="aEm">Email della persona</label><input type="email" id="nem" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email">
+    <label for="nrf" data-i="nrfL">Referral program</label><select id="nrf"><option value="1" data-i="nrfOn">With referral</option><option value="0" data-i="nrfOff">Without referral</option></select>
     <label for="npw" data-i="aPw">Password</label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
     <div class="row" style="margin-top:10px">
       <button type="button" class="btn pri" id="mku" data-i="aMku">Create now</button>
@@ -244,14 +247,14 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
   <h2 id="rft" data-i="rfT">Invite friends and earn</h2>
   <p class="sub" data-i="rfH" style="color:#fff;text-shadow:none;margin:0 0 8px"></p>
   <div id="rfb2"></div>
-  <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn" id="rfx" data-i="close">Close</button></div>
+  <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#rf" data-i="back">← Back</button><button type="button" class="btn" id="rfx" data-i="close">Close</button></div>
 </div></div>
 
 <div class="ov" id="usl"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ult">
   <h2 id="ult" data-i="usb">Users</h2>
   <p class="am" id="ulm" role="status" style="color:#fff"></p>
   <div id="ulb"></div>
-  <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn" id="ulx" data-i="close">Close</button></div>
+  <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#usl" data-i="back">← Back</button><button type="button" class="btn" id="ulx" data-i="close">Close</button></div>
 </div></div>
 
 <div class="ov" id="adr"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="art">
@@ -265,7 +268,7 @@ html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;colo
   <label for="pme" data-i="aEm">Email</label><input type="email" id="pme" autocapitalize="none" autocomplete="off">
   <label for="pmi" data-i="pmId">Purchase reference</label><input type="text" id="pmi" autocomplete="off">
   <div class="row" style="margin-top:10px"><button type="button" class="btn pri" id="pmr" data-i="pmR">Record purchase</button><button type="button" class="btn out" id="pmf" data-i="pmF">Refund purchase</button></div>
-  <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn" id="adx" data-i="close">Close</button></div>
+  <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#adr" data-i="back">← Back</button><button type="button" class="btn" id="adx" data-i="close">Close</button></div>
 </div></div>
 
 <div class="ov" id="auth"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="at">
@@ -316,7 +319,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
-radd:'+ Add reminder',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+radd:'+ Add reminder',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
@@ -349,7 +352,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
-radd:'+ Aggiungi promemoria',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+radd:'+ Aggiungi promemoria',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
@@ -921,7 +924,7 @@ async function callFn(name,body){
   if(data&&data.error)throw new Error(data.error);
   return data;
 }
-function resetNew(){$('#ncw').hidden=true;$('#nem').value='';$('#ncd').value='';$('#npw').value='';amk('')}
+function resetNew(){$('#ncw').hidden=true;$('#nrf').value='1';$('#nem').value='';$('#ncd').value='';$('#npw').value='';amk('')}
 const okEmail=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 $('#nsd').onclick=async()=>{
   if(!isAdmin()||!sb)return;
@@ -939,7 +942,7 @@ async function mkUser(body,btn){
   if(!isAdmin()||!sb)return;
   if(!okEmail(email)||password.length<8){amk(t_('aBad'));return}
   amk(t_('aWork'));btn.disabled=true;
-  try{await callFn('admin-create-user',{...body,email,password});resetNew();amk(t_('aOk',{e:email}))}
+  try{await callFn('admin-create-user',{...body,email,password,referral:$('#nrf').value==='1'});resetNew();amk(t_('aOk',{e:email}))}
   catch(e){amk(String(e&&e.message||e))}
   finally{btn.disabled=false}
 }
@@ -959,8 +962,8 @@ async function loadUsers(){
     const d=await callFn('admin-users',{action:'list'});
     $('#ulm').textContent='';
     $('#ulb').innerHTML=d.users.sort((x,y)=>(x.email||'')<(y.email||'')?-1:1).map(u=>`<div class="box" data-id="${esc(u.id)}" data-em="${esc(u.email)}"><b>${esc(u.email)}</b>${u.id===user.id?' <span class="pill">'+t_('usSelf')+'</span>':''}
-<span class="pill ${u.verified?'ok':'wa'}">${t_(u.verified?'usVer':'usUn')}</span>
-<div class="row" style="margin-top:8px">${u.id===user.id?'':`<button type="button" class="sm" data-u="em">${t_('usEdit')}</button>`}<button type="button" class="sm" data-u="pw">${t_('usPw')}</button></div></div>`).join('');
+<span class="pill ${u.verified?'ok':'wa'}">${t_(u.verified?'usVer':'usUn')}</span> <span class="pill">${t_(u.referral?'usRefOn':'usRefOff')}</span>
+<div class="row" style="margin-top:8px">${u.id===user.id?'':`<button type="button" class="sm" data-u="em">${t_('usEdit')}</button>`}<button type="button" class="sm" data-u="pw">${t_('usPw')}</button><button type="button" class="sm" data-u="rf" data-v="${u.referral?0:1}">${t_(u.referral?'usRefF':'usRefT')}</button></div></div>`).join('');
   }catch(e){$('#ulm').textContent=String(e.message||e)}
 }
 $('#ulb').onclick=async e=>{
@@ -970,6 +973,8 @@ $('#ulb').onclick=async e=>{
     if(b.dataset.u==='em'){
       const v=prompt(t_('usNewE'),box.dataset.em);if(!v)return;
       await callFn('admin-users',{action:'update_email',id,email:v.trim()});
+    }else if(b.dataset.u==='rf'){
+      await callFn('admin-users',{action:'set_referral',id,referral:b.dataset.v==='1'});
     }else{
       const v=prompt(t_('usNewP'));if(!v)return;
       await callFn('admin-users',{action:'set_password',id,password:v});
@@ -977,8 +982,9 @@ $('#ulb').onclick=async e=>{
     toast(t_('usOk'));loadUsers();
   }catch(err){toast(String(err.message||err))}
 };
-$('#usb').onclick=()=>{$('#usl').classList.add('on');loadUsers()};
+$('#usb').onclick=()=>{shut('#usr');$('#usl').classList.add('on');loadUsers()};
 $('#ulx').onclick=()=>shut('#usl');
+document.addEventListener('click',e=>{const b=e.target.closest('[data-bk]');if(!b)return;shut(b.dataset.bk);openUsr()});
 $('#usl').onclick=e=>{if(e.target===$('#usl'))shut('#usl')};
 
 /* ---------- invita amici e premi ---------- */
@@ -1072,6 +1078,9 @@ $('#pmf').onclick=async()=>{
   try{const {error}=await sb.rpc('admin_refund_purchase',{p_external:id});if(error)throw error;toast(t_('pmRf'));loadAdmin();pendingBadge()}
   catch(err){toast(String(err.message||err))}
 };
+async function flags(){
+  try{const {data}=await sb.rpc('my_flags');$('#rfb').hidden=!!(data&&data.referral===false)}catch(e){}
+}
 async function pendingBadge(){
   if(!isAdmin()||!sb)return;
   try{const {data}=await sb.rpc('admin_pending_rewards');const n=+data||0;$('#adn').hidden=!n;$('#adn').textContent=n;$('#ubtn').textContent=n?'👤•':'👤'}catch(e){}
@@ -1122,7 +1131,7 @@ async function start(u){
   user=u;synced=false;loadLocal();
   document.body.classList.remove('guest');$('#auth').classList.remove('on');
   render();items.forEach(hydrate);
-  await sync();ensurePush();check();claimRef();pendingBadge();
+  await sync();ensurePush();check();claimRef();pendingBadge();flags();
   if(pendingNote)openNote(pendingNote,true);
   if(!started){
     started=true;
