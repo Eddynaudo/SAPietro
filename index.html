@@ -118,6 +118,11 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
 html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;color:#0B1230;opacity:1}
 select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink)}
 select option{color:#0B1230}
+.lock{position:fixed;inset:0;z-index:40;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%)}
+.lock.on{display:flex}.lock img{width:112px;height:112px;border-radius:26px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.lock h2{margin:0;font-size:28px;color:var(--skyInk);text-shadow:var(--skyShadow)}
+.lock p{margin:0;max-width:320px;color:var(--skyInk);text-shadow:var(--skyShadow)}
+.lk2{background:none;border:0;color:var(--skyInk);text-decoration:underline;cursor:pointer;padding:8px}
 .rl{display:flex;gap:8px;margin:0 0 8px}.rl input{flex:1}.rl .sm{flex:none}
 .pbar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:10px 0 6px}
 .pbar i{height:14px;border-radius:4px;background:var(--field);border:1px solid var(--line)}
@@ -214,6 +219,7 @@ select option{color:#0B1230}
   <div class="ur"><span data-i="uSt">Stato</span><b id="sy" role="status"></b></div>
   <div class="stack">
     <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
+    <button type="button" class="btn" id="bioT" hidden></button>
     <button type="button" class="btn" id="rfb"><span data-i="rfb">Invite</span></button>
   </div>
   <div id="adm" hidden>
@@ -243,6 +249,25 @@ select option{color:#0B1230}
     <button type="button" class="btn out" id="out" data-i="out">Esci</button>
     <button type="button" class="btn" id="ucl" data-i="close">Chiudi</button>
   </div>
+</div></div>
+
+<div class="lock" id="lock" role="dialog" aria-modal="true" aria-labelledby="lkt">
+  <img src="icon-192.png" alt="">
+  <h2 id="lkt">DayMarck</h2>
+  <p data-i="lkH">Unlock with Face ID or fingerprint.</p>
+  <button type="button" class="btn pri" id="unl" data-i="lkB" style="padding:13px 22px">Unlock</button>
+  <p class="am" id="lkm" role="status"></p>
+  <button type="button" class="lk2" id="unp" data-i="lkP">Use password instead</button>
+</div>
+
+<div class="ov" id="bio"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="bit" style="max-width:440px">
+  <h2 id="bit" data-i="bioT">Faster sign-in</h2>
+  <p class="sub" data-i="bioH" style="color:#fff;text-shadow:none"></p>
+  <div class="stack">
+    <button type="button" class="btn pri" id="bioY" data-i="bioY">Enable</button>
+    <button type="button" class="btn" id="bioN" data-i="bioN">Not now</button>
+  </div>
+  <p class="am" id="bim" role="status" style="color:#fff"></p>
 </div></div>
 
 <div class="ov" id="rf"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rft">
@@ -321,7 +346,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
-radd:'+ Add reminder',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+radd:'+ Add reminder',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, each arrives as a notification</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
@@ -354,7 +379,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
-radd:'+ Aggiungi promemoria',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+radd:'+ Aggiungi promemoria',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, ognuno arriva come notifica</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
@@ -1100,6 +1125,60 @@ async function claimRef(){
   }catch(e){}
 }
 
+/* ---------- Face ID / impronta: blocco locale dell'app (WebAuthn, solo sul dispositivo) ---------- */
+let bioOK=false,fresh=false,unlocked=false,hiddenAt=0;
+const bk=()=>user?'dm.bio.'+user.id:null;
+const bioGet=()=>{try{return localStorage.getItem(bk())}catch(e){return null}};
+const toB=u8=>btoa(String.fromCharCode(...new Uint8Array(u8))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+async function bioProbe(){
+  try{bioOK=!!(window.PublicKeyCredential&&navigator.credentials&&await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())}catch(e){bioOK=false}
+  bioBtn();
+}
+function bioBtn(){const b=$('#bioT');b.hidden=!bioOK;b.textContent=t_(bioGet()?'bioOn':'bioOff')}
+async function bioEnable(){
+  const cred=await navigator.credentials.create({publicKey:{challenge:rnd(32),rp:{name:'DayMarck',id:location.hostname},
+    user:{id:new TextEncoder().encode(user.id),name:user.email,displayName:user.email},
+    pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+    authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'discouraged'},timeout:60000}});
+  if(!cred)throw new Error('none');
+  localStorage.setItem(bk(),toB(cred.rawId));unlocked=true;bioBtn();
+}
+async function bioVerify(){
+  const id=bioGet();if(!id)return true;
+  const raw=Uint8Array.from(atob(id.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+  const a=await navigator.credentials.get({publicKey:{challenge:rnd(32),rpId:location.hostname,allowCredentials:[{type:'public-key',id:raw,transports:['internal']}],userVerification:'required',timeout:60000}});
+  return !!a;
+}
+function showLock(){$('#lock').classList.add('on');$('#lkm').textContent='';tryUnlock()}
+async function tryUnlock(){
+  try{if(await bioVerify()){unlocked=true;$('#lock').classList.remove('on')}}
+  catch(e){$('#lkm').textContent=t_('bioErr')}
+}
+$('#unl').onclick=tryUnlock;
+$('#unp').onclick=async()=>{try{localStorage.removeItem(bk())}catch(e){}$('#lock').classList.remove('on');unlocked=true;try{await sb.auth.signOut()}catch(e){}};
+function bioGate(){ // all'apertura: se Face ID è attivo, l'app resta coperta finché non si sblocca
+  if(bioGet()&&!unlocked&&!fresh){$('#lock').classList.add('on');showLock()}
+}
+async function offerBio(){
+  await bioProbe();
+  let no=false;try{no=!!localStorage.getItem('dm.bio.no.'+user.id)}catch(e){}
+  if(bioOK&&!bioGet()&&!no)$('#bio').classList.add('on');
+}
+$('#bioY').onclick=async()=>{
+  try{await bioEnable();$('#bio').classList.remove('on');toast(t_('bioOk'))}
+  catch(e){$('#bim').textContent=t_('bioErr')}
+};
+$('#bioN').onclick=()=>{try{localStorage.setItem('dm.bio.no.'+user.id,'1')}catch(e){}$('#bio').classList.remove('on')};
+$('#bioT').onclick=async()=>{
+  if(bioGet()){try{localStorage.removeItem(bk())}catch(e){}bioBtn();return}
+  try{await bioEnable();toast(t_('bioOk'))}catch(e){toast(t_('bioErr'))}
+};
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){hiddenAt=Date.now();return}
+  if(user&&bioGet()&&hiddenAt&&Date.now()-hiddenAt>60000){unlocked=false;showLock()}
+});
+
 /* ---------- accesso ---------- */
 const amsg=m=>{$('#am').textContent=m};
 function showAuth(m){document.body.classList.add('guest');$('#auth').classList.add('on');amsg(m||'')}
@@ -1116,7 +1195,7 @@ async function doLogin(){
   const email=$('#em').value.trim(),password=$('#pw').value;
   if(!email||!password){amsg(t_('lgNeed'));return}
   amsg(t_('lgWait'));
-  try{const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;amsg('')}
+  try{const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;fresh=true;amsg('')}
   catch(e){amsg(errIt(e))}
 }
 $('#login').onclick=doLogin;
@@ -1126,16 +1205,17 @@ $('#out').onclick=async()=>{
   await sync();
   if(items.some(t=>t.dirty)&&!confirm(t_('leave')))return;
   try{const s=await getSub();if(s){await sb.from('push_subscriptions').delete().eq('endpoint',s.endpoint);await s.unsubscribe()}}catch(e){}
-  try{localStorage.removeItem(KEYU())}catch(e){}
+  try{localStorage.removeItem(KEYU());localStorage.removeItem(bk())}catch(e){}
   $('#usr').classList.remove('on');
   await sb.auth.signOut();
 };
 
 async function start(u){
-  user=u;synced=false;loadLocal();
+  user=u;synced=false;loadLocal();bioGate();bioProbe();
   document.body.classList.remove('guest');$('#auth').classList.remove('on');
   render();items.forEach(hydrate);
   await sync();ensurePush();check();claimRef();pendingBadge();flags();
+  if(fresh){fresh=false;unlocked=true;offerBio()}
   if(pendingNote)openNote(pendingNote,true);
   if(!started){
     started=true;
@@ -1150,7 +1230,7 @@ if(sb){
     const u=s&&s.user;
     if(u&&(!user||user.id!==u.id))setTimeout(()=>start(u),0);
     else if(!u&&(ev==='SIGNED_OUT'||ev==='INITIAL_SESSION')){
-      if(ev==='SIGNED_OUT'){user=null;items=[];tomb=[];synced=false;closeNote();render();setSync('')}
+      if(ev==='SIGNED_OUT'){user=null;unlocked=false;items=[];tomb=[];synced=false;closeNote();render();setSync('')}
       showAuth();
     }
   });
