@@ -787,7 +787,7 @@ function drawRl(list){
 const rlVals=()=>[...document.querySelectorAll('#rl input')].map(i=>({id:i.dataset.id||null,at:i.value}));
 $('#radd').onclick=()=>{const v=rlVals();if(v.length>=5){toast(t_('maxRem'));return}v.push({id:null,at:''});drawRl(v)};
 $('#rl').onclick=e=>{const b=e.target.closest('[data-rm]');if(!b)return;const rows=[...document.querySelectorAll('#rl .rl')],i=rows.indexOf(b.parentElement),v=rlVals();v.splice(i,1);drawRl(v.length?v:[{id:null,at:''}])};
-$('#add').onclick=()=>{openF();if(view==='cal'&&sel)drawRl([{id:null,at:sel+'T09:00'}])};
+$('#add').onclick=()=>{openF();const day=(view==='cal'&&sel)?sel:todayKey(),n=new Date();drawRl([{id:null,at:day+'T'+p2(n.getHours())+':'+p2(n.getMinutes())}])};
 $('#cancel').onclick=closeF;
 $('#ok').onclick=()=>{
   const title=$('#title').value.trim();
