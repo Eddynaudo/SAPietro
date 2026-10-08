@@ -1,4 +1,4 @@
-const V='promemoria-v2',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const V='promemoria-v3',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
@@ -16,7 +16,7 @@ self.addEventListener('fetch',e=>{
     fetch(r).then(res=>{
       if(res.ok){const c=res.clone();caches.open(V).then(ch=>ch.put(r,c))}
       return res;
-    }).catch(()=>caches.match(r).then(x=>x||caches.match('./index.html')))
+    }).catch(()=>caches.match(r,{ignoreSearch:true}).then(x=>x||caches.match('./index.html')))
   );
 });
 
@@ -39,7 +39,17 @@ self.addEventListener('push',e=>{
   })());
 });
 
+// Toccando la notifica si apre la nota a schermo intero.
 self.addEventListener('notificationclick',e=>{
   e.notification.close();
-  e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>l.length?l[0].focus():clients.openWindow('./index.html')));
+  const id=e.notification.data&&e.notification.data.id;
+  const url='./index.html'+(id?'?note='+encodeURIComponent(id):'');
+  e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{
+    if(l.length){
+      const c=l[0];
+      if(id)c.postMessage({type:'open-note',id});
+      return c.focus();
+    }
+    return clients.openWindow(url);
+  }));
 });
