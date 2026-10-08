@@ -9,7 +9,6 @@
 <meta name="apple-mobile-web-app-title" content="Promemoria">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#E8EDF1;--card:#fff;--ink:#14213D;--mute:#5B6780;--line:#CFD8E2;--acc:#2F5BFF;--accInk:#fff;--warn:#E8890C;--ok:#3F7D58;--bad:#C93A3A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -38,7 +37,9 @@ h1{font-size:clamp(30px,8vw,44px);line-height:1.02;font-weight:800;margin:6px 0 
 .late .due{color:var(--warn);font-weight:600}
 .bd{background:var(--warn);color:#1b1200;border-radius:6px;padding:0 6px;margin-left:6px;font-size:12px}
 .th{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.th img{width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer}
+.th img,.ph{width:64px;height:64px;object-fit:cover;border-radius:8px}
+.th img{cursor:pointer}
+.ph{display:inline-block;background:var(--line)}
 audio{width:100%;margin-top:8px;height:36px}
 .acts{display:flex;flex-direction:column;gap:6px}
 .sm{border:1px solid var(--line);background:var(--card);border-radius:10px;min-width:40px;height:38px;cursor:pointer;padding:0 10px}
@@ -47,16 +48,19 @@ audio{width:100%;margin-top:8px;height:36px}
 .fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--acc);color:var(--accInk);border:0;border-radius:999px;padding:14px 22px;font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 6px 20px rgba(20,33,61,.3)}
 .ov{position:fixed;inset:0;background:rgba(10,15,30,.55);display:none;align-items:flex-end;justify-content:center;z-index:5}
 .ov.on{display:flex}
+#auth{z-index:20;background:var(--bg);align-items:center}
+#auth .sheet{border-radius:20px;max-width:420px;margin:0 16px}
 .sheet{background:var(--card);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
 .sheet h2{margin:0 0 4px;font-size:22px}
 label{display:block;font-weight:600;margin:14px 0 4px}
 label small{font-weight:400;color:var(--mute)}
-input[type=text],textarea,input[type=datetime-local]{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+input[type=text],input[type=email],input[type=password],textarea,input[type=datetime-local]{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
 textarea{min-height:70px;resize:vertical}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 14px;cursor:pointer}
 .btn.rec{background:var(--bad);color:#fff;border-color:var(--bad)}
 .pri{background:var(--acc);color:var(--accInk);border-color:var(--acc);font-weight:800}
+.am{min-height:1.4em;margin:10px 0 0;color:var(--mute)}
 #att{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .at{position:relative}
 .at img{width:76px;height:76px;object-fit:cover;border-radius:10px;display:block}
@@ -67,7 +71,7 @@ textarea{min-height:70px;resize:vertical}
 .al .sm{background:rgba(255,255,255,.7);border-color:transparent;color:#1b1200}
 @keyframes pl{50%{transform:scale(1.025)}}
 @media (prefers-reduced-motion:reduce){.al{animation:none}}
-#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;display:none;z-index:10;max-width:90%}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;display:none;z-index:30;max-width:90%}
 #toast.on{display:block}
 #lb img{max-width:94%;max-height:90%;border-radius:10px;margin:auto}
 #lb{align-items:center}
@@ -84,6 +88,8 @@ textarea{min-height:70px;resize:vertical}
 .dy i.dn{background:var(--ok)}
 .dy.sel i{background:var(--accInk)}
 .dh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 0;color:var(--mute)}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:22px 0 0;font-size:14px;color:var(--mute)}
+.foot .sm{height:32px}
 </style></head>
 <body>
 <div class="app">
@@ -91,7 +97,7 @@ textarea{min-height:70px;resize:vertical}
     <div><h1 id="day"></h1><p class="sub" id="cnt"></p></div>
     <div class="hb">
       <button class="ib" id="exp" aria-label="Aggiungi al calendario del telefono">📅</button>
-      <button class="ib" id="bell" aria-label="Attiva le notifiche">🔔</button>
+      <button class="ib" id="bell" aria-label="Attiva le notifiche">🔕</button>
     </div>
   </div>
   <div class="tabs" id="views" role="group" aria-label="Vista">
@@ -105,6 +111,7 @@ textarea{min-height:70px;resize:vertical}
     <button data-f="done" aria-pressed="false">Fatti</button>
   </div>
   <div id="list"></div>
+  <div class="foot"><span id="sy" role="status"></span><span><span id="who"></span> <button class="sm" id="out">Esci</button></span></div>
 </div>
 <button class="fab" id="add">+ Nuovo</button>
 
@@ -112,7 +119,7 @@ textarea{min-height:70px;resize:vertical}
   <h2 id="ft">Nuovo promemoria</h2>
   <label for="title">Titolo</label><input type="text" id="title" maxlength="120" placeholder="Cosa devi fare?">
   <label for="note">Note</label><textarea id="note" placeholder="Dettagli (facoltativo)"></textarea>
-  <label for="due">Avviso <small>suona all'ora indicata, se la pagina resta aperta</small></label>
+  <label for="due">Avviso <small>arriva come notifica all'ora indicata</small></label>
   <input type="datetime-local" id="due">
   <label>Allegati</label>
   <div class="row">
@@ -131,22 +138,139 @@ textarea{min-height:70px;resize:vertical}
   <input type="file" id="aud" accept="audio/*" hidden>
 </div></div>
 
+<div class="ov" id="auth"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="at">
+  <h2 id="at">Accedi a Promemoria</h2>
+  <p class="sub" style="margin:0">I promemoria si salvano nel tuo account e li ritrovi su ogni dispositivo.</p>
+  <label for="em">Email</label><input type="email" id="em" autocomplete="email" inputmode="email">
+  <label for="pw">Password <small>almeno 8 caratteri</small></label><input type="password" id="pw" autocomplete="current-password">
+  <p class="am" id="am" role="status"></p>
+  <div class="row" style="margin-top:12px">
+    <button type="button" class="btn pri" id="login">Accedi</button>
+    <button type="button" class="btn" id="signup">Crea account</button>
+  </div>
+</div></div>
+
 <div class="ov" id="lb"><img id="lbimg" alt="Allegato ingrandito"></div>
 <div class="alerts" id="alerts" aria-live="assertive"></div>
 <div id="toast" role="status"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <script>
-const $=s=>document.querySelector(s),KEY='promemoria.v1';
-let items=[],filter='all',view='list',cur=new Date(),sel=null,draft=null,mr=null,rt=null,actx=null;
-try{items=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){toast('Memoria piena: togli qualche foto o audio.')}};
+const SB_URL='https://jhupjstzpwmpvkntxosd.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodXBqc3R6cHdtcHZrbnR4b3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NjM4MjYsImV4cCI6MjEwNzAzOTgyNn0.YWMl0Iqmv9dxbDm_DhwcJmLLq-a6weJcHq3VYwR1C2k';
+const VAPID='BGSJQulmwrmiqbFuM_cr9M9b7k9V1EXmwc7OBip1Zv9E_q_gvWmGLhGulCVj_ZFnyju1KRu39V5gPOqbe9bkkcM';
+
+const $=s=>document.querySelector(s);
+const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SB_URL,SB_KEY):null;
+let user=null,items=[],tomb=[],filter='all',view='list',cur=new Date(),sel=null,draft=null,mr=null,rt=null,actx=null;
+let syncing=false,again=false,synced=false,started=false;
+const KEYU=()=>'promemoria.v2.'+user.id;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const p2=n=>String(n).padStart(2,'0');
 const loc=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'T'+p2(d.getHours())+':'+p2(d.getMinutes());
 const fmt=s=>new Date(s).toLocaleString('it-IT',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),3500)}
+const uuid=()=>crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),4000)}
+const setSync=m=>{$('#sy').textContent=m};
 
+/* ---------- salvataggio locale ---------- */
+const strip=t=>({...t,imgs:t.imgs.map(a=>a.path?{path:a.path}:a),audio:t.audio?(t.audio.path?{path:t.audio.path}:t.audio):null});
+function persist(){
+  if(!user)return;
+  try{localStorage.setItem(KEYU(),JSON.stringify({items:items.map(strip),tomb}))}
+  catch(e){toast('Memoria del telefono piena: sincronizza e togli qualche allegato.')}
+}
+function loadLocal(){
+  try{const d=JSON.parse(localStorage.getItem(KEYU())||'{}');items=(d.items||[]).map(t=>({imgs:[],audio:null,srv:[],...t}));tomb=d.tomb||[]}
+  catch(e){items=[];tomb=[]}
+}
+const sig=()=>JSON.stringify(items.map(strip));
+function commit(){persist();render();sync()}
+
+/* ---------- allegati ---------- */
+const blobs=new Map(),loading=new Set();
+async function hydrate(t){
+  if(!sb)return;
+  for(const a of [...t.imgs,...(t.audio?[t.audio]:[])]){
+    if(!a.path||a.url)continue;
+    if(blobs.has(a.path)){a.url=blobs.get(a.path);continue}
+    if(loading.has(a.path))continue;
+    loading.add(a.path);
+    try{
+      const {data,error}=await sb.storage.from('attachments').download(a.path);
+      if(error)throw error;
+      const u=URL.createObjectURL(data);blobs.set(a.path,u);a.url=u;render();
+    }catch(e){/* offline: riprova alla prossima sincronizzazione */}
+    finally{loading.delete(a.path)}
+  }
+}
+async function upload(t,a){
+  const blob=await (await fetch(a.url)).blob(),ty=blob.type||'';
+  const ext=ty.includes('webm')?'webm':ty.includes('mp4')||ty.includes('aac')?'m4a':ty.includes('mpeg')?'mp3':ty.includes('ogg')?'ogg':ty.includes('jpeg')?'jpg':'bin';
+  const path=user.id+'/'+t.id+'/'+uid()+'.'+ext;
+  const {error}=await sb.storage.from('attachments').upload(path,blob,{contentType:ty||'application/octet-stream',upsert:false});
+  if(error)throw error;
+  return path;
+}
+
+/* ---------- sincronizzazione ---------- */
+function fromRow(r,local){
+  const old=new Map((local?[...local.imgs,...(local.audio?[local.audio]:[])]:[]).filter(a=>a.path).map(a=>[a.path,a.url]));
+  const mk=p=>({path:p,url:old.get(p)||blobs.get(p)||''});
+  const ip=r.img_paths||[];
+  return{id:r.id,title:r.title,note:r.note||'',due:r.due?loc(new Date(r.due)):'',done:r.done,alerted:r.alerted,
+    imgs:ip.map(mk),audio:r.audio_path?mk(r.audio_path):null,dirty:false,srv:[...ip,...(r.audio_path?[r.audio_path]:[])]};
+}
+const rowOf=t=>({id:t.id,title:t.title,note:t.note||'',due:t.due?new Date(t.due).toISOString():null,done:!!t.done,alerted:!!t.alerted,
+  img_paths:t.imgs.map(a=>a.path).filter(Boolean),audio_path:t.audio&&t.audio.path?t.audio.path:null});
+async function sync(){
+  if(!sb||!user)return;
+  if(syncing){again=true;return}
+  syncing=true;setSync('Sincronizzo…');
+  try{
+    for(const g of [...tomb]){
+      const {error}=await sb.from('reminders').delete().eq('id',g.id);
+      if(error)throw error;
+      if(g.paths&&g.paths.length)await sb.storage.from('attachments').remove(g.paths);
+      tomb=tomb.filter(x=>x.id!==g.id);persist();
+    }
+    for(const t of items.filter(x=>x.dirty)){
+      for(const a of [...t.imgs,...(t.audio?[t.audio]:[])]){if(!a.path&&a.url)a.path=await upload(t,a)}
+      const row=rowOf(t),sent=JSON.stringify(row);
+      const {error}=await sb.from('reminders').upsert(row,{onConflict:'id'});
+      if(error)throw error;
+      const keep=new Set([...row.img_paths,...(row.audio_path?[row.audio_path]:[])]);
+      const gone=(t.srv||[]).filter(p=>!keep.has(p));
+      if(gone.length)await sb.storage.from('attachments').remove(gone);
+      t.srv=[...keep];
+      t.dirty=JSON.stringify(rowOf(t))!==sent;   // se è cambiato durante l'invio, resta da sincronizzare
+      persist();
+    }
+    const {data,error}=await sb.from('reminders').select('*');
+    if(error)throw error;
+    const before=sig(),ids=new Set(data.map(r=>r.id));
+    for(const r of data){
+      const local=items.find(x=>x.id===r.id);
+      if(local&&local.dirty)continue;
+      const n=fromRow(r,local);
+      if(local)Object.assign(local,n);else items.push(n);
+    }
+    items=items.filter(t=>t.dirty||ids.has(t.id));
+    synced=true;persist();
+    if(sig()!==before)render();
+    items.forEach(hydrate);
+    setSync('Sincronizzato');
+  }catch(e){
+    console.warn('sync',e);
+    setSync(navigator.onLine?'Sincronizzazione non riuscita, riprovo':'Offline: salvo sul telefono');
+  }finally{
+    syncing=false;
+    if(again){again=false;sync()}
+  }
+}
+
+/* ---------- elenco ---------- */
 function render(){
   const now=Date.now();
   const v=items.filter(t=>filter==='all'||(filter==='todo'?!t.done:t.done))
@@ -160,8 +284,8 @@ function render(){
 <input type="checkbox" class="chk" data-a="chk" aria-label="Segna come fatto" ${t.done?'checked':''}>
 <div><div class="t">${esc(t.title)}</div>${t.note?`<div class="n">${esc(t.note)}</div>`:''}
 ${t.due?`<div class="due">⏰ ${fmt(t.due)}${late?'<span class="bd">scaduto</span>':''}</div>`:''}
-${t.imgs&&t.imgs.length?`<div class="th">${t.imgs.map((s,i)=>`<img src="${s}" alt="Allegato ${i+1}" data-a="img" data-i="${i}">`).join('')}</div>`:''}
-${t.audio?`<audio controls src="${t.audio}"></audio>`:''}</div>
+${t.imgs.length?`<div class="th">${t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="Allegato ${i+1}" data-a="img" data-i="${i}">`:'<span class="ph" aria-label="Caricamento allegato"></span>').join('')}</div>`:''}
+${t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:'<div class="n">Audio in caricamento…</div>'):''}</div>
 <div class="acts"><button class="sm" data-a="edit" aria-label="Modifica">✏️</button><button class="sm" data-a="del" aria-label="Elimina">🗑️</button></div></article>`}).join('')
   :`<p class="empty">${sel?'Nessun promemoria in questo giorno. Tocca “Nuovo” per aggiungerne uno.':filter==='done'?'Ancora nulla di completato.':'Nessun promemoria. Tocca “Nuovo” per aggiungerne uno.'}</p>`;
   renderCal();
@@ -199,19 +323,23 @@ $('#list').onclick=e=>{
   const b=e.target.closest('[data-a]');if(!b)return;
   const t=items.find(x=>x.id===b.closest('.card').dataset.id);if(!t)return;
   const a=b.dataset.a;
-  if(a==='chk'){t.done=b.checked;save();render()}
+  if(a==='chk'){t.done=b.checked;t.dirty=true;commit()}
   else if(a==='edit')openF(t);
-  else if(a==='img'){$('#lbimg').src=t.imgs[+b.dataset.i];$('#lb').classList.add('on')}
+  else if(a==='img'){const im=t.imgs[+b.dataset.i];if(im&&im.url){$('#lbimg').src=im.url;$('#lb').classList.add('on')}}
   else if(a==='del'){
-    if(b.dataset.arm){items=items.filter(x=>x!==t);save();render();toast('Promemoria eliminato.')}
-    else{b.dataset.arm=1;b.textContent='Elimina?';b.classList.add('arm');setTimeout(()=>{if(b.isConnected&&b.dataset.arm){b.dataset.arm='';b.textContent='🗑️';b.classList.remove('arm')}},3000)}
+    if(b.dataset.arm){
+      items=items.filter(x=>x!==t);
+      tomb.push({id:t.id,paths:[...(t.srv||[])]});
+      commit();toast('Promemoria eliminato.');
+    }else{b.dataset.arm=1;b.textContent='Elimina?';b.classList.add('arm');setTimeout(()=>{if(b.isConnected&&b.dataset.arm){b.dataset.arm='';b.textContent='🗑️';b.classList.remove('arm')}},3000)}
   }
 };
 $('#lb').onclick=()=>$('#lb').classList.remove('on');
 document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 
+/* ---------- modulo ---------- */
 function openF(t){
-  draft=t?{...t,imgs:[...(t.imgs||[])]}:{id:null,title:'',note:'',due:'',imgs:[],audio:null};
+  draft=t?{...t,imgs:t.imgs.map(a=>({...a})),audio:t.audio?{...t.audio}:null}:{id:null,title:'',note:'',due:'',imgs:[],audio:null};
   $('#ft').textContent=t?'Modifica promemoria':'Nuovo promemoria';
   $('#title').value=draft.title;$('#note').value=draft.note||'';$('#due').value=draft.due||'';
   drawAtt();$('#ov').classList.add('on');setTimeout(()=>$('#title').focus(),50);
@@ -223,16 +351,16 @@ $('#ok').onclick=()=>{
   const title=$('#title').value.trim();
   if(!title){toast('Scrivi un titolo.');$('#title').focus();return}
   stopRec();
-  const due=$('#due').value,old=items.find(x=>x.id===draft.id);
-  const t={...draft,title,note:$('#note').value.trim(),due};
+  const due=$('#due').value,old=draft.id?items.find(x=>x.id===draft.id):null;
+  const t={...draft,title,note:$('#note').value.trim(),due,dirty:true};
   t.alerted=old&&old.due===due?old.alerted:false;
-  if(old)Object.assign(old,t);else{t.id=uid();t.done=false;items.push(t)}
-  save();closeF();render();check();
+  if(old)Object.assign(old,t);else{t.id=uuid();t.done=false;t.srv=[];items.push(t)}
+  closeF();commit();check();
 };
 
 function drawAtt(){
-  $('#att').innerHTML=draft.imgs.map((s,i)=>`<div class="at"><img src="${s}" alt="Foto ${i+1}"><button type="button" data-x="${i}" aria-label="Rimuovi foto">×</button></div>`).join('')
-   +(draft.audio?`<div class="at au"><audio controls src="${draft.audio}"></audio><button type="button" data-x="a" aria-label="Rimuovi audio">×</button></div>`:'');
+  $('#att').innerHTML=draft.imgs.map((a,i)=>`<div class="at">${a.url?`<img src="${a.url}" alt="Foto ${i+1}">`:'<span class="ph"></span>'}<button type="button" data-x="${i}" aria-label="Rimuovi foto">×</button></div>`).join('')
+   +(draft.audio?`<div class="at au">${draft.audio.url?`<audio controls src="${draft.audio.url}"></audio>`:'<span class="n">Audio in caricamento…</span>'}<button type="button" data-x="a" aria-label="Rimuovi audio">×</button></div>`:'');
 }
 $('#att').onclick=e=>{const b=e.target.closest('[data-x]');if(!b)return;if(b.dataset.x==='a')draft.audio=null;else draft.imgs.splice(+b.dataset.x,1);drawAtt()};
 
@@ -245,13 +373,13 @@ $('#bcam').onclick=()=>$('#cam').click();
 $('#bgal').onclick=()=>$('#gal').click();
 $('#baud').onclick=()=>$('#aud').click();
 ['cam','gal'].forEach(id=>$('#'+id).onchange=async e=>{
-  for(const f of e.target.files){const s=await shrink(f);if(s)draft.imgs.push(s);else toast('Immagine non leggibile.')}
-  e.target.value='';drawAtt();
+  for(const f of e.target.files){const s=await shrink(f);if(s&&draft)draft.imgs.push({path:null,url:s});else if(!s)toast('Immagine non leggibile.')}
+  e.target.value='';if(draft)drawAtt();
 });
 $('#aud').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
-  if(f.size>1.5e6){toast('Audio troppo grande (max 1,5 MB).');return}
-  draft.audio=await rd(f);drawAtt();
+  if(f.size>2.5e6){toast('Audio troppo grande (max 2,5 MB).');return}
+  draft.audio={path:null,url:await rd(f)};drawAtt();
 };
 
 function stopRec(){if(mr&&mr.state==='recording')mr.stop()}
@@ -264,13 +392,14 @@ $('#brec').onclick=async()=>{
     mr.onstop=async()=>{
       s.getTracks().forEach(t=>t.stop());clearTimeout(rt);
       $('#brec').textContent='🎙️ Registra audio';$('#brec').classList.remove('rec');
-      if(draft&&ch.length){draft.audio=await rd(new Blob(ch,{type:mr.mimeType}));drawAtt()}
+      if(draft&&ch.length){draft.audio={path:null,url:await rd(new Blob(ch,{type:mr.mimeType}))};drawAtt()}
     };
     mr.start();rt=setTimeout(stopRec,60000);
     $('#brec').textContent='⏹ Ferma registrazione';$('#brec').classList.add('rec');
   }catch(e){toast('Microfono non disponibile: usa “Carica audio”.')}
 };
 
+/* ---------- avvisi in pagina ---------- */
 function unlock(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){}}
 document.addEventListener('pointerdown',unlock,{once:true});
 function beep(){
@@ -290,21 +419,57 @@ function fire(t){
 $('#alerts').onclick=e=>{
   const b=e.target.closest('[data-b]');if(!b)return;
   const el=b.closest('.al'),t=items.find(x=>x.id===el.dataset.id);
-  if(t&&b.dataset.b==='done')t.done=true;
-  if(t&&b.dataset.b==='snz'){t.due=loc(new Date(Date.now()+600000));t.alerted=false}
-  el.remove();save();render();
+  if(t&&b.dataset.b==='done'){t.done=true;t.dirty=true}
+  if(t&&b.dataset.b==='snz'){t.due=loc(new Date(Date.now()+600000));t.alerted=false;t.dirty=true}
+  el.remove();commit();
 };
 function check(){
+  if(!user||!(synced||!navigator.onLine))return;
   let ch=false;const n=Date.now();
-  items.forEach(t=>{if(!t.done&&t.due&&!t.alerted&&+new Date(t.due)<=n){t.alerted=true;ch=true;fire(t)}});
-  if(ch){save();render()}
+  items.forEach(t=>{if(!t.done&&t.due&&!t.alerted&&+new Date(t.due)<=n){t.alerted=true;t.dirty=true;ch=true;fire(t)}});
+  if(ch)commit();
+}
+
+/* ---------- notifiche push ---------- */
+const b64u=s=>{const p='='.repeat((4-s.length%4)%4),r=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(r,c=>c.charCodeAt(0))};
+const pushOK=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+async function getSub(){const r=await navigator.serviceWorker.getRegistration();return r?r.pushManager.getSubscription():null}
+async function bellState(){
+  let on=false;
+  try{on=pushOK()&&Notification.permission==='granted'&&!!(await getSub())}catch(e){}
+  $('#bell').textContent=on?'🔔':'🔕';
+  $('#bell').setAttribute('aria-label',on?'Notifiche attive: tocca per una prova':'Attiva le notifiche');
+  return on;
+}
+async function subscribePush(){
+  const reg=await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID)});
+  const j=sub.toJSON();
+  const {error}=await sb.from('push_subscriptions').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth},{onConflict:'endpoint'});
+  if(error)throw error;
+  return reg;
 }
 $('#bell').onclick=async()=>{
   unlock();
-  if(!('Notification' in window)){toast('Notifiche non supportate: resta l’avviso in pagina.');return}
-  try{const r=await Notification.requestPermission();toast(r==='granted'?'Notifiche attive.':'Notifiche non attive: resta l’avviso in pagina.')}catch(e){toast('Notifiche non disponibili qui.')}
+  if(!pushOK()){toast('Questo browser non supporta le notifiche. Su iPhone aggiungi prima l’app alla Home.');return}
+  try{
+    if(Notification.permission!=='granted'){
+      const r=await Notification.requestPermission();
+      if(r!=='granted'){toast('Notifiche non attive: abilitale dalle impostazioni del browser.');return}
+    }
+    const reg=await subscribePush();
+    await bellState();
+    reg.showNotification('Promemoria',{body:'Le notifiche funzionano su questo dispositivo.',tag:'prova',icon:'icon-192.png'});
+  }catch(e){console.warn(e);toast('Non sono riuscito ad attivare le notifiche. Riprova tra poco.')}
 };
+async function ensurePush(){
+  try{if(pushOK()&&Notification.permission==='granted')await subscribePush()}catch(e){console.warn('push',e)}
+  bellState();
+}
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='push')sync()});
 
+/* ---------- calendario del telefono (.ics) ---------- */
 function icsFold(l){const o=[];while(l.length>72){o.push(l.slice(0,72));l=' '+l.slice(72)}o.push(l);return o.join('\r\n')}
 $('#exp').onclick=()=>{
   const L=items.filter(t=>t.due&&!t.done);
@@ -325,10 +490,71 @@ $('#exp').onclick=()=>{
   toast('File creato: aprilo per aggiungere gli eventi al calendario del telefono.');
 };
 
+/* ---------- accesso ---------- */
+const amsg=m=>{$('#am').textContent=m};
+function showAuth(m){$('#auth').classList.add('on');amsg(m||'')}
+function errIt(e){
+  const m=String(e&&e.message||e);
+  if(/invalid login/i.test(m))return 'Email o password non corretti.';
+  if(/not confirmed/i.test(m))return 'Conferma prima l’indirizzo dalla mail che ti ho inviato.';
+  if(/at least|weak|short/i.test(m))return 'Password troppo debole: usa almeno 8 caratteri.';
+  if(/rate limit|too many/i.test(m))return 'Troppi tentativi: riprova tra qualche minuto.';
+  if(/network|fetch/i.test(m))return 'Nessuna connessione: riprova.';
+  return 'Accesso non riuscito: '+m;
+}
+async function doAuth(mode){
+  if(!sb){amsg('Servizio di accesso non raggiungibile. Controlla la connessione e ricarica.');return}
+  const email=$('#em').value.trim(),password=$('#pw').value;
+  if(!email||password.length<8){amsg('Inserisci l’email e una password di almeno 8 caratteri.');return}
+  amsg('Un attimo…');
+  try{
+    if(mode==='in'){const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;amsg('')}
+    else{
+      const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+      if(error)throw error;
+      amsg(data.session?'':'Account creato. Ti ho mandato una mail: conferma l’indirizzo e poi premi “Accedi”.');
+    }
+  }catch(e){amsg(errIt(e))}
+}
+$('#login').onclick=()=>doAuth('in');
+$('#signup').onclick=()=>doAuth('up');
+$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')doAuth('in')});
+
+$('#out').onclick=async()=>{
+  await sync();
+  if(items.some(t=>t.dirty)&&!confirm('Alcune modifiche non sono ancora sincronizzate e andranno perse. Esci comunque?'))return;
+  try{const s=await getSub();if(s){await sb.from('push_subscriptions').delete().eq('endpoint',s.endpoint);await s.unsubscribe()}}catch(e){}
+  try{localStorage.removeItem(KEYU())}catch(e){}
+  await sb.auth.signOut();
+};
+
+async function start(u){
+  user=u;synced=false;loadLocal();
+  $('#auth').classList.remove('on');$('#who').textContent=u.email||'';
+  render();items.forEach(hydrate);
+  await sync();ensurePush();check();
+  if(!started){
+    started=true;
+    setInterval(check,15000);
+    setInterval(()=>{if(!document.hidden)sync()},60000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden){sync().then(check)}});
+    addEventListener('online',sync);
+  }
+}
+if(sb){
+  sb.auth.onAuthStateChange((ev,s)=>{
+    const u=s&&s.user;
+    if(u&&(!user||user.id!==u.id))setTimeout(()=>start(u),0);
+    else if(!u&&(ev==='SIGNED_OUT'||ev==='INITIAL_SESSION')){
+      if(ev==='SIGNED_OUT'){user=null;items=[];tomb=[];synced=false;render();setSync('');$('#who').textContent=''}
+      showAuth();
+    }
+  });
+}else showAuth('Servizio di accesso non raggiungibile. Controlla la connessione e ricarica.');
+
 const d=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
 $('#day').textContent=d.charAt(0).toUpperCase()+d.slice(1);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)check()});
-render();check();setInterval(check,15000);
+render();
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
 </body></html>
