@@ -761,7 +761,8 @@ function openNote(id,kind){
   pendingNote=null;nvId=id;nvKind=kind||null;renderNote();
   $('#nv').classList.add('on');$('#nv').scrollTop=0;
   document.body.style.overflow='hidden';
-  $('#nvt').focus();hydrate(t);
+  $('#nvt').focus();
+  if(kind==='main'&&t.audio){stopAudio();hydrate(t).then(()=>{if(nvId===id){const au=$('#nvm audio');if(au&&au.paused)au.play().catch(()=>{})}})}else hydrate(t);
   return true;
 }
 function renderNote(){
@@ -772,7 +773,7 @@ function renderNote(){
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
   const ok=$('#nvok');if(nvKind==='remind'){ok.textContent=t_('ok');ok.disabled=false}else{ok.textContent=t.done?t_('done'):nvKind==='main'?t_('confirmed'):t_('complete');ok.disabled=!!t.done}
 }
-function closeNote(){nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
+function closeNote(){stopAudio();nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
   if(nvKind==='remind'){closeNote();return}
@@ -873,8 +874,17 @@ function beep(){
   if(!actx)return;
   [0,.35,.7].forEach(d=>{const o=actx.createOscillator(),g=actx.createGain(),t=actx.currentTime+d;o.frequency.value=880;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.25);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.3)});
 }
+let curAudio=null;
+function stopAudio(){if(curAudio){try{curAudio.pause()}catch(e){}curAudio=null}}
+function playAtt(t){ // solo per la notifica dell'attività: dopo il suono parte la registrazione allegata
+  if(!t.audio)return;
+  hydrate(t).then(()=>{
+    if(!t.audio||!t.audio.url||nvId===t.id)return;
+    stopAudio();const a=new Audio(t.audio.url);curAudio=a;a.play().catch(()=>{});
+  });
+}
 function fire(t,a){
-  beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
+  beep();if(!a||a.kind==='main')setTimeout(()=>playAtt(t),1300);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
   const el=document.createElement('div');el.className='al';el.dataset.id=t.id;if(a)el.dataset.aid=a.id;
   const main=!a||a.kind==='main';el.dataset.kind=main?'main':'remind';
   el.innerHTML=`<button class="lk" data-b="open">${main?'⏰':'🔔'} ${esc(t.title)}</button><div class="row">${main?`<button class="sm" data-b="done">${t_('confirmed')}</button><button class="sm" data-b="snz">${t_('snooze')}</button><button class="sm" data-b="x">${t_('close')}</button>`:`<button class="sm" data-b="x">${t_('ok')}</button>`}</div>`;
@@ -887,6 +897,7 @@ function fire(t,a){
 $('#alerts').onclick=e=>{
   const b=e.target.closest('[data-b]');if(!b)return;
   const el=b.closest('.al'),t=items.find(x=>x.id===el.dataset.id);
+  stopAudio();
   if(b.dataset.b==='open'){el.remove();if(t)openNote(t.id,el.dataset.kind);return}
   if(t&&b.dataset.b==='done'){t.done=true;t.dirty=true}
   if(t&&b.dataset.b==='snz'){
