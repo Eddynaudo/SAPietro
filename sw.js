@@ -1,4 +1,4 @@
-const V='promemoria-v3',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const V='daymarck-v4',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
@@ -25,9 +25,9 @@ self.addEventListener('push',e=>{
   let d={};
   try{d=e.data?e.data.json():{}}catch(_){d={body:e.data?e.data.text():''}}
   e.waitUntil((async()=>{
-    await self.registration.showNotification(d.title||'Promemoria',{
+    await self.registration.showNotification(d.title||'DayMarck',{
       body:d.body||'',
-      tag:d.id||'promemoria',
+      tag:d.id||'daymarck',
       icon:'icon-192.png',
       badge:'icon-192.png',
       data:{id:d.id},

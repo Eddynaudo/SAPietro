@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="it"><head><meta charset="utf-8">
+<html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Promemoria</title>
+<title>DayMarck</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#050a1c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Promemoria">
+<meta name="apple-mobile-web-app-title" content="DayMarck">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
@@ -111,6 +111,9 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
 .at button{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;border:0;background:#F2F6FF;color:#0B1230;cursor:pointer}
 
 /* nota a schermo intero */
+.lg{display:inline-flex;border:1px solid rgba(255,255,255,.25);background:var(--glass2);border-radius:999px;padding:2px;cursor:pointer;color:#fff;font:700 12px/1 system-ui;align-items:center}
+.lg span{padding:7px 9px;border-radius:999px;opacity:.65}
+html[lang=en] .lg [data-l=en],html[lang=it] .lg [data-l=it]{background:#fff;color:#0B1230;opacity:1}
 .nv{position:fixed;inset:0;z-index:15;display:none;overflow:auto;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%)}
 .nv.on{display:block}
 .nvw{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(32px + env(safe-area-inset-bottom,0px))}
@@ -141,42 +144,43 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
   <div class="top">
     <div><h1 id="day"></h1><p class="sub" id="cnt"></p></div>
     <div class="hb">
+      <button class="lg" id="lang" aria-label="Language"><span data-l="en">EN</span><span data-l="it">IT</span></button>
       <button class="ib" id="bell" aria-label="Attiva le notifiche">🔕</button>
       <button class="ib" id="ubtn" aria-label="Area utente">👤</button>
     </div>
   </div>
   <div class="tabs" id="views" role="group" aria-label="Vista">
-    <button data-v="cal" aria-pressed="true">Calendario</button>
-    <button data-v="all" aria-pressed="false">Tutti gli impegni</button>
+    <button data-v="cal" aria-pressed="true" data-i="cal">Calendario</button>
+    <button data-v="all" aria-pressed="false" data-i="all">Tutti gli impegni</button>
   </div>
   <div id="cal"></div>
   <h2 id="dayh"></h2>
   <div class="tabs" id="filters" role="group" aria-label="Filtro" hidden>
-    <button data-f="all" aria-pressed="true">Tutti</button>
-    <button data-f="todo" aria-pressed="false">Da fare</button>
-    <button data-f="done" aria-pressed="false">Fatti</button>
+    <button data-f="all" aria-pressed="true" data-i="fAll">Tutti</button>
+    <button data-f="todo" aria-pressed="false" data-i="fTodo">Da fare</button>
+    <button data-f="done" aria-pressed="false" data-i="fDone">Fatti</button>
   </div>
   <div id="list"></div>
 </div>
-<button class="fab" id="add">+ Nuovo</button>
+<button class="fab" id="add" data-i="add">+ Nuovo</button>
 
 <div class="ov" id="ov"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ft">
-  <h2 id="ft">Nuovo promemoria</h2>
-  <label for="title">Titolo</label><input type="text" id="title" maxlength="120" placeholder="Cosa devi fare?">
-  <label for="note">Note</label><textarea id="note" placeholder="Dettagli (facoltativo)"></textarea>
-  <label for="due">Avviso <small>arriva come notifica all'ora indicata</small></label>
+  <h2 id="ft">New task</h2>
+  <label for="title" data-i="lTitle">Titolo</label><input type="text" id="title" maxlength="120" data-ph="phTitle" placeholder="Cosa devi fare?">
+  <label for="note" data-i="lNote">Note</label><textarea id="note" data-ph="phNote" placeholder="Dettagli (facoltativo)"></textarea>
+  <label for="due" data-i="lDue">Avviso <small>arriva come notifica all'ora indicata</small></label>
   <input type="datetime-local" id="due">
-  <label>Allegati</label>
+  <label data-i="lAtt">Allegati</label>
   <div class="row">
-    <button type="button" class="btn" id="bcam">📷 Scatta foto</button>
-    <button type="button" class="btn" id="bgal">🖼️ Scegli immagini</button>
-    <button type="button" class="btn" id="brec">🎙️ Registra audio</button>
-    <button type="button" class="btn" id="baud">🎵 Carica audio</button>
+    <button type="button" class="btn" id="bcam" data-i="bcam">📷 Scatta foto</button>
+    <button type="button" class="btn" id="bgal" data-i="bgal">🖼️ Scegli immagini</button>
+    <button type="button" class="btn" id="brec" data-i="brec">🎙️ Registra audio</button>
+    <button type="button" class="btn" id="baud" data-i="baud">🎵 Carica audio</button>
   </div>
   <div id="att"></div>
   <div class="row" style="margin-top:20px;justify-content:flex-end">
-    <button type="button" class="btn" id="cancel">Annulla</button>
-    <button type="button" class="btn pri" id="ok">Salva</button>
+    <button type="button" class="btn" id="cancel" data-i="cancel">Annulla</button>
+    <button type="button" class="btn pri" id="ok" data-i="save">Salva</button>
   </div>
   <input type="file" id="cam" accept="image/*" capture="environment" hidden>
   <input type="file" id="gal" accept="image/*" multiple hidden>
@@ -184,40 +188,40 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
 </div></div>
 
 <div class="ov" id="usr"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ut">
-  <h2 id="ut">Area utente</h2>
-  <div class="ur"><span>Account</span><b id="uem"></b></div>
-  <div class="ur"><span>Stato</span><b id="sy" role="status"></b></div>
+  <h2 id="ut" data-i="uTitle">Area utente</h2>
+  <div class="ur"><span data-i="uAcc">Account</span><b id="uem"></b></div>
+  <div class="ur"><span data-i="uSt">Stato</span><b id="sy" role="status"></b></div>
   <div class="stack">
-    <button type="button" class="btn" id="syn">Sincronizza ora</button>
-    <button type="button" class="btn" id="exp">Aggiungi al calendario del telefono</button>
+    <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
+    <button type="button" class="btn" id="exp" data-i="exp">Aggiungi al calendario del telefono</button>
   </div>
   <div id="adm" hidden>
     <hr>
-    <h3>Nuovo account</h3>
-    <p class="sub" style="margin:0 0 4px">Crea l’accesso per un’altra persona e comunicale email e password.</p>
-    <label for="nem">Email della persona</label><input type="email" id="nem" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email">
-    <label for="npw">Password <small>almeno 8 caratteri</small></label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
+    <h3 data-i="aNew">Nuovo account</h3>
+    <p class="sub" data-i="aHint" style="margin:0 0 4px;color:#fff;text-shadow:none">Crea l’accesso per un’altra persona e comunicale email e password.</p>
+    <label for="nem" data-i="aEm">Email della persona</label><input type="email" id="nem" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email">
+    <label for="npw" data-i="aPw">Password <small>almeno 8 caratteri</small></label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
     <p class="am" id="amk" role="status"></p>
-    <button type="button" class="btn pri" id="mk" style="margin-top:6px">Crea account</button>
+    <button type="button" class="btn pri" id="mk" style="margin-top:6px" data-i="aMk">Crea account</button>
   </div>
   <hr>
   <div class="row" style="justify-content:space-between;margin-top:12px">
-    <button type="button" class="btn out" id="out">Esci</button>
-    <button type="button" class="btn" id="ucl">Chiudi</button>
+    <button type="button" class="btn out" id="out" data-i="out">Esci</button>
+    <button type="button" class="btn" id="ucl" data-i="close">Chiudi</button>
   </div>
 </div></div>
 
 <div class="ov" id="auth"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="at">
-  <h2 id="at">Accedi a Promemoria</h2>
-  <p class="sub" style="margin:0">Non hai un account? Chiedilo all’amministratore.</p>
-  <label for="em">Email</label><input type="email" id="em" autocomplete="email" inputmode="email">
-  <label for="pw">Password</label><input type="password" id="pw" autocomplete="current-password">
+  <h2 id="at" data-i="lgT">Accedi a DayMarck</h2>
+  <p class="sub" style="margin:0" data-i="lgH">Non hai un account? Chiedilo all’amministratore.</p>
+  <label for="em" data-i="lgE">Email</label><input type="email" id="em" autocomplete="email" inputmode="email">
+  <label for="pw" data-i="lgP">Password</label><input type="password" id="pw" autocomplete="current-password">
   <p class="am" id="am" role="status"></p>
-  <button type="button" class="btn pri" id="login" style="width:100%;margin-top:10px;padding:13px">Accedi</button>
+  <button type="button" class="btn pri" id="login" style="width:100%;margin-top:10px;padding:13px" data-i="lgB">Accedi</button>
 </div></div>
 
 <div class="nv" id="nv" role="dialog" aria-modal="true" aria-labelledby="nvt"><div class="nvw">
-  <button class="ib nvx" id="nvx" aria-label="Chiudi">✕</button>
+  <button class="ib nvx" id="nvx" aria-label="Chiudi" data-al="close">✕</button>
   <div class="nvp">
     <div class="nvm" id="nvm"></div>
     <h2 id="nvt" tabindex="-1"></h2>
@@ -226,7 +230,7 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0 6px}
   </div>
 </div></div>
 
-<div class="ov" id="lb"><img id="lbimg" alt="Allegato ingrandito"></div>
+<div class="ov" id="lb"><img id="lbimg" alt=""></div>
 <div class="alerts" id="alerts" aria-live="assertive"></div>
 <div id="toast" role="status"></div>
 
@@ -243,13 +247,71 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const p2=n=>String(n).padStart(2,'0');
 const loc=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'T'+p2(d.getHours())+':'+p2(d.getMinutes());
 const todayKey=()=>loc(new Date()).slice(0,10);
-const fmt=s=>new Date(s).toLocaleString('it-IT',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-const fmtDay=k=>new Date(k+'T00:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+const LOC=()=>LANG==='it'?'it-IT':'en-GB';
+const fmt=s=>new Date(s).toLocaleString(LOC(),{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const fmtDay=k=>new Date(k+'T00:00').toLocaleDateString(LOC(),{weekday:'long',day:'numeric',month:'long'});
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const uuid=()=>crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),4000)}
-const setSync=m=>{$('#sy').textContent=m};
+let syncKey='';
+const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
+/* ---------- lingua (inglese di default, italiano a scelta) ---------- */
+const TX={
+en:{cal:'Calendar',all:'All tasks',fAll:'All',fTodo:'To do',fDone:'Done',add:'+ New',lTitle:'Title',phTitle:'What do you need to do?',lNote:'Notes',phNote:'Details (optional)',
+lDue:'Alert <small>arrives as a notification at the chosen time</small>',lAtt:'Attachments',bcam:'📷 Take photo',bgal:'🖼️ Choose images',brec:'🎙️ Record audio',baud:'🎵 Upload audio',
+cancel:'Cancel',save:'Save',uTitle:'User area',uAcc:'Account',uSt:'Status',syn:'Sync now',exp:'Add to phone calendar',aNew:'New account',
+aHint:'Create a login for another person and share the email and password with them.',aEm:"Person's email",aPw:'Password <small>at least 8 characters</small>',aMk:'Create account',
+out:'Log out',close:'Close',lgT:'Log in to DayMarck',lgH:"Don't have an account? Ask the administrator.",lgE:'Email',lgP:'Password',lgB:'Log in',
+bellOn:'Notifications on: tap for a test',bellOff:'Turn on notifications',
+today:'Today',tomorrow:'Tomorrow',noDate:'No date',late:'overdue',edit:'Edit',del:'Delete',sure:'Sure?',mark:'Mark as done',
+left0:'All done',left1:'1 thing to do',leftN:'{n} things to do',emptyDay:'Nothing planned for this day. Tap “New” to add something.',emptyDone:'Nothing completed yet.',emptyAll:'No tasks. Tap “New” to add one.',
+prevM:'Previous month',nextM:'Next month',evN:'{n} tasks',attN:'Attachment {n}',loadAtt:'Loading attachment',loadAud:'Loading audio',audLoading:'Audio loading…',
+wd:['M','T','W','T','F','S','S'],
+done:'Completed',complete:'Complete',doneToast:'Task completed.',delToast:'Task deleted.',
+fEdit:'Edit task',fNew:'New task',needTitle:'Write a title.',photo:'Photo {n}',rmPhoto:'Remove photo',rmAudio:'Remove audio',badImg:'Image could not be read.',bigAud:'Audio too large (max 2.5 MB).',
+rec:'⏹ Stop recording',noMic:'Microphone unavailable: use “Upload audio”.',
+fDone2:'Done',snooze:'Snooze 10 min',
+syncing:'Syncing…',synced:'Synced',syncFail:'Sync failed, retrying',offline:'Offline: saving on the phone',full:'Phone storage full: sync and remove some attachments.',
+noPush:'This browser does not support notifications. On iPhone, add the app to the Home Screen first.',pushDenied:'Notifications off: enable them in the browser settings.',pushTest:'Notifications work on this device.',pushFail:"Couldn't turn on notifications. Try again shortly.",
+aBad:'Enter a valid email and a password of at least 8 characters.',aWork:'Creating the account…',aOk:'Account created for {e}. Share the email and password with them.',
+icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the tasks to your phone calendar.',
+lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
+lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
+it:{cal:'Calendario',all:'Tutti gli impegni',fAll:'Tutti',fTodo:'Da fare',fDone:'Fatti',add:'+ Nuovo',lTitle:'Titolo',phTitle:'Cosa devi fare?',lNote:'Note',phNote:'Dettagli (facoltativo)',
+lDue:"Avviso <small>arriva come notifica all'ora indicata</small>",lAtt:'Allegati',bcam:'📷 Scatta foto',bgal:'🖼️ Scegli immagini',brec:'🎙️ Registra audio',baud:'🎵 Carica audio',
+cancel:'Annulla',save:'Salva',uTitle:'Area utente',uAcc:'Account',uSt:'Stato',syn:'Sincronizza ora',exp:'Aggiungi al calendario del telefono',aNew:'Nuovo account',
+aHint:'Crea l’accesso per un’altra persona e comunicale email e password.',aEm:'Email della persona',aPw:'Password <small>almeno 8 caratteri</small>',aMk:'Crea account',
+out:'Esci',close:'Chiudi',lgT:'Accedi a DayMarck',lgH:'Non hai un account? Chiedilo all’amministratore.',lgE:'Email',lgP:'Password',lgB:'Accedi',
+bellOn:'Notifiche attive: tocca per una prova',bellOff:'Attiva le notifiche',
+today:'Oggi',tomorrow:'Domani',noDate:'Senza data',late:'scaduto',edit:'Modifica',del:'Elimina',sure:'Sicuro?',mark:'Segna come completato',
+left0:'Tutto fatto',left1:'1 cosa da fare',leftN:'{n} cose da fare',emptyDay:'Nessun impegno in questo giorno. Tocca “Nuovo” per aggiungerne uno.',emptyDone:'Ancora nulla di completato.',emptyAll:'Nessun impegno. Tocca “Nuovo” per aggiungerne uno.',
+prevM:'Mese precedente',nextM:'Mese successivo',evN:'{n} impegni',attN:'Allegato {n}',loadAtt:'Caricamento allegato',loadAud:'Caricamento audio',audLoading:'Audio in caricamento…',
+wd:['L','M','M','G','V','S','D'],
+done:'Completato',complete:'Completa',doneToast:'Impegno completato.',delToast:'Impegno eliminato.',
+fEdit:'Modifica impegno',fNew:'Nuovo impegno',needTitle:'Scrivi un titolo.',photo:'Foto {n}',rmPhoto:'Rimuovi foto',rmAudio:'Rimuovi audio',badImg:'Immagine non leggibile.',bigAud:'Audio troppo grande (max 2,5 MB).',
+rec:'⏹ Ferma registrazione',noMic:'Microfono non disponibile: usa “Carica audio”.',
+fDone2:'Fatto',snooze:'Rimanda 10 min',
+syncing:'Sincronizzo…',synced:'Sincronizzato',syncFail:'Sincronizzazione non riuscita, riprovo',offline:'Offline: salvo sul telefono',full:'Memoria del telefono piena: sincronizza e togli qualche allegato.',
+noPush:'Questo browser non supporta le notifiche. Su iPhone aggiungi prima l’app alla Home.',pushDenied:'Notifiche non attive: abilitale dalle impostazioni del browser.',pushTest:'Le notifiche funzionano su questo dispositivo.',pushFail:'Non sono riuscito ad attivare le notifiche. Riprova tra poco.',
+aBad:'Inserisci un’email valida e una password di almeno 8 caratteri.',aWork:'Creo l’account…',aOk:'Account creato per {e}. Comunicale email e password.',
+icsNone:'Nessun impegno con data da esportare.',icsOk:'File creato: aprilo per aggiungere gli impegni al calendario del telefono.',
+lgNet:'Servizio di accesso non raggiungibile. Controlla la connessione e ricarica.',lgBad:'Email o password non corretti.',lgConf:'Questo indirizzo non è ancora confermato: chiedi all’amministratore.',lgRate:'Troppi tentativi: riprova tra qualche minuto.',lgNo:'Nessuna connessione: riprova.',lgFail:'Accesso non riuscito: ',
+lgNeed:'Inserisci email e password.',lgWait:'Un attimo…',leave:'Alcune modifiche non sono ancora sincronizzate e andranno perse. Esci comunque?',appName:'DayMarck',pushBody:'Promemoria'}
+};
+let LANG='en';
+try{const l=localStorage.getItem('dm.lang');if(l==='it'||l==='en')LANG=l}catch(e){}
+const t_=(k,v)=>{let x=(TX[LANG]||TX.en)[k];if(x===undefined)x=TX.en[k];if(v)for(const q in v)x=x.replace('{'+q+'}',v[q]);return x};
+function applyLang(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=t_(e.dataset.i)});
+  document.querySelectorAll('[data-ph]').forEach(e=>{e.placeholder=t_(e.dataset.ph)});
+  document.querySelectorAll('[data-al]').forEach(e=>{e.setAttribute('aria-label',t_(e.dataset.al))});
+  $('#lang').setAttribute('aria-label',LANG==='en'?'Language: English. Tap for Italiano':'Lingua: italiano. Tocca per English');
+  $('#brec').textContent=t_('brec');
+  const d=$('#day');if(d)d.textContent=cap(new Date().toLocaleDateString(LOC(),{weekday:'long',day:'numeric',month:'long'}));
+}
+
 
 /* ---------- cielo che cambia durante la giornata ---------- */
 const SKY=[
@@ -323,7 +385,7 @@ const strip=t=>({...t,imgs:t.imgs.map(a=>a.path?{path:a.path}:a),audio:t.audio?(
 function persist(){
   if(!user)return;
   try{localStorage.setItem(KEYU(),JSON.stringify({items:items.map(strip),tomb}))}
-  catch(e){toast('Memoria del telefono piena: sincronizza e togli qualche allegato.')}
+  catch(e){toast(t_('full'))}
 }
 function loadLocal(){
   try{const d=JSON.parse(localStorage.getItem(KEYU())||'{}');items=(d.items||[]).map(t=>({imgs:[],audio:null,srv:[],...t}));tomb=d.tomb||[]}
@@ -371,7 +433,7 @@ const rowOf=t=>({id:t.id,title:t.title,note:t.note||'',due:t.due?new Date(t.due)
 async function sync(){
   if(!sb||!user)return;
   if(syncing){again=true;return}
-  syncing=true;setSync('Sincronizzo…');
+  syncing=true;setSync('syncing');
   try{
     for(const g of [...tomb]){
       const {error}=await sb.from('reminders').delete().eq('id',g.id);
@@ -404,10 +466,10 @@ async function sync(){
     synced=true;persist();
     if(sig()!==before){render();if(nvId)renderNote()}
     items.forEach(hydrate);
-    setSync('Sincronizzato');
+    setSync('synced');
   }catch(e){
     console.warn('sync',e);
-    setSync(navigator.onLine?'Sincronizzazione non riuscita, riprovo':'Offline: salvo sul telefono');
+    setSync(navigator.onLine?'syncFail':'offline');
   }finally{
     syncing=false;
     if(again){again=false;sync()}
@@ -418,36 +480,36 @@ async function sync(){
 const byDate=(a,b)=>(a.due?+new Date(a.due):9e15)-(b.due?+new Date(b.due):9e15);
 function dayLabel(k){
   const tm=loc(new Date(Date.now()+864e5)).slice(0,10);
-  return k===todayKey()?'Oggi':k===tm?'Domani':cap(fmtDay(k));
+  return k===todayKey()?t_('today'):k===tm?t_('tomorrow'):cap(fmtDay(k));
 }
 function cardHTML(t,now){
   const late=!t.done&&t.due&&new Date(t.due)<now;
-  return `<div class="sw" data-id="${t.id}"><div class="acts"><button class="ab ed" data-a="edit">Modifica</button><button class="ab dl" data-a="del">Elimina</button></div>
+  return `<div class="sw" data-id="${t.id}"><div class="acts"><button class="ab ed" data-a="edit">${t_('edit')}</button><button class="ab dl" data-a="del">${t_('del')}</button></div>
 <article class="card ${t.done?'done':late?'late':''}" tabindex="0">
-<input type="checkbox" class="chk" data-a="chk" aria-label="Segna come completato" ${t.done?'checked':''}>
+<input type="checkbox" class="chk" data-a="chk" aria-label="${t_('mark')}" ${t.done?'checked':''}>
 <div><div class="t">${esc(t.title)}</div>${t.note?`<div class="n">${esc(t.note)}</div>`:''}
-${t.due?`<div class="due">⏰ ${fmt(t.due)}${late?'<span class="bd">scaduto</span>':''}</div>`:''}
-${t.imgs.length?`<div class="th">${t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="Allegato ${i+1}" data-a="img" data-i="${i}">`:'<span class="ph" aria-label="Caricamento allegato"></span>').join('')}</div>`:''}
-${t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:'<div class="n">Audio in caricamento…</div>'):''}</div></article></div>`;
+${t.due?`<div class="due">⏰ ${fmt(t.due)}${late?`<span class="bd">${t_('late')}</span>`:''}</div>`:''}
+${t.imgs.length?`<div class="th">${t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="${t_('attN',{n:i+1})}" data-a="img" data-i="${i}">`:`<span class="ph" aria-label="${t_('loadAtt')}"></span>`).join('')}</div>`:''}
+${t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<div class="n">${t_('audLoading')}</div>`):''}</div></article></div>`;
 }
 function render(){
   const now=new Date(),calV=view==='cal';
   $('#cal').hidden=!calV;$('#dayh').hidden=!calV;$('#filters').hidden=calV;
   document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===view));
   const n=items.filter(t=>!t.done).length;
-  $('#cnt').textContent=n===0?'Tutto fatto':n===1?'1 cosa da fare':n+' cose da fare';
+  $('#cnt').textContent=n===0?t_('left0'):n===1?t_('left1'):t_('leftN',{n});
   let html='';
   if(calV){
     $('#dayh').textContent=dayLabel(sel);
     const v=items.filter(t=>t.due&&t.due.slice(0,10)===sel).sort(byDate);
-    html=v.length?v.map(t=>cardHTML(t,now)).join(''):'<p class="empty">Nessun impegno in questo giorno. Tocca “Nuovo” per aggiungerne uno.</p>';
+    html=v.length?v.map(t=>cardHTML(t,now)).join(''):`<p class="empty">${t_('emptyDay')}</p>`;
   }else{
     const v=items.filter(t=>filter==='all'||(filter==='todo'?!t.done:t.done)).sort(byDate);
-    if(!v.length)html=`<p class="empty">${filter==='done'?'Ancora nulla di completato.':'Nessun impegno. Tocca “Nuovo” per aggiungerne uno.'}</p>`;
+    if(!v.length)html=`<p class="empty">${filter==='done'?t_('emptyDone'):t_('emptyAll')}</p>`;
     let last=null;
     for(const t of v){
       const k=t.due?t.due.slice(0,10):'none';
-      if(k!==last){html+=`<h3 class="dg">${k==='none'?'Senza data':esc(dayLabel(k))}</h3>`;last=k}
+      if(k!==last){html+=`<h3 class="dg">${k==='none'?t_('noDate'):esc(dayLabel(k))}</h3>`;last=k}
       html+=cardHTML(t,now);
     }
   }
@@ -460,12 +522,12 @@ function renderCal(){
   const y=cur.getFullYear(),m=cur.getMonth(),first=new Date(y,m,1),off=(first.getDay()+6)%7,nd=new Date(y,m+1,0).getDate();
   const map={};items.forEach(t=>{if(t.due)(map[t.due.slice(0,10)]=map[t.due.slice(0,10)]||[]).push(t)});
   const today=todayKey();
-  let h=`<div class="cn"><button class="ib" data-c="-1" aria-label="Mese precedente">‹</button><strong>${first.toLocaleDateString('it-IT',{month:'long',year:'numeric'})}</strong><button class="ib" data-c="1" aria-label="Mese successivo">›</button></div><div class="cg">`;
-  ['L','M','M','G','V','S','D'].forEach(x=>h+=`<div class="wd" aria-hidden="true">${x}</div>`);
+  let h=`<div class="cn"><button class="ib" data-c="-1" aria-label="${t_('prevM')}">‹</button><strong>${first.toLocaleDateString(LOC(),{month:'long',year:'numeric'})}</strong><button class="ib" data-c="1" aria-label="${t_('nextM')}">›</button></div><div class="cg">`;
+  t_('wd').forEach(x=>h+=`<div class="wd" aria-hidden="true">${x}</div>`);
   for(let i=0;i<off;i++)h+='<div></div>';
   for(let d=1;d<=nd;d++){
     const k=y+'-'+p2(m+1)+'-'+p2(d),ev=map[k]||[],open=ev.some(t=>!t.done);
-    h+=`<button class="dy${k===today?' td':''}${k===sel?' sel':''}" data-k="${k}" aria-pressed="${k===sel}" aria-label="${fmtDay(k)}, ${ev.length} impegni">${d}${ev.length?`<i class="${open?'':'dn'}"></i>`:''}</button>`;
+    h+=`<button class="dy${k===today?' td':''}${k===sel?' sel':''}" data-k="${k}" aria-pressed="${k===sel}" aria-label="${fmtDay(k)}, ${t_('evN',{n:ev.length})}">${d}${ev.length?`<i class="${open?'':'dn'}"></i>`:''}</button>`;
   }
   c.innerHTML=h+'</div>';
 }
@@ -528,8 +590,8 @@ $('#list').addEventListener('click',e=>{
     if(b.dataset.arm){
       items=items.filter(x=>x!==t);
       tomb.push({id:t.id,paths:[...(t.srv||[])]});
-      commit();toast('Impegno eliminato.');
-    }else{b.dataset.arm=1;b.textContent='Sicuro?';setTimeout(()=>{if(b.isConnected&&b.dataset.arm){b.dataset.arm='';b.textContent='Elimina'}},3000)}
+      commit();toast(t_('delToast'));
+    }else{b.dataset.arm=1;b.textContent=t_('sure');setTimeout(()=>{if(b.isConnected&&b.dataset.arm){b.dataset.arm='';b.textContent=t_('del')}},3000)}
     return;
   }
   if(a==='img'){const im=t.imgs[+b.dataset.i];if(im&&im.url){$('#lbimg').src=im.url;$('#lb').classList.add('on')}return}
@@ -558,17 +620,17 @@ function openNote(id){
 }
 function renderNote(){
   const t=items.find(x=>x.id===nvId);if(!t){closeNote();return}
-  $('#nvm').innerHTML=t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="Allegato ${i+1}">`:'<span class="ph" role="img" aria-label="Caricamento allegato"></span>').join('')
-    +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:'<span class="ph" style="height:56px" role="img" aria-label="Caricamento audio"></span>'):'');
+  $('#nvm').innerHTML=t.imgs.map((a,i)=>a.url?`<img src="${a.url}" alt="${t_('attN',{n:i+1})}">`:`<span class="ph" role="img" aria-label="${t_('loadAtt')}"></span>`).join('')
+    +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
-  const ok=$('#nvok');ok.textContent=t.done?'Completato':'Completa';ok.disabled=!!t.done;
+  const ok=$('#nvok');ok.textContent=t.done?t_('done'):t_('complete');ok.disabled=!!t.done;
 }
 function closeNote(){nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
   const t=items.find(x=>x.id===nvId);if(!t||t.done)return;
-  t.done=true;t.dirty=true;closeNote();commit();toast('Impegno completato.');
+  t.done=true;t.dirty=true;closeNote();commit();toast(t_('doneToast'));
 };
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
@@ -580,7 +642,7 @@ addEventListener('keydown',e=>{
 /* ---------- modulo ---------- */
 function openF(t){
   draft=t?{...t,imgs:t.imgs.map(a=>({...a})),audio:t.audio?{...t.audio}:null}:{id:null,title:'',note:'',due:'',imgs:[],audio:null};
-  $('#ft').textContent=t?'Modifica promemoria':'Nuovo promemoria';
+  $('#ft').textContent=t?t_('fEdit'):t_('fNew');
   $('#title').value=draft.title;$('#note').value=draft.note||'';$('#due').value=draft.due||'';
   drawAtt();$('#ov').classList.add('on');setTimeout(()=>$('#title').focus(),50);
 }
@@ -589,7 +651,7 @@ $('#add').onclick=()=>{openF();if(view==='cal'&&sel)$('#due').value=sel+'T09:00'
 $('#cancel').onclick=closeF;
 $('#ok').onclick=()=>{
   const title=$('#title').value.trim();
-  if(!title){toast('Scrivi un titolo.');$('#title').focus();return}
+  if(!title){toast(t_('needTitle'));$('#title').focus();return}
   stopRec();
   const due=$('#due').value,old=draft.id?items.find(x=>x.id===draft.id):null;
   const t={...draft,title,note:$('#note').value.trim(),due,dirty:true};
@@ -600,8 +662,8 @@ $('#ok').onclick=()=>{
 };
 
 function drawAtt(){
-  $('#att').innerHTML=draft.imgs.map((a,i)=>`<div class="at">${a.url?`<img src="${a.url}" alt="Foto ${i+1}">`:'<span class="ph"></span>'}<button type="button" data-x="${i}" aria-label="Rimuovi foto">×</button></div>`).join('')
-   +(draft.audio?`<div class="at au">${draft.audio.url?`<audio controls src="${draft.audio.url}"></audio>`:'<span class="n">Audio in caricamento…</span>'}<button type="button" data-x="a" aria-label="Rimuovi audio">×</button></div>`:'');
+  $('#att').innerHTML=draft.imgs.map((a,i)=>`<div class="at">${a.url?`<img src="${a.url}" alt="${t_('photo',{n:i+1})}">`:'<span class="ph"></span>'}<button type="button" data-x="${i}" aria-label="${t_('rmPhoto')}">×</button></div>`).join('')
+   +(draft.audio?`<div class="at au">${draft.audio.url?`<audio controls src="${draft.audio.url}"></audio>`:`<span class="n">${t_('audLoading')}</span>`}<button type="button" data-x="a" aria-label="${t_('rmAudio')}">×</button></div>`:'');
 }
 $('#att').onclick=e=>{const b=e.target.closest('[data-x]');if(!b)return;if(b.dataset.x==='a')draft.audio=null;else draft.imgs.splice(+b.dataset.x,1);drawAtt()};
 
@@ -614,12 +676,12 @@ $('#bcam').onclick=()=>$('#cam').click();
 $('#bgal').onclick=()=>$('#gal').click();
 $('#baud').onclick=()=>$('#aud').click();
 ['cam','gal'].forEach(id=>$('#'+id).onchange=async e=>{
-  for(const f of e.target.files){const s=await shrink(f);if(s&&draft)draft.imgs.push({path:null,url:s});else if(!s)toast('Immagine non leggibile.')}
+  for(const f of e.target.files){const s=await shrink(f);if(s&&draft)draft.imgs.push({path:null,url:s});else if(!s)toast(t_('badImg'))}
   e.target.value='';if(draft)drawAtt();
 });
 $('#aud').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
-  if(f.size>2.5e6){toast('Audio troppo grande (max 2,5 MB).');return}
+  if(f.size>2.5e6){toast(t_('bigAud'));return}
   draft.audio={path:null,url:await rd(f)};drawAtt();
 };
 
@@ -632,12 +694,12 @@ $('#brec').onclick=async()=>{
     mr.ondataavailable=e=>e.data.size&&ch.push(e.data);
     mr.onstop=async()=>{
       s.getTracks().forEach(t=>t.stop());clearTimeout(rt);
-      $('#brec').textContent='🎙️ Registra audio';$('#brec').classList.remove('rec');
+      $('#brec').textContent=t_('brec');$('#brec').classList.remove('rec');
       if(draft&&ch.length){draft.audio={path:null,url:await rd(new Blob(ch,{type:mr.mimeType}))};drawAtt()}
     };
     mr.start();rt=setTimeout(stopRec,60000);
-    $('#brec').textContent='⏹ Ferma registrazione';$('#brec').classList.add('rec');
-  }catch(e){toast('Microfono non disponibile: usa “Carica audio”.')}
+    $('#brec').textContent=t_('rec');$('#brec').classList.add('rec');
+  }catch(e){toast(t_('noMic'))}
 };
 
 /* ---------- avvisi in pagina ---------- */
@@ -650,11 +712,11 @@ function beep(){
 function fire(t){
   beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
   const el=document.createElement('div');el.className='al';el.dataset.id=t.id;
-  el.innerHTML=`<button class="lk" data-b="open">⏰ ${esc(t.title)}</button><div class="row"><button class="sm" data-b="done">Fatto</button><button class="sm" data-b="snz">Rimanda 10 min</button><button class="sm" data-b="x">Chiudi</button></div>`;
+  el.innerHTML=`<button class="lk" data-b="open">⏰ ${esc(t.title)}</button><div class="row"><button class="sm" data-b="done">${t_('fDone2')}</button><button class="sm" data-b="snz">${t_('snooze')}</button><button class="sm" data-b="x">${t_('close')}</button></div>`;
   $('#alerts').append(el);
   try{if('Notification' in window&&Notification.permission==='granted'){
     const o={body:t.title,tag:t.id,icon:'icon-192.png',data:{id:t.id}},sw=navigator.serviceWorker;
-    (sw?sw.getRegistration():Promise.resolve()).then(r=>r?r.showNotification('Promemoria',o):new Notification('Promemoria',o)).catch(()=>{});
+    (sw?sw.getRegistration():Promise.resolve()).then(r=>r?r.showNotification('DayMarck',o):new Notification('DayMarck',o)).catch(()=>{});
   }}catch(e){}
 }
 $('#alerts').onclick=e=>{
@@ -680,7 +742,7 @@ async function bellState(){
   let on=false;
   try{on=pushOK()&&Notification.permission==='granted'&&!!(await getSub())}catch(e){}
   $('#bell').textContent=on?'🔔':'🔕';
-  $('#bell').setAttribute('aria-label',on?'Notifiche attive: tocca per una prova':'Attiva le notifiche');
+  $('#bell').setAttribute('aria-label',on?t_('bellOn'):t_('bellOff'));
   return on;
 }
 async function subscribePush(){
@@ -694,16 +756,16 @@ async function subscribePush(){
 }
 $('#bell').onclick=async()=>{
   unlock();
-  if(!pushOK()){toast('Questo browser non supporta le notifiche. Su iPhone aggiungi prima l’app alla Home.');return}
+  if(!pushOK()){toast(t_('noPush'));return}
   try{
     if(Notification.permission!=='granted'){
       const r=await Notification.requestPermission();
-      if(r!=='granted'){toast('Notifiche non attive: abilitale dalle impostazioni del browser.');return}
+      if(r!=='granted'){toast(t_('pushDenied'));return}
     }
     const reg=await subscribePush();
     await bellState();
-    reg.showNotification('Promemoria',{body:'Le notifiche funzionano su questo dispositivo.',tag:'prova',icon:'icon-192.png'});
-  }catch(e){console.warn(e);toast('Non sono riuscito ad attivare le notifiche. Riprova tra poco.')}
+    reg.showNotification('DayMarck',{body:t_('pushTest'),tag:'prova',icon:'icon-192.png'});
+  }catch(e){console.warn(e);toast(t_('pushFail'))}
 };
 async function ensurePush(){
   try{if(pushOK()&&Notification.permission==='granted')await subscribePush()}catch(e){console.warn('push',e)}
@@ -731,8 +793,8 @@ const amk=m=>{$('#amk').textContent=m};
 $('#mk').onclick=async()=>{
   if(!isAdmin()||!sb)return;
   const email=$('#nem').value.trim().toLowerCase(),password=$('#npw').value;
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8){amk('Inserisci un’email valida e una password di almeno 8 caratteri.');return}
-  amk('Creo l’account…');$('#mk').disabled=true;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||password.length<8){amk(t_('aBad'));return}
+  amk(t_('aWork'));$('#mk').disabled=true;
   try{
     const {data,error}=await sb.functions.invoke('admin-create-user',{body:{email,password}});
     if(error){
@@ -741,7 +803,7 @@ $('#mk').onclick=async()=>{
       throw new Error(m);
     }
     if(data&&data.error)throw new Error(data.error);
-    amk('Account creato per '+email+'. Comunicale email e password.');
+    amk(t_('aOk',{e:email}));
     $('#nem').value='';$('#npw').value='';
   }catch(e){amk(String(e&&e.message||e))}
   finally{$('#mk').disabled=false}
@@ -751,21 +813,21 @@ $('#mk').onclick=async()=>{
 function icsFold(l){const o=[];while(l.length>72){o.push(l.slice(0,72));l=' '+l.slice(72)}o.push(l);return o.join('\r\n')}
 $('#exp').onclick=()=>{
   const L=items.filter(t=>t.due&&!t.done);
-  if(!L.length){toast('Nessun impegno con data da esportare.');return}
+  if(!L.length){toast(t_('icsNone'));return}
   const z=s=>s.replace(/[-:]/g,'')+'00';
   const e=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/[,;]/g,'\\$&');
   const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
-  const o=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Promemoria//IT','CALSCALE:GREGORIAN'];
+  const o=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//DayMarck//EN','CALSCALE:GREGORIAN'];
   L.forEach(t=>{
-    o.push('BEGIN:VEVENT','UID:'+t.id+'@promemoria','DTSTAMP:'+stamp,'DTSTART:'+z(t.due),'DTEND:'+z(loc(new Date(+new Date(t.due)+1800000))),'SUMMARY:'+e(t.title));
+    o.push('BEGIN:VEVENT','UID:'+t.id+'@daymarck','DTSTAMP:'+stamp,'DTSTART:'+z(t.due),'DTEND:'+z(loc(new Date(+new Date(t.due)+1800000))),'SUMMARY:'+e(t.title));
     if(t.note)o.push('DESCRIPTION:'+e(t.note));
     o.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+e(t.title),'TRIGGER:PT0S','END:VALARM','END:VEVENT');
   });
   o.push('END:VCALENDAR');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([o.map(icsFold).join('\r\n')],{type:'text/calendar'}));
-  a.download='promemoria.ics';document.body.append(a);a.click();a.remove();
-  toast('File creato: aprilo per aggiungere gli impegni al calendario del telefono.');
+  a.download='daymarck.ics';document.body.append(a);a.click();a.remove();
+  toast(t_('icsOk'));
 };
 
 /* ---------- accesso ---------- */
@@ -773,17 +835,17 @@ const amsg=m=>{$('#am').textContent=m};
 function showAuth(m){document.body.classList.add('guest');$('#auth').classList.add('on');amsg(m||'')}
 function errIt(e){
   const m=String(e&&e.message||e);
-  if(/invalid login/i.test(m))return 'Email o password non corretti.';
-  if(/not confirmed/i.test(m))return 'Questo indirizzo non è ancora confermato: chiedi all’amministratore.';
-  if(/rate limit|too many/i.test(m))return 'Troppi tentativi: riprova tra qualche minuto.';
-  if(/network|fetch/i.test(m))return 'Nessuna connessione: riprova.';
-  return 'Accesso non riuscito: '+m;
+  if(/invalid login/i.test(m))return t_('lgBad');
+  if(/not confirmed/i.test(m))return t_('lgConf');
+  if(/rate limit|too many/i.test(m))return t_('lgRate');
+  if(/network|fetch/i.test(m))return t_('lgNo');
+  return t_('lgFail')+m;
 }
 async function doLogin(){
-  if(!sb){amsg('Servizio di accesso non raggiungibile. Controlla la connessione e ricarica.');return}
+  if(!sb){amsg(t_('lgNet'));return}
   const email=$('#em').value.trim(),password=$('#pw').value;
-  if(!email||!password){amsg('Inserisci email e password.');return}
-  amsg('Un attimo…');
+  if(!email||!password){amsg(t_('lgNeed'));return}
+  amsg(t_('lgWait'));
   try{const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;amsg('')}
   catch(e){amsg(errIt(e))}
 }
@@ -792,7 +854,7 @@ $('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 $('#out').onclick=async()=>{
   await sync();
-  if(items.some(t=>t.dirty)&&!confirm('Alcune modifiche non sono ancora sincronizzate e andranno perse. Esci comunque?'))return;
+  if(items.some(t=>t.dirty)&&!confirm(t_('leave')))return;
   try{const s=await getSub();if(s){await sb.from('push_subscriptions').delete().eq('endpoint',s.endpoint);await s.unsubscribe()}}catch(e){}
   try{localStorage.removeItem(KEYU())}catch(e){}
   $('#usr').classList.remove('on');
@@ -822,14 +884,19 @@ if(sb){
       showAuth();
     }
   });
-}else showAuth('Servizio di accesso non raggiungibile. Controlla la connessione e ricarica.');
+}else showAuth(t_('lgNet'));
 
 /* ---------- avvio ---------- */
 (function(){
   const q=new URLSearchParams(location.search).get('note');
   if(q){pendingNote=q;try{history.replaceState(null,'',location.pathname)}catch(e){}}
 })();
-$('#day').textContent=cap(new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}));
+$('#lang').onclick=()=>{
+  LANG=LANG==='en'?'it':'en';
+  try{localStorage.setItem('dm.lang',LANG)}catch(e){}
+  applyLang();setSync(syncKey);bellState();render();if(nvId)renderNote();
+};
+applyLang();
 applySky();drawStars();setInterval(()=>applySky(),60000);
 render();
 </script>

@@ -1,3 +1,3 @@
-# Promemoria
+# DayMarck
 
-App di promemoria con calendario, allegati (foto e audio) e avvisi. Installabile sul telefono come PWA.
+Reminder app with calendar, attachments (photos and audio) and alerts. Installable on the phone as a PWA. English and Italian.
