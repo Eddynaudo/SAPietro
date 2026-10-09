@@ -55,6 +55,11 @@ button,input,textarea{font:inherit;color:inherit}
 @keyframes ripple{0%{transform:scale(1);opacity:.85}100%{transform:scale(1.75);opacity:0}}
 @keyframes glowb{0%,100%{box-shadow:0 0 10px 1px rgba(150,210,255,.5),0 0 20px rgba(255,255,255,.25)}50%{box-shadow:0 0 16px 4px rgba(170,225,255,.85),0 0 30px rgba(255,255,255,.5)}}
 @media (prefers-reduced-motion:reduce){#hb,.hav,#hb::before,#hb::after,.hav::before,.hav::after{animation:none}#hb::before,#hb::after,.hav::before,.hav::after{display:none}}
+html.anim-on #hb,html.anim-on .hav{animation:glowb 2.6s ease-in-out infinite}
+html.anim-on #hb::before,html.anim-on #hb::after,html.anim-on .hav::before,html.anim-on .hav::after{display:block;animation:ripple 2.6s ease-out infinite}
+html.anim-on #hb::after,html.anim-on .hav::after{animation-delay:1.3s}
+html.anim-off #hb,html.anim-off .hav{animation:none}
+html.anim-off #hb::before,html.anim-off #hb::after,html.anim-off .hav::before,html.anim-off .hav::after{display:none;animation:none}
 #stars2{animation:tw 4.5s ease-in-out infinite alternate}
 @keyframes tw{from{opacity:var(--stars)}to{opacity:calc(var(--stars)*.25)}}
 @media (prefers-reduced-motion:reduce){#stars2{animation:none}.al{animation:none}}
@@ -308,6 +313,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
     <button type="button" class="btn" id="bioT" hidden></button>
     <button type="button" class="btn" id="supb"><span data-i="supb">Assistenza</span><span class="dot" id="udn" hidden></span></button>
     <button type="button" class="btn" id="pwb" data-i="pwb">Cambia password</button>
+    <button type="button" class="btn" id="anb"></button>
     <button type="button" class="btn" id="othD" data-i="othD">Only this phone</button>
     <button type="button" class="btn" id="rfb"><span data-i="rfb">Invite</span></button>
   </div>
@@ -456,7 +462,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
-prv:'Privacy notice',supb:'Support',supa:'Support messages',pwb:'Change password',pwNew:'New password (min. 8 characters):',pwOk:'Password changed.',pwBad:'The password must have at least 8 characters.',
+anA:'Avatar animation: automatic',anO:'Avatar animation: always on',anF:'Avatar animation: off',prv:'Privacy notice',supb:'Support',supa:'Support messages',pwb:'Change password',pwNew:'New password (min. 8 characters):',pwOk:'Password changed.',pwBad:'The password must have at least 8 characters.',
 radd:'+ Add reminder',othD:'Notifications only on this phone',othOk:'Done: other phones and old installs no longer get notifications.',othAsk:'Stop notifications on every other phone or old install of this account? Open DayMarck on them again to turn them back on.',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
@@ -490,7 +496,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
-prv:'Informativa sulla privacy',supb:'Assistenza',supa:'Messaggi assistenza',pwb:'Cambia password',pwNew:'Nuova password (min. 8 caratteri):',pwOk:'Password cambiata.',pwBad:'La password deve avere almeno 8 caratteri.',
+anA:'Animazione avatar: automatica',anO:'Animazione avatar: sempre attiva',anF:'Animazione avatar: ferma',prv:'Informativa sulla privacy',supb:'Assistenza',supa:'Messaggi assistenza',pwb:'Cambia password',pwNew:'Nuova password (min. 8 caratteri):',pwOk:'Password cambiata.',pwBad:'La password deve avere almeno 8 caratteri.',
 radd:'+ Aggiungi promemoria',othD:'Notifiche solo su questo telefono',othOk:'Fatto: gli altri telefoni e le vecchie installazioni non ricevono più notifiche.',othAsk:'Fermare le notifiche su ogni altro telefono o vecchia installazione di questo account? Riaprendo DayMarck su quelli si riattivano.',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
@@ -1722,7 +1728,16 @@ $('#pwb').onclick=async()=>{
   const {error}=await sb.auth.updateUser({password:v});
   toast(error?String(error.message||error):t_('pwOk'));
 };
-$('#lang').addEventListener('click',()=>{labels();if(hp.classList.contains('on')&&mode==='list')list()});
+$('#lang').addEventListener('click',()=>{labels();anApply();if(hp.classList.contains('on')&&mode==='list')list()});
+/* ----- animazione dell'avatar: automatica (segue il telefono) / sempre attiva / ferma ----- */
+const AN=['auto','on','off'],ANK={auto:'anA',on:'anO',off:'anF'};
+let anm='auto';try{const v=localStorage.getItem('dm.anim');if(AN.includes(v))anm=v}catch(e){}
+function anApply(){
+  const c=document.documentElement.classList;c.toggle('anim-on',anm==='on');c.toggle('anim-off',anm==='off');
+  const b=$('#anb');if(b)b.textContent=t_(ANK[anm]);
+}
+$('#anb').onclick=()=>{anm=AN[(AN.indexOf(anm)+1)%3];try{localStorage.setItem('dm.anim',anm)}catch(e){}anApply()};
+anApply();
 labels();
 })();
 </script>
