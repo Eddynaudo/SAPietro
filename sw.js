@@ -1,4 +1,4 @@
-const V='daymarck-v24',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp'];
+const V='daymarck-v25',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
