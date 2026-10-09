@@ -35,7 +35,7 @@ button,input,textarea{font:inherit;color:inherit}
 #sky canvas{position:absolute;inset:0;width:100%;height:100%;opacity:var(--stars)}
 #bgp{position:absolute;inset:0;background:url(bg.webp) center/cover no-repeat;filter:var(--bf,none);transform:translateZ(0)}
 #bgt{position:absolute;inset:0;background:var(--bt,transparent)}
-.ufoot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:14px}.ufoot #upb{justify-self:end}.ufoot #uver{font-size:12px;opacity:.75}.ufoot #upb{padding:8px 14px;font-size:14px}.ribbon{position:fixed;top:0;left:0;right:0;z-index:50;background:#E8590C;color:#fff;font:700 11px system-ui;text-align:center;padding:2px;letter-spacing:.1em;pointer-events:none}#upd .sheet{text-align:center}#upd p{margin:8px 0}#upd .ic{font-size:13px;opacity:.9}.ulogo{display:block;width:76px;height:76px;margin:0 auto;filter:drop-shadow(0 4px 14px rgba(40,150,255,.55))}
+.cap{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;background:var(--field)}.cap b{font-size:14px}.cap .bar{height:8px;border-radius:5px;background:rgba(255,255,255,.18);margin:4px 0 8px;overflow:hidden}.cap .bar i{display:block;height:100%;background:#3DDC84}.cap .bar i.w{background:#FFB020}.cap .bar i.c{background:#FF5C5C}.cap .big{font-size:20px;font-weight:800}.cap small{opacity:.75;display:block;margin-top:4px}.ufoot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:14px}.ufoot #upb{justify-self:end}.ufoot #uver{font-size:12px;opacity:.75}.ufoot #upb{padding:8px 14px;font-size:14px}.ribbon{position:fixed;top:0;left:0;right:0;z-index:50;background:#E8590C;color:#fff;font:700 11px system-ui;text-align:center;padding:2px;letter-spacing:.1em;pointer-events:none}#upd .sheet{text-align:center}#upd p{margin:8px 0}#upd .ic{font-size:13px;opacity:.9}.ulogo{display:block;width:76px;height:76px;margin:0 auto;filter:drop-shadow(0 4px 14px rgba(40,150,255,.55))}
 .plk{color:inherit;font-size:14px;opacity:.85}
 .sheet .sub{color:var(--mute);text-shadow:none}
 /* riquadri con sfumatura e bagliore bianco, per leggerli bene sullo sfondo */
@@ -323,6 +323,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
     <div class="stack" style="margin-top:0">
       <button type="button" class="btn" id="adb"><span data-i="adb">Referral &amp; Rewards</span><span class="dot" id="adn" hidden></span></button>
       <button type="button" class="btn" id="usb" data-i="usb">Users</button>
+      <div id="cap" class="cap" hidden></div>
       <button type="button" class="btn" id="supa"><span data-i="supa">Messaggi assistenza</span><span class="dot" id="sdn" hidden></span></button>
     </div>
     <hr>
@@ -1768,6 +1769,31 @@ labels();
 })();
 </script>
 <script>
+/* Capienza Supabase (solo amministratore) */
+(function(){
+const q=s=>document.querySelector(s),en=()=>document.documentElement.lang==='en';
+const mb=b=>b>=1073741824?(b/1073741824).toFixed(2)+' GB':(b/1048576).toFixed(b<10485760?2:1)+' MB';
+const cls=p=>p>=85?'c':p>=70?'w':'';
+let alerted='';
+async function cap(show){
+  if(!sb||typeof isAdmin!=='function'||!isAdmin())return;
+  let d;try{const r=await sb.rpc('admin_capacity');d=r.data;if(r.error||!d)return}catch(e){return}
+  const E=en(),worst=Math.max(d.db_pct,d.storage_pct),low=d.users_left<=10||worst>=80;
+  const bar=(l,u,t,p)=>'<div>'+l+': <b>'+mb(u)+'</b> / '+mb(t)+' ('+p+'%)</div><div class="bar"><i class="'+cls(p)+'" style="width:'+Math.min(p,100)+'%"></i></div>';
+  const el=q('#cap');if(!el)return;
+  el.innerHTML='<b>'+(E?'Supabase capacity (real time)':'Capienza Supabase (tempo reale)')+'</b>'+
+    bar(E?'Database':'Database',d.db_bytes,d.db_limit,d.db_pct)+bar(E?'Files (photos/audio)':'Archivio file (foto/audio)',d.storage_bytes,d.storage_limit,d.storage_pct)+
+    '<div class="big">'+(E?'~'+d.users_left+' more users':'~'+d.users_left+' utenti ancora attivabili')+'</div>'+
+    '<small>'+(E?'Now '+d.users+' users. Estimate per user: files ':'Ora '+d.users+' utenti. Stima per utente: file ')+mb(d.per_user_storage)+(E?', data ':', dati ')+mb(d.per_user_db)+'. '+
+    (d.storage_estimated?(E?'Files: prudent assumption until at least 3 users upload attachments; it becomes a real average afterwards.':'File: ipotesi prudente finché almeno 3 utenti non caricano allegati; poi diventa una media reale.'):(E?'Based on real averages.':'Basata sulle medie reali.'))+
+    (low?'<br><b style="color:#FFB020">⚠ '+(E?'Time to plan the Supabase upgrade.':'È il momento di pianificare l’upgrade di Supabase.')+'</b>':'')+'</small>';
+  el.hidden=false;
+  if(low&&alerted!==String(d.users_left)&&!show){alerted=String(d.users_left);toast((E?'⚠ Supabase: about ':'⚠ Supabase: circa ')+d.users_left+(E?' users left before the upgrade':' utenti prima dell’upgrade'))}
+}
+window.dmCap=cap;
+const b=q('#ubtn');if(b)b.addEventListener('click',()=>cap(true));
+setTimeout(()=>cap(false),6000);setInterval(()=>cap(false),30*60*1000);
+})();
 /* Aggiornamenti: quelli "di sistema" arrivano da soli. Quelli importanti (nuove funzioni, icona) li approva l'amministratore: tabella app_release -> popup. */
 (function(){
 const q=s=>document.querySelector(s),lg=()=>document.documentElement.lang==='en'?'en':'it';
