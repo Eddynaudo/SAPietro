@@ -1455,7 +1455,7 @@ render();
 /* Assistente: risposte predefinite (nessuna AI) + chat con l'assistenza (amministratore). */
 (function(){
 const H={
-it:{nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda che ti serve, oppure scrivimi la tua.',more:'← Altre domande',
+it:{wel:'Ciao, benvenuto in DayMarck! 👋 Vuoi sapere qualcosa? Ti propongo alcune cose utili da conoscere subito:',nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda che ti serve, oppure scrivimi la tua.',more:'← Altre domande',
  ask:'✍️ Scrivi la tua domanda',chat:'💬 Scrivi all’assistenza',inb:'📥 Apri i messaggi ricevuti',askPh:'Es. come cambio la password?',askGo:'Chiedi',
  noMatch:'Non ho una risposta precisa a questa domanda nell’app. Puoi scrivere all’assistenza: ti risponde direttamente l’amministratore.',noMatchAdm:'Non ho una risposta precisa a questa domanda.',
  rel:'Potrebbe interessarti anche:',unknown:'Se hai un dubbio che non trovi qui, scrivi all’assistenza.',unknownAdm:'',
@@ -1489,7 +1489,7 @@ it:{nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda ch
  ['Dove trovo l’informativa sulla privacy?','Nella schermata di accesso e nell’<b>Area utente</b> 👤 trovi <b>Informativa sulla privacy</b>: spiega quali dati trattiamo, perché, per quanto tempo e come esercitare i tuoi diritti (accesso, rettifica, cancellazione).','privacy dati gdpr informativa cancellare trattamento personali diritti'],
  ['Come contatto l’assistenza?','Tocca <b>Scrivi all’assistenza</b> qui sotto (o il pulsante <b>Assistenza</b> nell’Area utente 👤): il messaggio arriva direttamente all’amministratore e la risposta compare nella stessa schermata, con una notifica.','assistenza contattare contatto supporto aiuto scrivere messaggio problema']
  ]},
-en:{nm:'DayMarck Assistant',sb:'Quick answers',hi:'Hi! Pick the question you need, or type your own.',more:'← More questions',
+en:{wel:'Hi, welcome to DayMarck! 👋 Want to know something? Here are a few useful things to learn right away:',nm:'DayMarck Assistant',sb:'Quick answers',hi:'Hi! Pick the question you need, or type your own.',more:'← More questions',
  ask:'✍️ Type your question',chat:'💬 Message support',inb:'📥 Open received messages',askPh:'E.g. how do I change my password?',askGo:'Ask',
  noMatch:'I don’t have a precise answer to that in the app. You can message support: the administrator replies to you directly.',noMatchAdm:'I don’t have a precise answer to that.',
  rel:'You may also like:',unknown:'If you have a doubt that isn’t covered here, message support.',unknownAdm:'',
@@ -1622,6 +1622,26 @@ function openHelp(m){
   if(m==='chat'&&!adm())chat();else list();
   $('#hx').focus();
 }
+function welcome(set){
+  labels();hp.classList.add('on');mode='list';const h=L();
+  bd.innerHTML='<div class="hm bot">'+h.wel+'</div><div class="hq">'+set.map(i=>'<button type="button" data-q="'+i+'">'+h.q[i][0]+'</button>').join('')+'</div><div class="hq"><button type="button" data-more="1">'+h.more.replace('← ','')+'</button></div>';
+  bd.scrollTop=0;
+}
+/* Prime 3 aperture dell'app su questo dispositivo: l'assistente si apre da solo con 3 domande utili. */
+const WSETS=[[0,5,4],[2,6,7],[19,3,13]];
+let welDone=false;
+function maybeWelcome(){
+  if(welDone||!me()||adm())return;
+  const ca=me().created_at;if(ca&&Date.now()-new Date(ca)>14*864e5){welDone=true;return}
+  if(document.querySelector('#ov.on,#nv.on,#usr.on,#cl.on,#upd.on,#lock.on,#rf.on'))return;
+  welDone=true;
+  let n=0;try{n=+localStorage.getItem('dm.opens:'+me().id)||0}catch(e){}
+  if(n>=3)return;
+  try{localStorage.setItem('dm.opens:'+me().id,String(n+1))}catch(e){}
+  welcome(WSETS[n]);
+}
+window.dmWelcome=maybeWelcome;
+let wt=0;const wi=setInterval(()=>{maybeWelcome();if(welDone||++wt>20)clearInterval(wi)},2500);
 function shut(){hp.classList.remove('on');mode='list'}
 hb.onclick=()=>openHelp();$('#hx').onclick=shut;
 hp.onclick=e=>{if(e.target===hp)shut()};
