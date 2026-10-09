@@ -237,6 +237,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <div class="stack">
     <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
     <button type="button" class="btn" id="bioT" hidden></button>
+    <button type="button" class="btn" id="othD" data-i="othD">Only this phone</button>
     <button type="button" class="btn" id="rfb"><span data-i="rfb">Invite</span></button>
   </div>
   <div id="adm" hidden>
@@ -381,7 +382,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
-radd:'+ Add reminder',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+radd:'+ Add reminder',othD:'Notifications only on this phone',othOk:'Done: other phones and old installs no longer get notifications.',othAsk:'Stop notifications on every other phone or old install of this account? Open DayMarck on them again to turn them back on.',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
@@ -414,7 +415,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
-radd:'+ Aggiungi promemoria',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+radd:'+ Aggiungi promemoria',othD:'Notifiche solo su questo telefono',othOk:'Fatto: gli altri telefoni e le vecchie installazioni non ricevono più notifiche.',othAsk:'Fermare le notifiche su ogni altro telefono o vecchia installazione di questo account? Riaprendo DayMarck su quelli si riattivano.',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
@@ -525,7 +526,7 @@ addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(drawStars,200)});
 
 /* ---------- stato ---------- */
 let user=null,items=[],tomb=[],view='cal',filter='all',cur=new Date(),sel=todayKey(),draft=null,mr=null,rt=null,actx=null;
-let syncing=false,again=false,synced=false,started=false,pendingNote=null,pendingKind=null,nvId=null,nvKind=null;
+let syncing=false,again=false,synced=false,started=false,pendingNote=null,pendingKind=null,pendingAid=null,nvId=null,nvKind=null,nvAid=null;
 const KEYU=()=>'promemoria.v2.'+user.id;
 
 /* ---------- salvataggio locale ---------- */
@@ -554,7 +555,9 @@ async function hydrate(t){
     try{
       const {data,error}=await sb.storage.from('attachments').download(a.path);
       if(error)throw error;
-      const u=URL.createObjectURL(data);blobs.set(a.path,u);a.url=u;render();if(nvId===t.id){renderNote();tryAutoplay()}
+      const u=URL.createObjectURL(data);blobs.set(a.path,u);a.url=u;
+      const cur=items.find(x=>x.id===t.id)||t;[...cur.imgs,...(cur.audio?[cur.audio]:[])].forEach(x=>{if(x.path===a.path)x.url=u});
+      render();if(nvId===t.id){renderNote();tryAutoplay()}
     }catch(e){/* offline: riprova alla prossima sincronizzazione */}
     finally{loading.delete(a.path)}
   }
@@ -777,10 +780,10 @@ $('#list').addEventListener('keydown',e=>{
 $('#lb').onclick=()=>$('#lb').classList.remove('on');
 
 /* ---------- nota a schermo intero (anche dalla notifica) ---------- */
-function openNote(id,kind){
+function openNote(id,kind,aid){
   const t=items.find(x=>x.id===id);
   if(!t){pendingNote=id;return false}
-  pendingNote=null;nvId=id;nvKind=kind||null;renderNote();
+  pendingNote=null;nvId=id;nvKind=kind||null;nvAid=aid||null;renderNote();
   $('#nv').classList.add('on');$('#nv').scrollTop=0;
   document.body.style.overflow='hidden';
   $('#nvt').focus();
@@ -799,11 +802,11 @@ function renderNote(){
     +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
-  $('#nvx2').hidden=nvKind!=='main'||!!t.done;$('#nvsz').hidden=true;
+  $('#nvx2').hidden=!(nvKind==='remind'||(nvKind==='main'&&!t.done));$('#nvcl').hidden=nvKind!=='main';$('#nvsz').hidden=true;
   const ok=$('#nvok');ok.disabled=false;ok.classList.toggle('grn',nvKind==='main');
   if(nvKind==='remind')ok.textContent=t_('ok');else if(nvKind==='main')ok.textContent='✅ '+t_('confirmed');else ok.textContent=t.done?t_('done'):t_('complete')
 }
-function closeNote(){stopAudio();nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML='';if(nq.length){const n=nq.shift();setTimeout(()=>enqueueNote(n[0],n[1]),350)}}
+function closeNote(){stopAudio();nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML='';if(nq.length){const n=nq.shift();setTimeout(()=>enqueueNote(n[0],n[1],n[2]),350)}}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
   if(nvKind==='remind'){closeNote();return}
@@ -819,9 +822,16 @@ $('#nvok').onclick=()=>{
 $('#nvsn').onclick=()=>{$('#nvx2').hidden=true;$('#nvsz').hidden=false};
 $('#nvsz').onclick=e=>{
   const b=e.target.closest('[data-m]');if(!b)return;
-  const t=items.find(x=>x.id===nvId),a=t&&mainOf(t);if(!t||!a)return;
-  const m=+b.dataset.m;
-  a.at=loc(new Date(Date.now()+m*60000));a.sent=false;t.alerts.sort((x,y)=>x.at<y.at?-1:1);t.due=firstAt(t);t.dirty=true;
+  const t=items.find(x=>x.id===nvId);if(!t)return;
+  const m=+b.dataset.m,at=loc(new Date(Date.now()+m*60000));
+  let a;
+  if(nvKind==='remind'){
+    a=t.alerts.find(x=>x.id===nvAid&&x.kind!=='main');
+    if(!a){const past=remOf(t).filter(x=>x.sent).sort((x,y)=>x.at<y.at?1:-1);a=past[0]}
+    if(!a){if(remOf(t).length>=5){toast(t_('maxRem'));return}a={id:uuid(),kind:'remind',srv:false};t.alerts.push(a)}
+  }else a=mainOf(t);
+  if(!a)return;
+  a.at=at;a.sent=false;t.alerts.sort((x,y)=>x.at<y.at?-1:1);t.due=firstAt(t);t.dirty=true;
   closeNote();commit();toast(t_('snzDone',{m}));
 };
 $('#nvcl').onclick=()=>{$('#cl').classList.add('on')};
@@ -937,18 +947,21 @@ function playAtt(t){ // solo per la notifica dell'attività: dopo il suono parte
   });
 }
 const nq=[];
-function enqueueNote(id,kind){
-  if(nvId||$('#cl').classList.contains('on')){if(!nq.some(x=>x[0]===id&&x[1]===kind))nq.push([id,kind])}
-  else openNote(id,kind);
+function enqueueNote(id,kind,aid){
+  if(nvId||$('#cl').classList.contains('on')){if(!nq.some(x=>x[0]===id&&x[1]===kind))nq.push([id,kind,aid])}
+  else openNote(id,kind,aid);
 }
 function fire(t,a){
   const main=!a||a.kind==='main';
   beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
-  try{if('Notification' in window&&Notification.permission==='granted'){
-    const o={body:t.title,tag:a?a.id:t.id,icon:'icon-192.png',data:{id:t.id,kind:main?'main':'remind'}},sw=navigator.serviceWorker;
-    (sw?sw.getRegistration():Promise.resolve()).then(r=>r?r.showNotification('DayMarck',o):new Notification('DayMarck',o)).catch(()=>{});
-  }}catch(e){}
-  enqueueNote(t.id,main?'main':'remind');
+  // Se le notifiche push sono attive le invia già il server: qui niente seconda notifica di sistema.
+  (async()=>{try{
+    if('Notification' in window&&Notification.permission==='granted'){
+      let sub=null;try{sub=pushOK()?await getSub():null}catch(e){}
+      if(!sub){const o={body:t.title,tag:a?a.id:t.id,icon:'icon-192.png',data:{id:t.id,aid:a&&a.id,kind:main?'main':'remind'}},sw=navigator.serviceWorker;
+        const r=sw?await sw.getRegistration():null;r?r.showNotification('DayMarck',o):new Notification('DayMarck',o)}
+    }}catch(e){}})();
+  enqueueNote(t.id,main?'main':'remind',a&&a.id);
   if(main&&t.audio)setTimeout(()=>{if(nvId!==t.id)playAtt(t)},1300);
 }
 function check(){
@@ -998,7 +1011,7 @@ async function ensurePush(){
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{
   const d=e.data||{};
   if(d.type==='push')sync();
-  if(d.type==='open-note'&&d.id){pendingNote=d.id;pendingKind=d.kind||null;if(user)sync().then(()=>{if(pendingNote)openNote(pendingNote,pendingKind||'remind')})}
+  if(d.type==='open-note'&&d.id){pendingNote=d.id;pendingKind=d.kind||null;pendingAid=d.aid||null;if(user)sync().then(()=>{if(pendingNote)openNote(pendingNote,pendingKind||'remind',pendingAid)})}
 });
 
 /* ---------- area utente ---------- */
@@ -1243,6 +1256,14 @@ $('#bioY').onclick=async()=>{
   catch(e){$('#bim').textContent=t_('bioErr')}
 };
 $('#bioN').onclick=()=>{try{localStorage.setItem('dm.bio.no.'+user.id,'1')}catch(e){}$('#bio').classList.remove('on')};
+$('#othD').onclick=async()=>{
+  try{
+    const sub=await getSub();if(!sub){toast(t_('noPush'));return}
+    if(!confirm(t_('othAsk')))return;
+    const {error}=await sb.from('push_subscriptions').delete().neq('endpoint',sub.endpoint);
+    if(error)throw error;toast(t_('othOk'));
+  }catch(e){toast(t_('pushFail'))}
+};
 $('#bioT').onclick=async()=>{
   if(bioGet()){try{localStorage.removeItem(bk())}catch(e){}bioBtn();return}
   try{await bioEnable();toast(t_('bioOk'))}catch(e){toast(t_('bioErr'))}
@@ -1289,7 +1310,7 @@ async function start(u){
   render();items.forEach(hydrate);
   await sync();ensurePush();check();claimRef();pendingBadge();flags();
   if(fresh){fresh=false;unlocked=true;offerBio()}
-  if(pendingNote)openNote(pendingNote,pendingKind||'remind');
+  if(pendingNote)openNote(pendingNote,pendingKind||'remind',pendingAid);
   if(!started){
     started=true;
     setInterval(check,15000);
@@ -1312,7 +1333,7 @@ if(sb){
 /* ---------- avvio ---------- */
 (function(){
   const q=new URLSearchParams(location.search).get('note');
-  if(q){pendingNote=q;pendingKind=new URLSearchParams(location.search).get('k');try{history.replaceState(null,'',location.pathname)}catch(e){}}
+  if(q){pendingNote=q;pendingKind=new URLSearchParams(location.search).get('k');pendingAid=new URLSearchParams(location.search).get('a');try{history.replaceState(null,'',location.pathname)}catch(e){}}
 })();
 $('#lang').onclick=()=>{
   LANG=LANG==='en'?'it':'en';

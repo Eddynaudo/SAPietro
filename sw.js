@@ -1,4 +1,4 @@
-const V='daymarck-v13',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico'];
+const V='daymarck-v14',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
@@ -30,7 +30,7 @@ self.addEventListener('push',e=>{
       tag:d.aid||d.id||'daymarck',
       icon:'icon-192.png',
       badge:'icon-192.png',
-      data:{id:d.id,kind:d.kind},
+      data:{id:d.id,aid:d.aid,kind:d.kind},
       requireInteraction:true,
       vibrate:[200,100,200]
     });
@@ -42,12 +42,12 @@ self.addEventListener('push',e=>{
 // Toccando la notifica si apre la nota a schermo intero.
 self.addEventListener('notificationclick',e=>{
   e.notification.close();
-  const id=e.notification.data&&e.notification.data.id,kind=(e.notification.data&&e.notification.data.kind)||'remind';
-  const url='./index.html'+(id?'?note='+encodeURIComponent(id)+'&k='+encodeURIComponent(kind):'');
+  const id=e.notification.data&&e.notification.data.id,kind=(e.notification.data&&e.notification.data.kind)||'remind',aid=e.notification.data&&e.notification.data.aid;
+  const url='./index.html'+(id?'?note='+encodeURIComponent(id)+'&k='+encodeURIComponent(kind)+(aid?'&a='+encodeURIComponent(aid):''):'');
   e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{
     if(l.length){
       const c=l[0];
-      if(id)c.postMessage({type:'open-note',id,kind});
+      if(id)c.postMessage({type:'open-note',id,kind,aid});
       return c.focus();
     }
     return clients.openWindow(url);
