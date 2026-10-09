@@ -33,10 +33,8 @@ button,input,textarea{font:inherit;color:inherit}
 /* cielo */
 #sky{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%);overflow:hidden}
 #sky canvas{position:absolute;inset:0;width:100%;height:100%;opacity:var(--stars)}
-#sky #skyfx{opacity:1}
-#sky #mead{position:absolute;left:0;right:0;bottom:0;height:var(--mh,240px);pointer-events:none}
-#mead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;filter:var(--mf,none)}
-#mead::after{content:'';position:absolute;inset:0;background:var(--mtint,transparent);-webkit-mask-image:url(meadow.webp);mask-image:url(meadow.webp);-webkit-mask-size:cover;mask-size:cover;-webkit-mask-position:center bottom;mask-position:center bottom;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+#bgp{position:absolute;inset:0;background:url(bg.webp) center/cover no-repeat;filter:var(--bf,none);transform:translateZ(0)}
+#bgt{position:absolute;inset:0;background:var(--bt,transparent)}
 #stars2{animation:tw 4.5s ease-in-out infinite alternate}
 @keyframes tw{from{opacity:var(--stars)}to{opacity:calc(var(--stars)*.25)}}
 @media (prefers-reduced-motion:reduce){#stars2{animation:none}.al{animation:none}}
@@ -64,8 +62,8 @@ h1{font-size:clamp(28px,7.6vw,42px);line-height:1.04;font-weight:800;margin:6px 
 .dy i{position:absolute;bottom:5px;left:50%;width:7px;height:7px;margin-left:-3px;border-radius:50%;background:var(--warn)}
 .dy i.dn{background:var(--ok)}
 .dy.sel i{background:var(--accInk)}
-#dayh{margin:18px 0 8px;font-size:20px;font-weight:800;color:var(--skyInk);text-shadow:var(--skyShadow)}
-.dg{margin:16px 0 6px;font-size:15px;font-weight:600;color:var(--skyMute);text-shadow:var(--skyShadow)}
+#dayh{margin:18px 0 8px;font-size:20px;font-weight:800;color:#F2F6FF;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.dg{margin:16px 0 6px;font-size:15px;font-weight:600;color:rgba(242,246,255,.94);text-shadow:0 1px 8px rgba(0,0,0,.7)}
 
 /* elenco e scorrimento */
 .sw{position:relative;margin-bottom:10px;border-radius:16px;overflow:hidden}
@@ -132,9 +130,9 @@ select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;b
 select option{color:#0B1230}
 .lock{position:fixed;inset:0;z-index:40;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%)}
 .lock.on{display:flex}.lock img{width:112px;height:112px;border-radius:26px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
-.lock h2{margin:0;font-size:28px;color:var(--skyInk);text-shadow:var(--skyShadow)}
-.lock p{margin:0;max-width:320px;color:var(--skyInk);text-shadow:var(--skyShadow)}
-.lk2{background:none;border:0;color:var(--skyInk);text-decoration:underline;cursor:pointer;padding:8px}
+.lock h2{margin:0;font-size:28px;color:var(--lkInk,#F2F6FF);text-shadow:var(--lkShadow,none)}
+.lock p{margin:0;max-width:320px;color:var(--lkInk,#F2F6FF);text-shadow:var(--lkShadow,none)}
+.lk2{background:none;border:0;color:var(--lkInk,#F2F6FF);text-decoration:underline;cursor:pointer;padding:8px}
 input[type=datetime-local]{display:block;min-width:0;max-width:100%;min-height:46px;-webkit-appearance:none;appearance:none;text-align:left}
 input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-width:0}
 .rl input{min-width:0}
@@ -222,7 +220,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 #sbn .o{background:#7C98FF;color:#0B1230}#sbn .c{background:transparent;font-size:20px;padding:4px 8px}
 </style></head>
 <body class="guest">
-<div id="sky" aria-hidden="true"><canvas id="stars"></canvas><canvas id="stars2"></canvas><canvas id="skyfx"></canvas><div id="mead"><img id="mimg" src="meadow.webp" alt="" decoding="async"></div></div>
+<div id="sky" aria-hidden="true"><div id="bgp"></div><div id="bgt"></div><canvas id="stars"></canvas><canvas id="stars2"></canvas></div>
 
 <div class="app">
   <div class="top">
@@ -519,17 +517,21 @@ function applyLang(){
 
 
 /* ---------- cielo che cambia durante la giornata ---------- */
-const SKY=[
-  [0,'#050a1c','#0b1636','#16224a',1],
-  [5,'#0a1330','#1d2c5c','#3b3f73',.8],
-  [6.5,'#2c3e78','#e0829a','#ffc27a',.15],
-  [8.5,'#4aa3e0','#8ccaf0','#cfeaf7',0],
-  [13,'#2f8fe0','#6db8ee','#bfe3f7',0],
-  [17,'#4a8fd8','#a9c9e8','#f6d9a6',0],
-  [18.75,'#2d3a7c','#d9708a','#ffb36b',.2],
-  [20,'#121c4a','#38336e','#7a4a7a',.7],
-  [21.5,'#060c24','#0e1a3d','#1a2652',1],
-  [24,'#050a1c','#0b1636','#16224a',1]
+const SKY=[ // ora, 3 colori del cielo (per le schermate a tinta unita), stelle 0-1, buio della foto 0-1
+  [0,'#050a1c','#0b1636','#16224a',1,1],
+  [4.5,'#050a1c','#0b1636','#16224a',1,1],
+  [5.5,'#0a1330','#1d2c5c','#3b3f73',.7,.85],
+  [6.5,'#2c3e78','#e0829a','#ffc27a',.15,.4],
+  [7.75,'#4aa3e0','#8ccaf0','#cfeaf7',0,.05],
+  [8.5,'#4aa3e0','#8ccaf0','#cfeaf7',0,0],
+  [13,'#2f8fe0','#6db8ee','#bfe3f7',0,0],
+  [17,'#4a8fd8','#a9c9e8','#f6d9a6',0,0],
+  [18.6,'#2d3a7c','#d9708a','#ffb36b',0,.2],
+  [19.8,'#121c4a','#38336e','#7a4a7a',0,.55],
+  [20.5,'#0a1235','#1b2352','#3a2f60',.15,.8],
+  [21.5,'#060c24','#0e1a3d','#1a2652',.6,.94],
+  [22.5,'#050a1c','#0b1636','#16224a',1,1],
+  [24,'#050a1c','#0b1636','#16224a',1,1]
 ];
 const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const mix=(a,b,t)=>a.map((x,i)=>Math.round(x+(b[i]-x)*t));
@@ -539,7 +541,7 @@ const lum=a=>{const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.05
 function skyAt(h){
   let i=0;while(i<SKY.length-2&&h>=SKY[i+1][0])i++;
   const A=SKY[i],B=SKY[i+1],t=Math.min(1,Math.max(0,(h-A[0])/(B[0]-A[0])));
-  return{c:[1,2,3].map(k=>mix(hex(A[k]),hex(B[k]),t)),s:A[4]+(B[4]-A[4])*t};
+  return{c:[1,2,3].map(k=>mix(hex(A[k]),hex(B[k]),t)),s:A[4]+(B[4]-A[4])*t,d:A[5]+(B[5]-A[5])*t};
 }
 // Testo chiaro o scuro, a seconda di cosa si legge meglio sulla parte alta del cielo.
 function skyInk(c){
@@ -552,15 +554,23 @@ function skyInk(c){
   return wl>=wd?'light':'dark';
 }
 function applySky(date){
-  const n=date||new Date(),h=n.getHours()+n.getMinutes()/60,{c,s}=skyAt(h),st=document.documentElement.style;
+  const n=date||new Date(),h=n.getHours()+n.getMinutes()/60,{c,s,d}=skyAt(h),st=document.documentElement.style;
   st.setProperty('--sky1',rgb(c[0]));st.setProperty('--sky2',rgb(c[1]));st.setProperty('--sky3',rgb(c[2]));
   st.setProperty('--stars',s.toFixed(2));
-  const light=skyInk(c)==='light';
+  // la foto: il sole resta fermo, cambia la luce (calda al tramonto/alba, sempre più buia fino alla notte)
+  const warm=Math.max(0,1-Math.abs(h-18.9)/1.3,1-Math.abs(h-6.4)/1.0),b=1-.8*d,navy=[6,11,32];
+  const tint=mix(mix(c[2],c[1],.5),navy,Math.min(1,d*1.1)),ta=Math.min(.6,.58*d+.12*warm*(1-d));
+  st.setProperty('--bf','brightness('+b.toFixed(2)+') saturate('+(1-.45*d+.14*warm).toFixed(2)+')');
+  st.setProperty('--bt','rgba('+tint.join(',')+','+ta.toFixed(2)+')');
+  // testo chiaro o scuro in base a quanto è chiara la parte alta della foto in questo momento
+  const L=.3*Math.pow(b,2.2)*(1-ta)+lum(tint)*ta,light=1.05/(L+.05)>(L+.05)/.058;
   st.setProperty('--skyInk',light?'#F2F6FF':'#0B1230');
-  st.setProperty('--skyMute',light?'rgba(242,246,255,.86)':'rgba(11,18,48,.8)');
-  st.setProperty('--skyShadow',light?'0 1px 10px rgba(0,0,0,.4)':'0 1px 10px rgba(255,255,255,.45)');
+  st.setProperty('--skyMute',light?'rgba(242,246,255,.88)':'rgba(11,18,48,.82)');
+  st.setProperty('--skyShadow',light?'0 1px 10px rgba(0,0,0,.45)':'0 1px 10px rgba(255,255,255,.55)');
+  const lk=skyInk(c)==='light';
+  st.setProperty('--lkInk',lk?'#F2F6FF':'#0B1230');
+  st.setProperty('--lkShadow',lk?'0 1px 10px rgba(0,0,0,.4)':'0 1px 10px rgba(255,255,255,.45)');
   const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',toHex(c[0]));
-  if(typeof drawFx==='function')drawFx(n);
 }
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function drawStars(){
@@ -569,9 +579,9 @@ function drawStars(){
     const c=$('#'+id),x=c.getContext&&c.getContext('2d');if(!x)return;
     c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);
     x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
-    const r=rng(seed),n=Math.round(w*h/3600*share);
+    const r=rng(seed),n=Math.round(w*h/4600*share);
     for(let i=0;i<n;i++){
-      const px=r()*w,py=h*.9*Math.pow(r(),1.35),rad=.4+r()*r()*1.5,a=(.35+r()*.65).toFixed(2),k=r();
+      const px=r()*w,py=h*.38*Math.pow(r(),.85),rad=.4+r()*r()*1.5,a=(.35+r()*.65).toFixed(2),k=r();
       x.fillStyle=k<.15?'rgba(255,226,190,'+a+')':k<.3?'rgba(190,215,255,'+a+')':'rgba(255,255,255,'+a+')';
       if(rad>1.2){x.shadowColor='rgba(200,220,255,.9)';x.shadowBlur=6}else x.shadowBlur=0;
       x.beginPath();x.arc(px,py,rad,0,6.2832);x.fill();
@@ -580,58 +590,7 @@ function drawStars(){
 }
 let rs=null;
 
-/* ---------- sole, luna e prato fiorito ---------- */
-const SUN_RISE=6.2,SUN_SET=19.8;
-let MH=100;
-function meadowH(){return Math.max(78,Math.min(124,Math.round(window.innerHeight*.12)))}
-function fxCtx(id,w,h,dpr){const c=$('#'+id),x=c.getContext&&c.getContext('2d');if(!x)return null;c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c.style.aspectRatio=w+'/'+h;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);return x}
-function drawMeadow(){MH=Math.max(150,Math.min(Math.round(window.innerHeight*.36),Math.round(window.innerWidth*607/941)));document.documentElement.style.setProperty('--mh',MH+'px')}
-function moonPhase(d){return(((d.getTime()-Date.UTC(2000,0,6,18,14))/864e5)%29.530588+29.530588)%29.530588/29.530588}
-function drawMoon(x,cx,cy,R,ph,al){
-  x.save();x.globalAlpha=al;
-  let g=x.createRadialGradient(cx,cy,R*.6,cx,cy,R*5);g.addColorStop(0,'rgba(190,210,255,.30)');g.addColorStop(1,'rgba(190,210,255,0)');
-  x.fillStyle=g;x.beginPath();x.arc(cx,cy,R*5,0,6.2832);x.fill();
-  x.fillStyle='rgba(150,165,205,.20)';x.beginPath();x.arc(cx,cy,R,0,6.2832);x.fill(); // parte in ombra
-  const side=ph<.5?1:-1,c=Math.cos(ph*6.2832);
-  x.translate(cx,cy);x.scale(side,1);
-  x.fillStyle='#f6f2e2';x.shadowColor='rgba(255,250,225,.9)';x.shadowBlur=14;
-  x.beginPath();x.arc(0,0,R,-1.5708,1.5708,false);
-  x.ellipse(0,0,Math.max(.01,Math.abs(c))*R,R,0,1.5708,-1.5708,c>0);
-  x.closePath();x.fill();
-  x.restore();
-}
-function drawFx(date){
-  const n=date||new Date(),h=n.getHours()+n.getMinutes()/60,W=window.innerWidth,Hh=window.innerHeight,dpr=Math.min(2,window.devicePixelRatio||1);
-  const x=fxCtx('skyfx',W,Hh,dpr);if(!x)return;
-  const hor=Hh-MH+Math.round(MH*.3),topY=Hh*.15;
-  const px=q=>W*(.08+.84*q+.2*Math.sin(Math.PI*Math.min(1,Math.max(0,q))));
-  // sole: sorge a est, tocca il punto più alto verso mezzogiorno, tramonta a ovest
-  const p=(h-SUN_RISE)/(SUN_SET-SUN_RISE);
-  if(p>-.04&&p<1.04){
-    const pc=Math.min(1,Math.max(0,p)),alt=Math.sin(Math.PI*pc),sx=px(p<0?-.0:pc)+(p<0?-W*.02:p>1?W*.02:0),sy=hor-alt*(hor-topY)+(p<0||p>1?10:0);
-    const low=1-Math.pow(alt,.5),col=[255,Math.round(226-low*110),Math.round(120-low*70)],R=24+low*10,fade=Math.min(1,Math.max(0,alt*5));
-    x.save();x.globalAlpha=Math.max(fade,.25);
-    const c3=col.join(',');
-    let g=x.createRadialGradient(sx,sy,R*.4,sx,sy,R*7);g.addColorStop(0,'rgba('+c3+',.75)');g.addColorStop(.3,'rgba('+c3+',.28)');g.addColorStop(1,'rgba('+c3+',0)');
-    x.fillStyle=g;x.beginPath();x.arc(sx,sy,R*7,0,6.2832);x.fill();
-    x.shadowColor='rgba('+c3+',1)';x.shadowBlur=30;x.fillStyle='rgb('+c3+')';x.beginPath();x.arc(sx,sy,R,0,6.2832);x.fill();
-    x.shadowBlur=0;x.fillStyle='rgba(255,252,225,.9)';x.beginPath();x.arc(sx,sy,R*.62,0,6.2832);x.fill();
-    x.restore();
-  }
-  // luna: compare in serata, sale, scende e sparisce all'alba
-  const q=((h-19.3+24)%24)/11.1;
-  if(q>=0&&q<=1){
-    const alt=Math.sin(Math.PI*q),dark=skyAt(h).s,al=Math.min(1,alt*3+.12)*Math.min(1,dark*1.7);
-    if(al>.02)drawMoon(x,px(q),hor-alt*(hor-Hh*.14),20,moonPhase(n),al);
-  }
-  // la foto del prato cambia luce con l'ora: più chiara di giorno, calda all'alba e al tramonto, scura e fredda di notte
-  const {c,s}=skyAt(h),gold=Math.max(0,1-Math.abs(h-18.9)/1.3,1-Math.abs(h-6.7)/1.1);
-  const br=(1.04-.62*s).toFixed(2),sat=(1.05+.2*gold-.4*s).toFixed(2),t=mix(c[2],[8,14,40],Math.min(1,s*.95)),a=Math.min(.72,.14+.58*s);
-  const st=document.documentElement.style;
-  st.setProperty('--mf','brightness('+br+') saturate('+sat+') sepia('+(gold*.12).toFixed(2)+') hue-rotate('+Math.round(16*(1-gold)*(1-s))+'deg)');
-  st.setProperty('--mtint','rgba('+t.join(',')+','+a.toFixed(2)+')');
-}
-addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(()=>{drawStars();drawMeadow();drawFx()},200)});
+addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(drawStars,200)});
 
 /* ---------- stato ---------- */
 let user=null,items=[],tomb=[],view='cal',filter='all',cur=new Date(),sel=todayKey(),draft=null,mr=null,rt=null,actx=null;
@@ -1455,7 +1414,7 @@ $('#lang').onclick=()=>{
 };
 if(navigator.standalone)document.documentElement.classList.add('ios-sa');
 applyLang();
-drawStars();drawMeadow();applySky();setInterval(()=>applySky(),60000);
+drawStars();applySky();setInterval(()=>applySky(),60000);
 render();
 </script>
 <script>
