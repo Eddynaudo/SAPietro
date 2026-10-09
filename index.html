@@ -161,6 +161,9 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 #nvt{font-size:28px;font-weight:800;line-height:1.1;margin:6px 0 8px;overflow-wrap:anywhere;outline:none}
 #nvd{font-size:18px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
 .big{width:100%;padding:16px;font-size:18px;margin-top:22px;border-radius:14px}
+.nvr{display:flex;gap:10px;margin-top:12px}.nvr .btn{flex:1;padding:12px 8px;font-weight:700}
+.btn.wht{background:#fff;color:#0B1230;border-color:#fff}
+#cl{z-index:22}
 .big.grn{background:var(--ok);color:#06210f;border-color:var(--ok)}
 .big[disabled]{opacity:.6;cursor:default}
 
@@ -284,6 +287,17 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <p class="am" id="bim" role="status" style="color:#fff"></p>
 </div></div>
 
+<div class="ov" id="cl"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="clt" style="max-width:440px">
+  <h2 id="clt" data-i="clT">Close this notification?</h2>
+  <p class="sub" data-i="clH" style="color:#fff;text-shadow:none"></p>
+  <div class="stack">
+    <button type="button" class="btn pri" id="clE" data-i="clE">Edit</button>
+    <button type="button" class="btn out" id="clD" data-i="clD">Delete</button>
+    <button type="button" class="btn" id="clK" data-i="clK">Leave it</button>
+    <button type="button" class="btn" id="clX" data-i="cancel">Cancel</button>
+  </div>
+</div></div>
+
 <div class="ov" id="rf"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rft">
   <h2 id="rft" data-i="rfT">Invite friends and earn</h2>
   <p class="sub" data-i="rfH" style="color:#fff;text-shadow:none;margin:0 0 8px"></p>
@@ -328,6 +342,13 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
     <h2 id="nvt" tabindex="-1"></h2>
     <p id="nvd"></p>
     <button type="button" class="btn pri big" id="nvok">Completa</button>
+    <div class="nvr" id="nvx2" hidden>
+      <button type="button" class="btn wht" id="nvsn" data-i="snzB">Snooze</button>
+      <button type="button" class="btn wht" id="nvcl" data-i="clsB">Close</button>
+    </div>
+    <div class="nvr" id="nvsz" hidden>
+      <button type="button" class="btn wht" data-m="5">5 min</button><button type="button" class="btn wht" data-m="10">10 min</button><button type="button" class="btn wht" data-m="30">30 min</button><button type="button" class="btn wht" data-m="60">60 min</button>
+    </div>
   </div>
 </div></div>
 
@@ -360,7 +381,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
-radd:'+ Add reminder',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+radd:'+ Add reminder',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
@@ -393,7 +414,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
-radd:'+ Aggiungi promemoria',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+radd:'+ Aggiungi promemoria',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
@@ -533,7 +554,7 @@ async function hydrate(t){
     try{
       const {data,error}=await sb.storage.from('attachments').download(a.path);
       if(error)throw error;
-      const u=URL.createObjectURL(data);blobs.set(a.path,u);a.url=u;render();if(nvId===t.id)renderNote();
+      const u=URL.createObjectURL(data);blobs.set(a.path,u);a.url=u;render();if(nvId===t.id){renderNote();tryAutoplay()}
     }catch(e){/* offline: riprova alla prossima sincronizzazione */}
     finally{loading.delete(a.path)}
   }
@@ -763,8 +784,14 @@ function openNote(id,kind){
   $('#nv').classList.add('on');$('#nv').scrollTop=0;
   document.body.style.overflow='hidden';
   $('#nvt').focus();
-  if(kind==='main'&&t.audio){stopAudio();hydrate(t).then(()=>{if(nvId===id){const au=$('#nvm audio');if(au&&au.paused)au.play().catch(()=>{})}})}else hydrate(t);
+  nvPlayed=false;stopAudio();hydrate(t).then(tryAutoplay);tryAutoplay();
   return true;
+}
+let nvPlayed=false;
+function tryAutoplay(){ // solo notifica dell'attività: parte la registrazione allegata
+  if(nvKind!=='main'||nvPlayed||!nvId)return;
+  const au=$('#nvm audio');if(!au)return;
+  nvPlayed=true;au.play().catch(()=>{});
 }
 function renderNote(){
   const t=items.find(x=>x.id===nvId);if(!t){closeNote();return}
@@ -772,10 +799,11 @@ function renderNote(){
     +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
+  $('#nvx2').hidden=nvKind!=='main'||!!t.done;$('#nvsz').hidden=true;
   const ok=$('#nvok');ok.disabled=false;ok.classList.toggle('grn',nvKind==='main');
   if(nvKind==='remind')ok.textContent=t_('ok');else if(nvKind==='main')ok.textContent='✅ '+t_('confirmed');else ok.textContent=t.done?t_('done'):t_('complete')
 }
-function closeNote(){stopAudio();nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
+function closeNote(){stopAudio();nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML='';if(nq.length){const n=nq.shift();setTimeout(()=>enqueueNote(n[0],n[1]),350)}}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
   if(nvKind==='remind'){closeNote();return}
@@ -786,6 +814,24 @@ $('#nvok').onclick=()=>{
   closeNote();
   if(!was){commit();toast(t_('doneToast'))}else render();
   pendingNote=null;pendingKind=null;
+};
+
+$('#nvsn').onclick=()=>{$('#nvx2').hidden=true;$('#nvsz').hidden=false};
+$('#nvsz').onclick=e=>{
+  const b=e.target.closest('[data-m]');if(!b)return;
+  const t=items.find(x=>x.id===nvId),a=t&&mainOf(t);if(!t||!a)return;
+  const m=+b.dataset.m;
+  a.at=loc(new Date(Date.now()+m*60000));a.sent=false;t.alerts.sort((x,y)=>x.at<y.at?-1:1);t.due=firstAt(t);t.dirty=true;
+  closeNote();commit();toast(t_('snzDone',{m}));
+};
+$('#nvcl').onclick=()=>{$('#cl').classList.add('on')};
+$('#clX').onclick=()=>$('#cl').classList.remove('on');
+$('#clK').onclick=()=>{$('#cl').classList.remove('on');closeNote()};
+$('#clE').onclick=()=>{const t=items.find(x=>x.id===nvId);$('#cl').classList.remove('on');closeNote();if(t)openF(t)};
+$('#clD').onclick=()=>{
+  const t=items.find(x=>x.id===nvId);$('#cl').classList.remove('on');closeNote();
+  if(!t)return;
+  items=items.filter(x=>x!==t);tomb.push({id:t.id,paths:[...(t.srv||[])]});commit();toast(t_('delToast'));
 };
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
@@ -890,30 +936,21 @@ function playAtt(t){ // solo per la notifica dell'attività: dopo il suono parte
     stopAudio();const a=new Audio(t.audio.url);curAudio=a;a.play().catch(()=>{});
   });
 }
+const nq=[];
+function enqueueNote(id,kind){
+  if(nvId||$('#cl').classList.contains('on')){if(!nq.some(x=>x[0]===id&&x[1]===kind))nq.push([id,kind])}
+  else openNote(id,kind);
+}
 function fire(t,a){
-  beep();if(!a||a.kind==='main')setTimeout(()=>playAtt(t),1300);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
-  const el=document.createElement('div');el.className='al';el.dataset.id=t.id;if(a)el.dataset.aid=a.id;
-  const main=!a||a.kind==='main';el.dataset.kind=main?'main':'remind';
-  el.innerHTML=`<button class="lk" data-b="open">${main?'⏰':'🔔'} ${esc(t.title)}</button><div class="row">${main?`<button class="sm" data-b="done">${t_('confirmed')}</button><button class="sm" data-b="snz">${t_('snooze')}</button><button class="sm" data-b="x">${t_('close')}</button>`:`<button class="sm" data-b="x">${t_('ok')}</button>`}</div>`;
-  $('#alerts').append(el);
+  const main=!a||a.kind==='main';
+  beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
   try{if('Notification' in window&&Notification.permission==='granted'){
-    const o={body:t.title,tag:t.id,icon:'icon-192.png',data:{id:t.id,kind:main?'main':'remind'}},sw=navigator.serviceWorker;
+    const o={body:t.title,tag:a?a.id:t.id,icon:'icon-192.png',data:{id:t.id,kind:main?'main':'remind'}},sw=navigator.serviceWorker;
     (sw?sw.getRegistration():Promise.resolve()).then(r=>r?r.showNotification('DayMarck',o):new Notification('DayMarck',o)).catch(()=>{});
   }}catch(e){}
+  enqueueNote(t.id,main?'main':'remind');
+  if(main&&t.audio)setTimeout(()=>{if(nvId!==t.id)playAtt(t)},1300);
 }
-$('#alerts').onclick=e=>{
-  const b=e.target.closest('[data-b]');if(!b)return;
-  const el=b.closest('.al'),t=items.find(x=>x.id===el.dataset.id);
-  stopAudio();
-  if(b.dataset.b==='open'){el.remove();if(t)openNote(t.id,el.dataset.kind);return}
-  if(t&&b.dataset.b==='done'){t.done=true;t.dirty=true}
-  if(t&&b.dataset.b==='snz'){
-    const at=loc(new Date(Date.now()+600000)),a=t.alerts.find(x=>x.id===el.dataset.aid);
-    if(a){a.at=at;a.sent=false}else if(t.alerts.length<5)t.alerts.push({id:uuid(),at,sent:false,srv:false});
-    t.alerts.sort((x,y)=>x.at<y.at?-1:1);t.due=firstAt(t);t.dirty=true;
-  }
-  el.remove();commit();
-};
 function check(){
   if(!user||!(synced||!navigator.onLine))return;
   let ch=false;const n=Date.now();
