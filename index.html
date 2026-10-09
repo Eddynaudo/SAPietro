@@ -44,6 +44,17 @@ button,input,textarea{font:inherit;color:inherit}
 .dy.sel{background:var(--acc);box-shadow:0 0 0 1px rgba(255,255,255,.4),0 0 16px rgba(255,255,255,.55),inset 0 1px 0 rgba(255,255,255,.5)}
 .tabs button[aria-pressed=true]{box-shadow:0 0 14px rgba(255,255,255,.55)}
 .lg{box-shadow:0 0 12px rgba(255,255,255,var(--gl,.4))}
+/* onda azzurra e bianca attorno all'avatar, sempre attiva (anche con l'assistente aperto) */
+#hb,.hav{position:relative}
+#hb{position:fixed}
+.hav{overflow:visible!important}
+.hav img{border-radius:50%}
+#hb,.hav{box-shadow:0 0 12px 2px rgba(150,210,255,.65),0 0 24px rgba(255,255,255,.35);animation:glowb 2.6s ease-in-out infinite}
+#hb::before,#hb::after,.hav::before,.hav::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(200,235,255,.85);box-shadow:0 0 10px rgba(170,220,255,.8);pointer-events:none;opacity:0;animation:ripple 2.6s ease-out infinite}
+#hb::after,.hav::after{animation-delay:1.3s}
+@keyframes ripple{0%{transform:scale(1);opacity:.85}100%{transform:scale(1.75);opacity:0}}
+@keyframes glowb{0%,100%{box-shadow:0 0 10px 1px rgba(150,210,255,.5),0 0 20px rgba(255,255,255,.25)}50%{box-shadow:0 0 16px 4px rgba(170,225,255,.85),0 0 30px rgba(255,255,255,.5)}}
+@media (prefers-reduced-motion:reduce){#hb,.hav,#hb::before,#hb::after,.hav::before,.hav::after{animation:none}#hb::before,#hb::after,.hav::before,.hav::after{display:none}}
 #stars2{animation:tw 4.5s ease-in-out infinite alternate}
 @keyframes tw{from{opacity:var(--stars)}to{opacity:calc(var(--stars)*.25)}}
 @media (prefers-reduced-motion:reduce){#stars2{animation:none}.al{animation:none}}
