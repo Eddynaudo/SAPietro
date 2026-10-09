@@ -161,6 +161,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 #nvt{font-size:28px;font-weight:800;line-height:1.1;margin:6px 0 8px;overflow-wrap:anywhere;outline:none}
 #nvd{font-size:18px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
 .big{width:100%;padding:16px;font-size:18px;margin-top:22px;border-radius:14px}
+.big.grn{background:var(--ok);color:#06210f;border-color:var(--ok)}
 .big[disabled]{opacity:.6;cursor:default}
 
 .alerts{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:8px;right:8px;z-index:25;display:grid;gap:8px;max-width:620px;margin:0 auto}
@@ -771,14 +772,20 @@ function renderNote(){
     +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
-  const ok=$('#nvok');if(nvKind==='remind'){ok.textContent=t_('ok');ok.disabled=false}else{ok.textContent=t.done?t_('done'):nvKind==='main'?t_('confirmed'):t_('complete');ok.disabled=!!t.done}
+  const ok=$('#nvok');ok.disabled=false;ok.classList.toggle('grn',nvKind==='main');
+  if(nvKind==='remind')ok.textContent=t_('ok');else if(nvKind==='main')ok.textContent='✅ '+t_('confirmed');else ok.textContent=t.done?t_('done'):t_('complete')
 }
 function closeNote(){stopAudio();nvId=null;$('#nv').classList.remove('on');document.body.style.overflow='';$('#nvm').innerHTML=''}
 $('#nvx').onclick=closeNote;
 $('#nvok').onclick=()=>{
   if(nvKind==='remind'){closeNote();return}
-  const t=items.find(x=>x.id===nvId);if(!t||t.done)return;
-  t.done=true;t.dirty=true;closeNote();commit();toast(t_('doneToast'));
+  const t=items.find(x=>x.id===nvId);
+  if(!t){closeNote();return}
+  const was=t.done;
+  if(!was){t.done=true;t.dirty=true}
+  closeNote();
+  if(!was){commit();toast(t_('doneToast'))}else render();
+  pendingNote=null;pendingKind=null;
 };
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
