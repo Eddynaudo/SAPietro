@@ -33,6 +33,11 @@ button,input,textarea{font:inherit;color:inherit}
 /* cielo */
 #sky{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%);overflow:hidden}
 #sky canvas{position:absolute;inset:0;width:100%;height:100%;opacity:var(--stars)}
+#sky #skyfx{opacity:1}
+#sky #mead{position:absolute;left:0;right:0;bottom:0;height:var(--mh,100px);pointer-events:none}
+#sky #mead canvas{position:absolute;left:-10px;bottom:-10px;width:calc(100% + 20px);height:auto;opacity:1}
+#mead .m0{filter:blur(2.4px)}#mead .m1{filter:blur(1.1px)}
+#mead::after{content:'';position:absolute;left:0;right:0;bottom:0;top:-10px;background:var(--mtint,transparent)}
 #stars2{animation:tw 4.5s ease-in-out infinite alternate}
 @keyframes tw{from{opacity:var(--stars)}to{opacity:calc(var(--stars)*.25)}}
 @media (prefers-reduced-motion:reduce){#stars2{animation:none}.al{animation:none}}
@@ -218,7 +223,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 #sbn .o{background:#7C98FF;color:#0B1230}#sbn .c{background:transparent;font-size:20px;padding:4px 8px}
 </style></head>
 <body class="guest">
-<div id="sky" aria-hidden="true"><canvas id="stars"></canvas><canvas id="stars2"></canvas></div>
+<div id="sky" aria-hidden="true"><canvas id="stars"></canvas><canvas id="stars2"></canvas><canvas id="skyfx"></canvas><div id="mead"><canvas class="m0" id="m0"></canvas><canvas class="m1" id="m1"></canvas><canvas class="m2" id="m2"></canvas></div></div>
 
 <div class="app">
   <div class="top">
@@ -556,6 +561,7 @@ function applySky(date){
   st.setProperty('--skyMute',light?'rgba(242,246,255,.86)':'rgba(11,18,48,.8)');
   st.setProperty('--skyShadow',light?'0 1px 10px rgba(0,0,0,.4)':'0 1px 10px rgba(255,255,255,.45)');
   const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',toHex(c[0]));
+  if(typeof drawFx==='function')drawFx(n);
 }
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function drawStars(){
@@ -574,7 +580,86 @@ function drawStars(){
   });
 }
 let rs=null;
-addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(drawStars,200)});
+
+/* ---------- sole, luna e prato fiorito ---------- */
+const SUN_RISE=6.2,SUN_SET=19.8;
+let MH=100;
+function meadowH(){return Math.max(78,Math.min(124,Math.round(window.innerHeight*.12)))}
+function fxCtx(id,w,h,dpr){const c=$('#'+id),x=c.getContext&&c.getContext('2d');if(!x)return null;c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c.style.aspectRatio=w+'/'+h;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);return x}
+function drawMeadow(){
+  MH=meadowH();document.documentElement.style.setProperty('--mh',MH+'px');
+  const dpr=Math.min(2,window.devicePixelRatio||1),W=window.innerWidth+20,H=MH+10;
+  const FL=['#ffffff','#ffd84a','#ff6f91','#c77dff','#ff9f43','#ff5d5d','#7ec8ff','#fff3a0'];
+  const layers=[
+    {id:'m0',seed:11,top:.12,amp:.07,fq:.011,g:['#79b86d','#4e9150'],n:W/5.5,rmin:.9,rmax:1.7,stem:0,petal:false,blade:0},
+    {id:'m1',seed:12,top:.34,amp:.08,fq:.017,g:['#5fa85a','#3c8244'],n:W/7,rmin:1.5,rmax:2.6,stem:4,petal:false,blade:W/6},
+    {id:'m2',seed:13,top:.56,amp:.07,fq:.026,g:['#4c9a4c','#2f6f3a'],n:W/12,rmin:2.6,rmax:4.6,stem:10,petal:true,blade:W/3}
+  ];
+  layers.forEach(L=>{
+    const x=fxCtx(L.id,W,H,dpr);if(!x)return;const r=rng(L.seed);
+    const top=y=>H*L.top+Math.sin(y*L.fq+L.seed)*H*L.amp+Math.sin(y*L.fq*2.3+L.seed*2)*H*L.amp*.4;
+    const g=x.createLinearGradient(0,H*L.top-6,0,H);g.addColorStop(0,L.g[0]);g.addColorStop(1,L.g[1]);
+    x.fillStyle=g;x.beginPath();x.moveTo(0,H);for(let px=0;px<=W;px+=4)x.lineTo(px,top(px));x.lineTo(W,H);x.closePath();x.fill();
+    for(let i=0;i<L.blade;i++){ // fili d'erba
+      const px=r()*W,py=top(px)+r()*(H-top(px)),len=4+r()*7,lean=(r()-.5)*4;
+      x.strokeStyle=r()<.5?L.g[0]:L.g[1];x.lineWidth=1;x.beginPath();x.moveTo(px,py);x.lineTo(px+lean,py-len);x.stroke();
+    }
+    const pts=[];for(let i=0;i<L.n;i++){const px=r()*W,t=top(px);pts.push([px,t+4+r()*(H-t-6),r()])}
+    pts.sort((a,b)=>a[1]-b[1]); // prima i fiori più lontani
+    for(const [px,py,k] of pts){
+      const rad=L.rmin+(L.rmax-L.rmin)*Math.pow(py/H,1.2)*(.6+k*.7),col=FL[Math.floor(k*FL.length*.999)];
+      if(L.stem){x.strokeStyle=L.g[1];x.lineWidth=L.petal?1.4:1;x.beginPath();x.moveTo(px,py+L.stem*.4);x.lineTo(px,py);x.stroke()}
+      if(L.petal&&rad>2.8){
+        x.fillStyle=col;for(let a=0;a<5;a++){const an=a*1.2566+k*6;x.beginPath();x.arc(px+Math.cos(an)*rad*.62,py+Math.sin(an)*rad*.62,rad*.5,0,6.2832);x.fill()}
+        x.fillStyle=col==='#ffd84a'||col==='#fff3a0'?'#e8902a':'#ffd84a';x.beginPath();x.arc(px,py,rad*.38,0,6.2832);x.fill();
+      }else{x.fillStyle=col;x.beginPath();x.arc(px,py,rad,0,6.2832);x.fill()}
+    }
+  });
+}
+function moonPhase(d){return(((d.getTime()-Date.UTC(2000,0,6,18,14))/864e5)%29.530588+29.530588)%29.530588/29.530588}
+function drawMoon(x,cx,cy,R,ph,al){
+  x.save();x.globalAlpha=al;
+  let g=x.createRadialGradient(cx,cy,R*.6,cx,cy,R*5);g.addColorStop(0,'rgba(190,210,255,.30)');g.addColorStop(1,'rgba(190,210,255,0)');
+  x.fillStyle=g;x.beginPath();x.arc(cx,cy,R*5,0,6.2832);x.fill();
+  x.fillStyle='rgba(150,165,205,.20)';x.beginPath();x.arc(cx,cy,R,0,6.2832);x.fill(); // parte in ombra
+  const side=ph<.5?1:-1,c=Math.cos(ph*6.2832);
+  x.translate(cx,cy);x.scale(side,1);
+  x.fillStyle='#f6f2e2';x.shadowColor='rgba(255,250,225,.9)';x.shadowBlur=14;
+  x.beginPath();x.arc(0,0,R,-1.5708,1.5708,false);
+  x.ellipse(0,0,Math.max(.01,Math.abs(c))*R,R,0,1.5708,-1.5708,c>0);
+  x.closePath();x.fill();
+  x.restore();
+}
+function drawFx(date){
+  const n=date||new Date(),h=n.getHours()+n.getMinutes()/60,W=window.innerWidth,Hh=window.innerHeight,dpr=Math.min(2,window.devicePixelRatio||1);
+  const x=fxCtx('skyfx',W,Hh,dpr);if(!x)return;
+  const hor=Hh-MH+Math.round(MH*.2),topY=Hh*.15;
+  const px=q=>W*(.08+.84*q+.2*Math.sin(Math.PI*Math.min(1,Math.max(0,q))));
+  // sole: sorge a est, tocca il punto più alto verso mezzogiorno, tramonta a ovest
+  const p=(h-SUN_RISE)/(SUN_SET-SUN_RISE);
+  if(p>-.04&&p<1.04){
+    const pc=Math.min(1,Math.max(0,p)),alt=Math.sin(Math.PI*pc),sx=px(p<0?-.0:pc)+(p<0?-W*.02:p>1?W*.02:0),sy=hor-alt*(hor-topY)+(p<0||p>1?10:0);
+    const low=1-Math.pow(alt,.5),col=[255,Math.round(226-low*110),Math.round(120-low*70)],R=24+low*10,fade=Math.min(1,Math.max(0,alt*5));
+    x.save();x.globalAlpha=Math.max(fade,.25);
+    const c3=col.join(',');
+    let g=x.createRadialGradient(sx,sy,R*.4,sx,sy,R*7);g.addColorStop(0,'rgba('+c3+',.75)');g.addColorStop(.3,'rgba('+c3+',.28)');g.addColorStop(1,'rgba('+c3+',0)');
+    x.fillStyle=g;x.beginPath();x.arc(sx,sy,R*7,0,6.2832);x.fill();
+    x.shadowColor='rgba('+c3+',1)';x.shadowBlur=30;x.fillStyle='rgb('+c3+')';x.beginPath();x.arc(sx,sy,R,0,6.2832);x.fill();
+    x.shadowBlur=0;x.fillStyle='rgba(255,252,225,.9)';x.beginPath();x.arc(sx,sy,R*.62,0,6.2832);x.fill();
+    x.restore();
+  }
+  // luna: compare in serata, sale, scende e sparisce all'alba
+  const q=((h-19.3+24)%24)/11.1;
+  if(q>=0&&q<=1){
+    const alt=Math.sin(Math.PI*q),dark=skyAt(h).s,al=Math.min(1,alt*3+.12)*Math.min(1,dark*1.7);
+    if(al>.02)drawMoon(x,px(q),hor-alt*(hor-Hh*.14),20,moonPhase(n),al);
+  }
+  // luce sul prato: più scuro e freddo di notte, caldo al tramonto
+  const {c,s}=skyAt(h),warm=Math.max(0,1-Math.abs(h-18.8)/1.2)*.35+Math.max(0,1-Math.abs(h-6.6)/.9)*.25;
+  const a=Math.min(.7,.05+.62*s+warm*.0),t=mix(c[2],[10,16,40],Math.min(1,s*.9));
+  document.documentElement.style.setProperty('--mtint','rgba('+t.join(',')+','+a.toFixed(2)+')');
+}
+addEventListener('resize',()=>{clearTimeout(rs);rs=setTimeout(()=>{drawStars();drawMeadow();drawFx()},200)});
 
 /* ---------- stato ---------- */
 let user=null,items=[],tomb=[],view='cal',filter='all',cur=new Date(),sel=todayKey(),draft=null,mr=null,rt=null,actx=null;
@@ -1398,7 +1483,7 @@ $('#lang').onclick=()=>{
 };
 if(navigator.standalone)document.documentElement.classList.add('ios-sa');
 applyLang();
-applySky();drawStars();setInterval(()=>applySky(),60000);
+drawStars();drawMeadow();applySky();setInterval(()=>applySky(),60000);
 render();
 </script>
 <script>
