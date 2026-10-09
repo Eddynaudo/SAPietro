@@ -178,7 +178,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 #lb img{max-width:94%;max-height:90%;border-radius:10px;margin:auto}
 
 /* ---------- assistente (domande e risposte guidate, non AI) ---------- */
-#hb{position:fixed;right:0;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:4;width:48px;height:48px;border:0;border-radius:50%;padding:0;background:transparent;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);transform:translateX(18px);transition:transform .2s ease;overflow:hidden}
+#hb{overflow:visible;position:fixed;right:0;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:4;width:48px;height:48px;border:0;border-radius:50%;padding:0;background:transparent;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);transform:translateX(18px);transition:transform .2s ease}
 #hb:hover,#hb:focus-visible{transform:translateX(4px)}
 #hb img,.hav img{display:block;width:100%;height:100%;object-fit:cover}
 .guest #hb{display:none}
@@ -197,6 +197,25 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 .hq button,.hlk{border:1px solid var(--line);background:var(--glass);color:var(--ink);border-radius:999px;padding:8px 12px;text-align:left;cursor:pointer;font-size:14px;text-decoration:none;display:block}
 .hq button:active{background:var(--field)}
 .hlk{text-align:center;font-weight:700}
+#hb img{border-radius:50%}
+.dot[hidden]{display:none}
+#hb .dot{position:absolute;top:-6px;left:-6px;margin:0;box-shadow:0 0 0 2px #fff}
+.ht{font-size:11px;opacity:.7;margin-top:3px}
+.hta{width:100%;min-height:74px;resize:vertical;border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:12px;padding:10px;font:inherit;font-size:16px}
+.hrow{display:flex;gap:8px;align-items:center}
+.hrow .go{flex:none;border:0;background:var(--acc);color:var(--accInk);font-weight:800;border-radius:999px;padding:10px 16px;cursor:pointer}
+.hrow .go:disabled{opacity:.5}
+.hmsg{color:var(--mute);font-size:13px;min-height:16px}
+.cvl{display:grid;gap:8px}
+#sup{z-index:17;align-items:center;background:rgba(5,8,20,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#sup .sheet{border-radius:20px;max-width:560px;margin:0 12px}
+.ci{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--glass);color:var(--ink);border-radius:14px;padding:10px 12px;cursor:pointer;margin-top:8px}
+.ci small{display:block;color:var(--mute);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sbn{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:26;max-width:520px;margin:0 auto;display:flex;gap:8px;align-items:center;background:#F2F6FF;color:#0B1230;border-radius:14px;padding:10px 12px;box-shadow:0 8px 26px rgba(0,0,0,.4)}
+#sbn[hidden]{display:none}
+#sbn span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+#sbn button{border:0;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}
+#sbn .o{background:#7C98FF;color:#0B1230}#sbn .c{background:transparent;font-size:20px;padding:4px 8px}
 </style></head>
 <body class="guest">
 <div id="sky" aria-hidden="true"><canvas id="stars"></canvas><canvas id="stars2"></canvas></div>
@@ -223,11 +242,13 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   </div>
   <div id="list"></div>
 </div>
-<button id="hb" type="button" aria-label="Assistente" aria-haspopup="dialog"><img src="avatar.png" alt="" width="56" height="56"></button>
+<button id="hb" type="button" aria-label="Assistente" aria-haspopup="dialog"><img src="avatar.png" alt="" width="56" height="56"><span class="dot" id="hdot" hidden></span></button>
 <div class="ov" id="hp"><div class="hbox" role="dialog" aria-modal="true" aria-labelledby="hnm">
   <div class="hhd"><span class="hav"><img src="avatar.png" alt="" width="56" height="56"></span><div><b id="hnm"></b><small id="hsb"></small></div><button class="x" id="hx" type="button" aria-label="Chiudi">×</button></div>
   <div class="hbd" id="hbd"></div>
 </div></div>
+<div class="ov" id="sup"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="supt"><div id="sbd2"></div></div></div>
+<div id="sbn" role="alert" hidden><span id="sbt"></span><button class="o" id="sbo" type="button"></button><button class="c" id="sbc" type="button" aria-label="×">×</button></div>
 <button class="fab" id="add" data-i="add">+ Nuovo</button>
 
 <div class="ov" id="ov"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ft">
@@ -263,6 +284,8 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <div class="stack">
     <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
     <button type="button" class="btn" id="bioT" hidden></button>
+    <button type="button" class="btn" id="supb"><span data-i="supb">Assistenza</span><span class="dot" id="udn" hidden></span></button>
+    <button type="button" class="btn" id="pwb" data-i="pwb">Cambia password</button>
     <button type="button" class="btn" id="othD" data-i="othD">Only this phone</button>
     <button type="button" class="btn" id="rfb"><span data-i="rfb">Invite</span></button>
   </div>
@@ -271,6 +294,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
     <div class="stack" style="margin-top:0">
       <button type="button" class="btn" id="adb"><span data-i="adb">Referral &amp; Rewards</span><span class="dot" id="adn" hidden></span></button>
       <button type="button" class="btn" id="usb" data-i="usb">Users</button>
+      <button type="button" class="btn" id="supa"><span data-i="supa">Messaggi assistenza</span><span class="dot" id="sdn" hidden></span></button>
     </div>
     <hr>
     <h3 data-i="aNew">Nuovo account</h3>
@@ -408,6 +432,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 /* ---------- lingua (inglese di default, italiano a scelta) ---------- */
 const TX={
 en:{
+supb:'Support',supa:'Support messages',pwb:'Change password',pwNew:'New password (min. 8 characters):',pwOk:'Password changed.',pwBad:'The password must have at least 8 characters.',
 radd:'+ Add reminder',othD:'Notifications only on this phone',othOk:'Done: other phones and old installs no longer get notifications.',othAsk:'Stop notifications on every other phone or old install of this account? Open DayMarck on them again to turn them back on.',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
@@ -441,6 +466,7 @@ icsNone:'No dated tasks to export.',icsOk:'File created: open it to add the task
 lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'Incorrect email or password.',lgConf:'This address is not confirmed yet: ask the administrator.',lgRate:'Too many attempts: try again in a few minutes.',lgNo:'No connection: try again.',lgFail:'Sign-in failed: ',
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
+supb:'Assistenza',supa:'Messaggi assistenza',pwb:'Cambia password',pwNew:'Nuova password (min. 8 caratteri):',pwOk:'Password cambiata.',pwBad:'La password deve avere almeno 8 caratteri.',
 radd:'+ Aggiungi promemoria',othD:'Notifiche solo su questo telefono',othOk:'Fatto: gli altri telefoni e le vecchie installazioni non ricevono più notifiche.',othAsk:'Fermare le notifiche su ogni altro telefono o vecchia installazione di questo account? Riaprendo DayMarck su quelli si riattivano.',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
@@ -1376,83 +1402,286 @@ applySky();drawStars();setInterval(()=>applySky(),60000);
 render();
 </script>
 <script>
-/* Assistente: risposte predefinite, nessuna AI. */
+/* Assistente: risposte predefinite (nessuna AI) + chat con l'assistenza (amministratore). */
 (function(){
-const MAIL='infomyvikon@gmail.com';
 const H={
-it:{nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda che ti serve e ti rispondo subito.',more:'← Altre domande',mail:'✉️ Scrivi all’assistenza',mailSub:'Assistenza DayMarck',
- fallback:'Se la tua domanda non è qui, scrivi all’assistenza: <a href="mailto:'+MAIL+'">'+MAIL+'</a>',close:'Chiudi',open:'Assistente',
+it:{nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda che ti serve, oppure scrivimi la tua.',more:'← Altre domande',
+ ask:'✍️ Scrivi la tua domanda',chat:'💬 Scrivi all’assistenza',inb:'📥 Apri i messaggi ricevuti',askPh:'Es. come cambio la password?',askGo:'Chiedi',
+ noMatch:'Non ho una risposta precisa a questa domanda nell’app. Puoi scrivere all’assistenza: ti risponde direttamente l’amministratore.',noMatchAdm:'Non ho una risposta precisa a questa domanda.',
+ rel:'Potrebbe interessarti anche:',unknown:'Se hai un dubbio che non trovi qui, scrivi all’assistenza.',unknownAdm:'',
+ chatH:'Scrivi qui la tua richiesta: arriva direttamente all’assistenza e la risposta la trovi in questa schermata (ti avvisiamo con una notifica).',chatPh:'Scrivi il tuo messaggio…',send:'Invia',sending:'Invio…',
+ chatErr:'Non sono riuscito a inviare. Controlla la connessione e riprova.',chatLim:'Troppi messaggi in poco tempo: riprova tra qualche minuto.',team:'Assistenza',empty:'Nessun messaggio ancora.',
+ close:'Chiudi',open:'Assistente',inbT:'Messaggi assistenza',inbNone:'Nessun messaggio dagli utenti.',back:'← Indietro',reply:'Rispondi…',youAre:'Tu',
+ bnUser:'Nuova richiesta da {e}',bnAdmin:'L’assistenza ti ha risposto',view:'Apri',pwNeed:'',
  q:[
- ['Come aggiungo un’attività?','Tocca il pulsante <b>+ Nuovo</b> in basso a destra. Scrivi il <b>titolo</b>, se vuoi aggiungi <b>note</b>, e controlla <b>Data e ora dell’attività</b> (all’apertura c’è già l’ora di adesso, puoi cambiarla). Poi tocca <b>Salva</b>.'],
- ['Cosa sono “Data e ora dell’attività” e “Promemoria”?','La <b>Data e ora dell’attività</b> è il momento in cui arriva la notifica vera, che puoi confermare. I <b>Promemoria</b> (fino a 5) sono avvisi extra prima o dopo: servono solo da richiamo e si chiudono con <b>OK</b>.'],
- ['Come aggiungo i promemoria?','Nel modulo, sotto la data dell’attività, tocca <b>+ Aggiungi promemoria</b> e scegli data e ora. Puoi metterne fino a <b>5</b> per ogni attività. Con la ✕ ne togli uno.'],
- ['Come allego foto o una registrazione?','Nel modulo trovi <b>Scatta foto</b>, <b>Scegli immagini</b>, <b>Registra audio</b> e <b>Carica audio</b>. La foto compare nella nota. L’audio parte da solo quando arriva la notifica dell’attività (massimo 2,5 MB).'],
- ['Come ricevo le notifiche?','Tocca la campanella 🔕 in alto e consenti le notifiche. Quando è attiva diventa 🔔 e toccandola fai una prova. <b>Su iPhone</b> l’app deve essere aggiunta alla Home (vedi la domanda sull’installazione).'],
- ['Come installo l’app sul telefono?','<b>iPhone:</b> apri il sito con Safari, tocca Condividi e poi <b>Aggiungi alla schermata Home</b>. <b>Android:</b> apri il sito con Chrome, menu ⋮ e poi <b>Installa app</b> (o Aggiungi a schermata Home). Poi aprila dall’icona DayMarck.'],
- ['Cosa fa il pulsante “Confermato”?','Compare sulla notifica vera dell’attività. Toccandolo l’attività viene segnata come <b>fatta</b>, sparisce da “Da fare” e finisce in “Fatti”, poi si torna alla home.'],
- ['Come funziona “Rimanda”?','Sulla notifica scegli di rimandarla di <b>5, 10, 30 o 60 minuti</b>: dopo quel tempo ti arriva di nuovo.'],
- ['Cosa succede se premo “Chiudi”?','Ti avvisa che, se non confermi né rimandi, l’attività <b>non ti avviserà più</b> finché non cambi l’ora: resta in elenco ma inattiva. Puoi scegliere <b>Modificala</b>, <b>Eliminala</b>, <b>Lasciala così</b> oppure annullare.'],
- ['Come segno un’attività come fatta?','Spunta la <b>casella</b> accanto al titolo, oppure apri la scheda e tocca <b>Completa</b>, oppure usa <b>Confermato</b> dalla notifica.'],
- ['Come modifico o elimino un’attività?','Nell’elenco scorri la scheda <b>verso sinistra</b>: compaiono <b>Modifica</b> ed <b>Elimina</b> (per eliminare tocca due volte, ti chiede “Sicuro?”).'],
- ['Cosa significano Tutti, Da fare e Fatti?','Nella vista <b>Tutti gli impegni</b> i filtri mostrano: <b>Tutti</b> ogni attività, <b>Da fare</b> quelle ancora aperte, <b>Fatti</b> quelle completate. In <b>Calendario</b> tocchi un giorno per vedere le sue attività.'],
- ['Funziona anche senza internet?','Sì: puoi guardare e modificare le attività e le modifiche si salvano sul telefono. Appena torna la connessione si sincronizzano da sole (in alto vedi “Sincronizzato”). Le notifiche però arrivano solo con la connessione attiva.'],
- ['Posso usare Face ID o l’impronta?','Sì, se il telefono li ha. Dopo l’accesso ti viene proposto di attivarli. Puoi cambiare idea dall’<b>Area utente</b> 👤, voce “Face ID / impronta”.'],
- ['Come cambio lingua?','Tocca <b>IT / EN</b> in alto: l’app passa da italiano a inglese e viceversa.'],
- ['Non mi arrivano le notifiche','Controlla che: 1) la campanella sia 🔔 (attiva); 2) le notifiche siano consentite nelle impostazioni del telefono per DayMarck; 3) su iPhone l’app sia aperta dall’icona nella Home, non da Safari; 4) il telefono non sia in “Non disturbare”. Se non si risolve, scrivi all’assistenza.'],
- ['Mi arriva la notifica doppia','Può restare registrata una vecchia installazione. Apri l’<b>Area utente</b> 👤 dal telefono che usi ora e tocca <b>Notifiche solo su questo telefono</b>.'],
- ['Come funziona “Invita amici e guadagna”?','Nell’Area utente, se è attivo per il tuo account, trovi il tuo <b>link personale</b>. Ogni <b>10 amici</b> che si registrano e completano un acquisto confermato ti fanno guadagnare un <b>buono Amazon da 10 €</b> (10 $ per l’estero), senza limiti. I clic e le sole registrazioni non contano. In “I miei premi” vedi lo stato.'],
- ['Ho dimenticato la password / voglio cambiare email','Non c’è un ripristino automatico: scrivi all’assistenza e ti reimpostiamo i dati di accesso.'],
- ['Come elimino il mio account?','Scrivi all’assistenza indicando l’email dell’account: lo elimina l’amministratore insieme a tutti i tuoi dati.'],
- ['Come esco dall’app?','Apri l’<b>Area utente</b> 👤 e tocca <b>Esci</b>. Se ci sono modifiche non ancora sincronizzate ti avvisa prima.']
+ ['Come aggiungo un’attività?','Tocca il pulsante <b>+ Nuovo</b> in basso a destra. Scrivi il <b>titolo</b>, se vuoi aggiungi <b>note</b>, e controlla <b>Data e ora dell’attività</b> (all’apertura c’è già l’ora di adesso, puoi cambiarla). Poi tocca <b>Salva</b>.','nuova nuovo creare inserire aggiungere attivita impegno titolo'],
+ ['Cosa sono “Data e ora dell’attività” e “Promemoria”?','La <b>Data e ora dell’attività</b> è il momento in cui arriva la notifica vera, che puoi confermare. I <b>Promemoria</b> (fino a 5) sono avvisi extra prima o dopo: servono solo da richiamo e si chiudono con <b>OK</b>.','differenza data ora orario remind promemoria notifica'],
+ ['Come aggiungo i promemoria?','Nel modulo, sotto la data dell’attività, tocca <b>+ Aggiungi promemoria</b> e scegli data e ora. Puoi metterne fino a <b>5</b> per ogni attività. Con la ✕ ne togli uno.','promemoria remind cinque massimo'],
+ ['Come allego foto o una registrazione?','Nel modulo trovi <b>Scatta foto</b>, <b>Scegli immagini</b>, <b>Registra audio</b> e <b>Carica audio</b>. La foto compare nella nota. L’audio parte da solo quando arriva la notifica dell’attività (massimo 2,5 MB).','foto immagine allegato audio registrazione vocale microfono'],
+ ['Come ricevo le notifiche?','Tocca la campanella 🔕 in alto e consenti le notifiche. Quando è attiva diventa 🔔 e toccandola fai una prova. <b>Su iPhone</b> l’app deve prima essere aggiunta alla Home (vedi la domanda sull’installazione).','notifica notifiche avviso campanella attivare push'],
+ ['Come installo l’app sul telefono?','<b>📱 iPhone (iOS 16.4 o successivo)</b><br>1) Apri il link dell’app con <b>Safari</b> (non da Chrome o da altre app).<br>2) Tocca <b>Condividi</b> (il quadrato con la freccia verso l’alto).<br>3) Scorri e tocca <b>Aggiungi alla schermata Home</b>.<br>4) Tocca <b>Aggiungi</b>.<br>5) Apri DayMarck dalla nuova icona nella Home e consenti le notifiche quando te lo chiede.<br><br><b>🤖 Android</b><br>1) Apri il link dell’app con <b>Chrome</b>.<br>2) Tocca il menu <b>⋮</b> in alto a destra.<br>3) Tocca <b>Installa app</b> (o <b>Aggiungi a schermata Home</b>) e conferma.<br>4) Apri DayMarck dalla nuova icona e consenti le notifiche.<br><br>Usa sempre l’icona per aprire l’app: dal browser le notifiche su iPhone non funzionano.','installare installazione scaricare download icona home schermata iphone android ios app telefono'],
+ ['Cosa fa il pulsante “Confermato”?','Compare sulla notifica vera dell’attività. Toccandolo l’attività viene segnata come <b>fatta</b>, sparisce da “Da fare” e finisce in “Fatti”, poi si torna alla home.','confermato conferma notifica fatta'],
+ ['Come funziona “Rimanda”?','Sulla notifica scegli di rimandarla di <b>5, 10, 30 o 60 minuti</b>: dopo quel tempo ti arriva di nuovo.','rimanda posticipa rimandare snooze minuti'],
+ ['Cosa succede se premo “Chiudi”?','Ti avvisa che, se non confermi né rimandi, l’attività <b>non ti avviserà più</b> finché non cambi l’ora: resta in elenco ma inattiva. Puoi scegliere <b>Modificala</b>, <b>Eliminala</b>, <b>Lasciala così</b> oppure annullare.','chiudi chiudere notifica inattiva'],
+ ['Come segno un’attività come fatta?','Spunta la <b>casella</b> accanto al titolo, oppure apri la scheda e tocca <b>Completa</b>, oppure usa <b>Confermato</b> dalla notifica.','completare completata fatta segnare spunta casella'],
+ ['Come modifico o elimino un’attività?','Nell’elenco scorri la scheda <b>verso sinistra</b>: compaiono <b>Modifica</b> ed <b>Elimina</b> (per eliminare tocca due volte, ti chiede “Sicuro?”).','modificare cambiare eliminare cancellare togliere attivita scorri'],
+ ['Cosa significano Tutti, Da fare e Fatti?','Nella vista <b>Tutti gli impegni</b> i filtri mostrano: <b>Tutti</b> ogni attività, <b>Da fare</b> quelle ancora aperte, <b>Fatti</b> quelle completate. In <b>Calendario</b> tocchi un giorno per vedere le sue attività.','filtro filtri tutti fare fatti calendario elenco'],
+ ['Funziona anche senza internet?','Sì: puoi guardare e modificare le attività e le modifiche si salvano sul telefono. Appena torna la connessione si sincronizzano da sole (in alto vedi “Sincronizzato”). Le notifiche però arrivano solo con la connessione attiva.','offline internet connessione sincronizza sincronizzazione'],
+ ['Posso usare Face ID o l’impronta?','Sì, se il telefono li ha. Dopo l’accesso ti viene proposto di attivarli. Puoi cambiare idea dall’<b>Area utente</b> 👤, voce “Face ID / impronta”.','face id impronta biometrico sblocco accesso veloce'],
+ ['Come cambio la password?','Apri l’<b>Area utente</b> 👤 e tocca <b>Cambia password</b>: scrivi la nuova (almeno 8 caratteri). Se non ricordi quella attuale e non riesci più a entrare, scrivi all’assistenza e ti viene reimpostata.','password cambiare cambio modificare dimenticata dimenticato reimpostare reset accesso'],
+ ['Come cambio l’email dell’account?','L’email la cambia l’amministratore: scrivi all’assistenza indicando la nuova email che vuoi usare.','email mail indirizzo cambiare cambio modificare account'],
+ ['Come cambio lingua?','Tocca <b>IT / EN</b> in alto: l’app passa da italiano a inglese e viceversa.','lingua italiano inglese english'],
+ ['Non mi arrivano le notifiche','Controlla che: 1) la campanella sia 🔔 (attiva); 2) le notifiche siano consentite nelle impostazioni del telefono per DayMarck; 3) su iPhone l’app sia aperta dall’icona nella Home, non da Safari; 4) il telefono non sia in “Non disturbare”. Se non si risolve, scrivi all’assistenza.','notifiche non arrivano ricevo problema push'],
+ ['Mi arriva la notifica doppia','Può restare registrata una vecchia installazione. Apri l’<b>Area utente</b> 👤 dal telefono che usi ora e tocca <b>Notifiche solo su questo telefono</b>.','doppia doppio duplicata due volte notifica'],
+ ['Come funziona “Invita amici e guadagna”?','Nell’Area utente, se è attivo per il tuo account, trovi il tuo <b>link personale</b>. Ogni <b>10 amici</b> che si registrano e completano un acquisto confermato ti fanno guadagnare un <b>buono Amazon da 10 €</b> (10 $ per l’estero), senza limiti. I clic e le sole registrazioni non contano. In “I miei premi” vedi lo stato.','invita amici referral premio buono amazon guadagnare link'],
+ ['Come elimino il mio account?','Scrivi all’assistenza indicando l’email dell’account: lo elimina l’amministratore insieme a tutti i tuoi dati.','eliminare cancellare account profilo dati'],
+ ['Come esco dall’app?','Apri l’<b>Area utente</b> 👤 e tocca <b>Esci</b>. Se ci sono modifiche non ancora sincronizzate ti avvisa prima.','esci uscire logout disconnettere'],
+ ['Come contatto l’assistenza?','Tocca <b>Scrivi all’assistenza</b> qui sotto (o il pulsante <b>Assistenza</b> nell’Area utente 👤): il messaggio arriva direttamente all’amministratore e la risposta compare nella stessa schermata, con una notifica.','assistenza contattare contatto supporto aiuto scrivere messaggio problema']
  ]},
-en:{nm:'DayMarck Assistant',sb:'Quick answers',hi:'Hi! Pick the question you need and I’ll answer right away.',more:'← More questions',mail:'✉️ Contact support',mailSub:'DayMarck support',
- fallback:'If your question isn’t here, email support: <a href="mailto:'+MAIL+'">'+MAIL+'</a>',close:'Close',open:'Assistant',
+en:{nm:'DayMarck Assistant',sb:'Quick answers',hi:'Hi! Pick the question you need, or type your own.',more:'← More questions',
+ ask:'✍️ Type your question',chat:'💬 Message support',inb:'📥 Open received messages',askPh:'E.g. how do I change my password?',askGo:'Ask',
+ noMatch:'I don’t have a precise answer to that in the app. You can message support: the administrator replies to you directly.',noMatchAdm:'I don’t have a precise answer to that.',
+ rel:'You may also like:',unknown:'If you have a doubt that isn’t covered here, message support.',unknownAdm:'',
+ chatH:'Write your request here: it goes straight to support and you’ll find the reply on this screen (we’ll notify you).',chatPh:'Write your message…',send:'Send',sending:'Sending…',
+ chatErr:'Could not send. Check your connection and try again.',chatLim:'Too many messages in a short time: try again in a few minutes.',team:'Support',empty:'No messages yet.',
+ close:'Close',open:'Assistant',inbT:'Support messages',inbNone:'No messages from users.',back:'← Back',reply:'Reply…',youAre:'You',
+ bnUser:'New request from {e}',bnAdmin:'Support replied to you',view:'Open',pwNeed:'',
  q:[
- ['How do I add a task?','Tap <b>+ New</b> at the bottom right. Write the <b>title</b>, add <b>notes</b> if you like, and check the <b>Activity date and time</b> (it starts at the current time; you can change it). Then tap <b>Save</b>.'],
- ['What are “Activity date and time” and “Reminders”?','The <b>task date and time</b> is when the real notification arrives, which you can confirm. <b>Reminders</b> (up to 5) are extra nudges before or after: just a heads-up, closed with <b>OK</b>.'],
- ['How do I add reminders?','In the form, below the activity date, tap <b>+ Add reminder</b> and pick a date and time. You can add up to <b>5</b> per task. Use ✕ to remove one.'],
- ['How do I attach photos or a recording?','The form has <b>Take photo</b>, <b>Choose images</b>, <b>Record audio</b> and <b>Upload audio</b>. Photos show in the note. Audio plays by itself when the task notification arrives (max 2.5 MB).'],
- ['How do I get notifications?','Tap the bell 🔕 at the top and allow notifications. When on it turns 🔔; tap it to send a test. <b>On iPhone</b> the app must be added to the Home Screen first (see the install question).'],
- ['How do I install the app on my phone?','<b>iPhone:</b> open the site in Safari, tap Share, then <b>Add to Home Screen</b>. <b>Android:</b> open it in Chrome, menu ⋮, then <b>Install app</b> (or Add to Home screen). Then open it from the DayMarck icon.'],
- ['What does “Confirmed” do?','It appears on the real task notification. Tapping it marks the task as <b>done</b>: it leaves “To do”, shows in “Done”, and you go back home.'],
- ['How does “Snooze” work?','On the notification choose <b>5, 10, 30 or 60 minutes</b>: it comes back after that time.'],
- ['What happens if I tap “Close”?','It warns you that, unless you confirm or snooze, the task <b>won’t notify you again</b> until you change its time: it stays listed but inactive. You can choose <b>Edit it</b>, <b>Delete it</b>, <b>Leave it</b> or cancel.'],
- ['How do I mark a task as done?','Tick the <b>checkbox</b> next to the title, or open the card and tap <b>Complete</b>, or use <b>Confirmed</b> on the notification.'],
- ['How do I edit or delete a task?','In the list swipe the card <b>left</b>: <b>Edit</b> and <b>Delete</b> appear (to delete, tap twice; it asks “Sure?”).'],
- ['What do All, To do and Done mean?','In the <b>All tasks</b> view the filters show: <b>All</b> every task, <b>To do</b> the open ones, <b>Done</b> the completed ones. In <b>Calendar</b> tap a day to see its tasks.'],
- ['Does it work offline?','Yes: you can view and edit tasks and changes are saved on the phone. When the connection returns they sync automatically (you’ll see “Synced” at the top). Notifications need a connection.'],
- ['Can I use Face ID or fingerprint?','Yes, if your phone has them. After signing in you’re offered to turn it on. Change it later in the <b>User area</b> 👤, “Face ID / fingerprint”.'],
- ['How do I change language?','Tap <b>IT / EN</b> at the top to switch between Italian and English.'],
- ['I’m not getting notifications','Check that: 1) the bell is 🔔 (on); 2) notifications are allowed for DayMarck in the phone settings; 3) on iPhone you open the app from the Home icon, not Safari; 4) the phone isn’t on Do Not Disturb. If it still fails, email support.'],
- ['I get double notifications','An old installation may still be registered. Open the <b>User area</b> 👤 on the phone you use now and tap <b>Notifications only on this phone</b>.'],
- ['How does “Invite friends and earn” work?','In the User area, if it’s on for your account, you’ll find your <b>personal link</b>. Every <b>10 friends</b> who sign up and complete a confirmed purchase earn you a <b>10 € Amazon voucher</b> (10 $ abroad), with no limit. Clicks and sign-ups alone don’t count. “My rewards” shows the status.'],
- ['I forgot my password / want to change my email','There’s no automatic reset: email support and we’ll reset your sign-in details.'],
- ['How do I delete my account?','Email support with your account address: the administrator deletes it along with all your data.'],
- ['How do I log out?','Open the <b>User area</b> 👤 and tap <b>Log out</b>. If some changes aren’t synced yet, it warns you first.']
+ ['How do I add a task?','Tap <b>+ New</b> at the bottom right. Write the <b>title</b>, add <b>notes</b> if you like, and check the <b>Activity date and time</b> (it starts at the current time; you can change it). Then tap <b>Save</b>.','new add create task title'],
+ ['What are “Activity date and time” and “Reminders”?','The <b>activity date and time</b> is when the real notification arrives, which you can confirm. <b>Reminders</b> (up to 5) are extra nudges before or after: just a heads-up, closed with <b>OK</b>.','difference date time reminder notification'],
+ ['How do I add reminders?','In the form, below the activity date, tap <b>+ Add reminder</b> and pick a date and time. You can add up to <b>5</b> per task. Use ✕ to remove one.','reminder five maximum'],
+ ['How do I attach photos or a recording?','The form has <b>Take photo</b>, <b>Choose images</b>, <b>Record audio</b> and <b>Upload audio</b>. Photos show in the note. Audio plays by itself when the task notification arrives (max 2.5 MB).','photo image attachment audio recording voice microphone'],
+ ['How do I get notifications?','Tap the bell 🔕 at the top and allow notifications. When on it turns 🔔; tap it to send a test. <b>On iPhone</b> the app must first be added to the Home Screen (see the install question).','notification notifications alert bell enable push'],
+ ['How do I install the app on my phone?','<b>📱 iPhone (iOS 16.4 or later)</b><br>1) Open the app link in <b>Safari</b> (not Chrome or other apps).<br>2) Tap <b>Share</b> (the square with the up arrow).<br>3) Scroll and tap <b>Add to Home Screen</b>.<br>4) Tap <b>Add</b>.<br>5) Open DayMarck from the new Home icon and allow notifications when asked.<br><br><b>🤖 Android</b><br>1) Open the app link in <b>Chrome</b>.<br>2) Tap the <b>⋮</b> menu at the top right.<br>3) Tap <b>Install app</b> (or <b>Add to Home screen</b>) and confirm.<br>4) Open DayMarck from the new icon and allow notifications.<br><br>Always open the app from its icon: from the browser, notifications on iPhone won’t work.','install installation download icon home screen iphone android ios app phone'],
+ ['What does “Confirmed” do?','It appears on the real task notification. Tapping it marks the task as <b>done</b>: it leaves “To do”, shows in “Done”, and you go back home.','confirmed confirm notification done'],
+ ['How does “Snooze” work?','On the notification choose <b>5, 10, 30 or 60 minutes</b>: it comes back after that time.','snooze postpone delay minutes'],
+ ['What happens if I tap “Close”?','It warns you that, unless you confirm or snooze, the task <b>won’t notify you again</b> until you change its time: it stays listed but inactive. You can choose <b>Edit it</b>, <b>Delete it</b>, <b>Leave it</b> or cancel.','close notification inactive'],
+ ['How do I mark a task as done?','Tick the <b>checkbox</b> next to the title, or open the card and tap <b>Complete</b>, or use <b>Confirmed</b> on the notification.','complete completed done mark tick checkbox'],
+ ['How do I edit or delete a task?','In the list swipe the card <b>left</b>: <b>Edit</b> and <b>Delete</b> appear (to delete, tap twice; it asks “Sure?”).','edit change delete remove task swipe'],
+ ['What do All, To do and Done mean?','In the <b>All tasks</b> view the filters show: <b>All</b> every task, <b>To do</b> the open ones, <b>Done</b> the completed ones. In <b>Calendar</b> tap a day to see its tasks.','filter filters all todo done calendar list'],
+ ['Does it work offline?','Yes: you can view and edit tasks and changes are saved on the phone. When the connection returns they sync automatically (you’ll see “Synced” at the top). Notifications need a connection.','offline internet connection sync'],
+ ['Can I use Face ID or fingerprint?','Yes, if your phone has them. After signing in you’re offered to turn it on. Change it later in the <b>User area</b> 👤, “Face ID / fingerprint”.','face id fingerprint biometric unlock'],
+ ['How do I change my password?','Open the <b>User area</b> 👤 and tap <b>Change password</b>: type the new one (at least 8 characters). If you can’t remember the current one and can’t sign in, message support and it will be reset.','password change forgot forgotten reset access'],
+ ['How do I change my account email?','The administrator changes the email: message support with the new email you want to use.','email address change account'],
+ ['How do I change language?','Tap <b>IT / EN</b> at the top to switch between Italian and English.','language italian english'],
+ ['I’m not getting notifications','Check that: 1) the bell is 🔔 (on); 2) notifications are allowed for DayMarck in the phone settings; 3) on iPhone you open the app from the Home icon, not Safari; 4) the phone isn’t on Do Not Disturb. If it still fails, message support.','notifications not arriving problem push'],
+ ['I get double notifications','An old installation may still be registered. Open the <b>User area</b> 👤 on the phone you use now and tap <b>Notifications only on this phone</b>.','double duplicate twice notification'],
+ ['How does “Invite friends and earn” work?','In the User area, if it’s on for your account, you’ll find your <b>personal link</b>. Every <b>10 friends</b> who sign up and complete a confirmed purchase earn you a <b>10 € Amazon voucher</b> (10 $ abroad), with no limit. Clicks and sign-ups alone don’t count. “My rewards” shows the status.','invite friends referral reward amazon voucher earn link'],
+ ['How do I delete my account?','Message support with your account address: the administrator deletes it along with all your data.','delete remove account profile data'],
+ ['How do I log out?','Open the <b>User area</b> 👤 and tap <b>Log out</b>. If some changes aren’t synced yet, it warns you first.','logout log out sign out exit'],
+ ['How do I contact support?','Tap <b>Message support</b> below (or the <b>Support</b> button in the User area 👤): the message goes straight to the administrator and the reply shows on the same screen, with a notification.','support contact help message problem write']
  ]}};
-const $=q=>document.querySelector(q),hb=$('#hb'),hp=$('#hp'),bd=$('#hbd');
-const L=()=>H[(typeof LANG!=='undefined'&&LANG==='en')?'en':'it'];
-function list(){
-  const h=L();bd.innerHTML='<div class="hm bot">'+h.hi+'</div><div class="hq">'+h.q.map((x,i)=>'<button type="button" data-q="'+i+'">'+x[0]+'</button>').join('')+'</div>';
-  bd.scrollTop=0;
+const $=q=>document.querySelector(q),hb=$('#hb'),hp=$('#hp'),bd=$('#hbd'),sup=$('#sup'),sbd=$('#sbd2');
+const lang=()=>(typeof LANG!=='undefined'&&LANG==='en')?'en':'it';
+const L=()=>H[lang()];
+const me=()=>(typeof user!=='undefined'&&user)?user:null;
+const adm=()=>typeof isAdmin==='function'&&isAdmin();
+const when=x=>new Date(x).toLocaleString(typeof LOC==='function'?LOC():undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const html=x=>esc(x).replace(/\n/g,'<br>');
+let mode='list',amode='list',auid=null,aem='',lastN=0,want=false,tk=0;
+
+/* ----- ricerca semplice nelle risposte ----- */
+const STOP=new Set('come cosa che per con una uno dei del della delle degli nel nella sono mio mia miei suo the and how what can does for with you your this that are not why when where'.split(' '));
+const norm=x=>x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').split(/[^a-z0-9]+/).filter(w=>w.length>=3&&!STOP.has(w));
+const stem=w=>w.slice(0,5);
+function search(text){
+  const toks=norm(text).map(stem);if(!toks.length)return[];
+  return L().q.map((f,i)=>{
+    const a=new Set(norm(f[0]+' '+f[2]).map(stem)),b=new Set(norm(f[1].replace(/<[^>]+>/g,' ')).map(stem));
+    let sc=0;toks.forEach(t=>{if(a.has(t))sc+=2;else if(b.has(t))sc+=1});
+    return{i,sc};
+  }).filter(r=>r.sc>=2).sort((x,y)=>y.sc-x.sc);
 }
-function answer(i){
-  const h=L(),x=h.q[i];
-  bd.innerHTML='<div class="hm me"></div><div class="hm bot">'+x[1]+'</div><div class="hm bot">'+h.fallback+'</div><div class="hq"><a class="hlk" href="mailto:'+MAIL+'?subject='+encodeURIComponent(h.mailSub)+'">'+h.mail+'</a><button type="button" data-more="1">'+h.more+'</button></div>';
-  bd.querySelector('.me').textContent=x[0];
-  bd.scrollTop=0;
-}
+
+/* ----- schermate dell'assistente ----- */
 function labels(){const h=L();$('#hnm').textContent=h.nm;$('#hsb').textContent=h.sb;hb.setAttribute('aria-label',h.open);$('#hx').setAttribute('aria-label',h.close)}
-function open(){labels();list();hp.classList.add('on');$('#hx').focus()}
-function shut(){hp.classList.remove('on');hb.focus()}
-hb.onclick=open;$('#hx').onclick=shut;
+function chips(){
+  const h=L();
+  return '<button type="button" data-ask="1">'+h.ask+'</button>'+(adm()?'<button type="button" data-inb="1">'+h.inb+'</button>':'<button type="button" data-chat="1">'+h.chat+'</button>');
+}
+function list(){
+  mode='list';const h=L();
+  bd.innerHTML='<div class="hm bot">'+h.hi+'</div><div class="hq">'+h.q.map((x,i)=>'<button type="button" data-q="'+i+'">'+x[0]+'</button>').join('')+'</div><div class="hq">'+chips()+'</div>';
+  bd.scrollTop=0;
+}
+function tail(){const h=L();return '<div class="hq">'+(adm()?'':'<button type="button" data-chat="1">'+h.chat+'</button>')+'<button type="button" data-more="1">'+h.more+'</button></div>'}
+function answer(i,asked){
+  mode='ans';const h=L(),x=h.q[i];
+  bd.innerHTML='<div class="hm me"></div><div class="hm bot">'+x[1]+'</div>'+tail();
+  bd.querySelector('.me').textContent=asked||x[0];bd.scrollTop=0;
+}
+function ask(){
+  mode='ask';const h=L();
+  bd.innerHTML='<div class="hm bot">'+h.hi+'</div><textarea class="hta" id="aqt" maxlength="300" placeholder="'+h.askPh+'"></textarea><div class="hrow"><button class="go" type="button" id="aqg">'+h.askGo+'</button></div><div class="hq"><button type="button" data-more="1">'+h.more+'</button></div>';
+  $('#aqt').focus();
+}
+function doAsk(){
+  const t=$('#aqt').value.trim();if(!t)return;
+  const h=L(),r=search(t);
+  if(!r.length){
+    mode='ans';
+    bd.innerHTML='<div class="hm me"></div><div class="hm bot">'+(adm()?h.noMatchAdm:h.noMatch)+'</div>'+tail();
+    bd.querySelector('.me').textContent=t;return;
+  }
+  mode='ans';
+  const rel=r.slice(1,3).map(z=>'<button type="button" data-q="'+z.i+'">'+h.q[z.i][0]+'</button>').join('');
+  bd.innerHTML='<div class="hm me"></div><div class="hm bot">'+h.q[r[0].i][1]+'</div>'+(rel?'<div class="hm bot">'+h.rel+'</div><div class="hq">'+rel+'</div>':'')+tail();
+  bd.querySelector('.me').textContent=t;bd.scrollTop=0;
+}
+
+/* ----- chat utente -> assistenza ----- */
+async function thread(uid){
+  const {data,error}=await sb.from('support_messages').select('id,sender,body,created_at').eq('user_id',uid).order('id');
+  if(error)throw error;return data||[];
+}
+function bubbles(rows,asAdmin){
+  const h=L();
+  return rows.length?rows.map(m=>{const mine=asAdmin?m.sender==='admin':m.sender==='user';
+    return '<div class="hm '+(mine?'me':'bot')+'">'+html(m.body)+'<div class="ht">'+(mine?'':(asAdmin?'':h.team+' · '))+when(m.created_at)+'</div></div>'}).join(''):'<div class="hmsg">'+h.empty+'</div>';
+}
+function chat(){
+  if(!me()||!sb||adm())return;
+  mode='chat';const h=L();
+  bd.innerHTML='<div class="hq"><button type="button" data-more="1">'+h.more+'</button></div><div class="hm bot">'+h.chatH+'</div><div class="cvl" id="cvl"></div><textarea class="hta" id="cvt" maxlength="2000" placeholder="'+h.chatPh+'"></textarea><div class="hrow"><button class="go" type="button" id="cvs">'+h.send+'</button><span class="hmsg" id="cvm"></span></div>';
+  refreshChat(true);
+}
+async function refreshChat(force){
+  if(mode!=='chat'||!me())return;
+  try{
+    const rows=await thread(me().id),box=$('#cvl');if(!box||mode!=='chat')return;
+    const near=bd.scrollHeight-bd.scrollTop-bd.clientHeight<80;
+    box.innerHTML=bubbles(rows,false);
+    if(rows.some(m=>m.sender==='admin'))sb.rpc('support_mark_read').then(()=>pollUnread());
+    if(force||near)bd.scrollTop=bd.scrollHeight;
+  }catch(e){}
+}
+async function sendChat(){
+  const t=$('#cvt'),b=$('#cvs'),m=$('#cvm'),h=L(),v=t.value.trim();if(!v)return;
+  b.disabled=true;m.textContent=h.sending;
+  const {error}=await sb.from('support_messages').insert({user_id:me().id,user_email:me().email||'',sender:'user',body:v,user_read:true,admin_read:false});
+  b.disabled=false;
+  if(error){m.textContent=/many messages/i.test(error.message||'')?h.chatLim:h.chatErr;return}
+  t.value='';m.textContent='';refreshChat(true);
+}
+
+/* ----- pannello e apertura ----- */
+function openHelp(m){
+  labels();hp.classList.add('on');
+  if(m==='chat'&&!adm())chat();else list();
+  $('#hx').focus();
+}
+function shut(){hp.classList.remove('on');mode='list'}
+hb.onclick=()=>openHelp();$('#hx').onclick=shut;
 hp.onclick=e=>{if(e.target===hp)shut()};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&hp.classList.contains('on'))shut()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(hp.classList.contains('on'))shut();else if(sup.classList.contains('on'))closeInbox()}});
 bd.onclick=e=>{
   const q=e.target.closest('[data-q]');if(q){answer(+q.dataset.q);return}
-  if(e.target.closest('[data-more]'))list();
+  if(e.target.closest('[data-more]')){list();return}
+  if(e.target.closest('[data-ask]')){ask();return}
+  if(e.target.closest('[data-chat]')){chat();return}
+  if(e.target.closest('[data-inb]')){shut();openInbox();return}
+  if(e.target.id==='aqg')doAsk();
+  if(e.target.id==='cvs')sendChat();
 };
-$('#lang').addEventListener('click',()=>{labels();if(hp.classList.contains('on'))list()});
+bd.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){if(e.target.id==='cvt')sendChat();if(e.target.id==='aqt')doAsk()}});
+
+/* ----- casella messaggi dell'amministratore ----- */
+function closeInbox(){sup.classList.remove('on');amode='list';auid=null}
+async function openInbox(){
+  if(!adm()||!sb)return;
+  sup.classList.add('on');amode='list';auid=null;
+  const h=L();
+  sbd.innerHTML='<h2 id="supt">'+h.inbT+'</h2><div id="sbl"><div class="hmsg">…</div></div><div class="stack"><button type="button" class="btn" id="sbx">'+h.close+'</button></div>';
+  await drawInbox();
+}
+async function drawInbox(){
+  if(amode!=='list')return;
+  const h=L(),box=$('#sbl');if(!box)return;
+  const {data,error}=await sb.rpc('support_inbox');
+  if(error){box.innerHTML='<div class="hmsg">'+esc(error.message||'')+'</div>';return}
+  box.innerHTML=(data&&data.length)?data.map(r=>'<button type="button" class="ci" data-u="'+esc(r.user_id)+'" data-e="'+esc(r.user_email||'')+'"><b>'+esc(r.user_email||'—')+'</b>'+(r.unread>0?'<span class="dot">'+r.unread+'</span>':'')+'<small>'+(r.last_sender==='admin'?h.youAre+': ':'')+esc(r.last_body)+' · '+when(r.last_at)+'</small></button>').join(''):'<div class="hmsg">'+h.inbNone+'</div>';
+}
+async function openThread(uid,em){
+  amode='th';auid=uid;aem=em;const h=L();
+  sbd.innerHTML='<div class="hq"><button type="button" id="sbk">'+h.back+'</button></div><h2 id="supt" style="margin:10px 0 8px">'+esc(em||'')+'</h2><div class="cvl" id="avl"></div><textarea class="hta" id="avt" maxlength="2000" placeholder="'+h.reply+'" style="margin-top:10px"></textarea><div class="hrow" style="margin-top:8px"><button class="go" type="button" id="avs">'+h.send+'</button><span class="hmsg" id="avm"></span></div><div class="stack"><button type="button" class="btn" id="sbx">'+h.close+'</button></div>';
+  await refreshThread(true);
+}
+async function refreshThread(force){
+  if(amode!=='th'||!auid)return;
+  try{
+    const rows=await thread(auid),box=$('#avl');if(!box)return;
+    const el=sup.querySelector('.sheet'),near=el.scrollHeight-el.scrollTop-el.clientHeight<100;
+    box.innerHTML=bubbles(rows,true);
+    if(rows.some(m=>m.sender==='user'))sb.rpc('support_mark_read',{p_user:auid}).then(()=>pollUnread());
+    if(force||near)el.scrollTop=el.scrollHeight;
+  }catch(e){}
+}
+async function sendReply(){
+  const t=$('#avt'),b=$('#avs'),m=$('#avm'),h=L(),v=t.value.trim();if(!v)return;
+  b.disabled=true;m.textContent=h.sending;
+  const {error}=await sb.from('support_messages').insert({user_id:auid,user_email:aem,sender:'admin',body:v,admin_read:true,user_read:false});
+  b.disabled=false;
+  if(error){m.textContent=h.chatErr;return}
+  t.value='';m.textContent='';refreshThread(true);
+}
+sup.onclick=e=>{
+  if(e.target===sup){closeInbox();return}
+  const c=e.target.closest('.ci');if(c){openThread(c.dataset.u,c.dataset.e);return}
+  if(e.target.id==='sbk'){amode='list';openInbox();return}
+  if(e.target.id==='sbx')closeInbox();
+  if(e.target.id==='avs')sendReply();
+};
+sup.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&e.target.id==='avt')sendReply()});
+
+/* ----- avvisi: pallino, popup, notifica ----- */
+function badges(n){
+  [['#hdot',n],['#udn',adm()?0:n],['#sdn',adm()?n:0]].forEach(([s,v])=>{const e=$(s);if(e){e.textContent=v;e.hidden=!v}});
+}
+function banner(txt,fn){
+  $('#sbt').textContent=txt;$('#sbo').textContent=L().view;$('#sbn').hidden=false;
+  $('#sbo').onclick=()=>{$('#sbn').hidden=true;fn()};
+}
+$('#sbc').onclick=()=>{$('#sbn').hidden=true};
+async function pollUnread(){
+  if(!sb||!me())return;
+  const a=adm();
+  const {data,error}=await sb.from('support_messages').select('id,user_email,body').eq('sender',a?'user':'admin').eq(a?'admin_read':'user_read',false).order('id',{ascending:false}).limit(50);
+  if(error||!data)return;
+  badges(data.length);
+  const top=data[0];
+  if(top&&top.id>lastN){
+    lastN=top.id;
+    const viewing=a?(sup.classList.contains('on')&&amode==='th'):(hp.classList.contains('on')&&mode==='chat');
+    if(!viewing)banner(a?L().bnUser.replace('{e}',top.user_email||'')+': '+top.body:L().bnAdmin+': '+top.body,()=>a?openInbox():openHelp('chat'));
+  }
+}
+setInterval(()=>{
+  if(document.hidden)return;
+  tk++;
+  if(hp.classList.contains('on')&&mode==='chat')refreshChat(false);
+  if(sup.classList.contains('on')){if(amode==='th')refreshThread(false);else drawInbox()}
+  if(want&&me()){want=false;adm()?openInbox():openHelp('chat')}
+  if(tk%2===0||tk===1)pollUnread();
+},10000);
+setTimeout(()=>{if(me())pollUnread()},3000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(pollUnread,800)});
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{
+  const d=e.data||{};
+  if(d.type==='open-support'){want=true;setTimeout(()=>{if(me()){want=false;adm()?openInbox():openHelp('chat')}},400)}
+  if(d.type==='push')setTimeout(pollUnread,500);
+});
+try{if(new URLSearchParams(location.search).get('support')){want=true;history.replaceState(null,'',location.pathname)}}catch(e){}
+
+/* ----- area utente ----- */
+$('#supb').onclick=()=>openHelp();
+$('#supa').onclick=openInbox;
+$('#pwb').onclick=async()=>{
+  const v=prompt(t_('pwNew'));if(v===null||v==='')return;
+  if(v.length<8||v.length>72){toast(t_('pwBad'));return}
+  const {error}=await sb.auth.updateUser({password:v});
+  toast(error?String(error.message||error):t_('pwOk'));
+};
+$('#lang').addEventListener('click',()=>{labels();if(hp.classList.contains('on')&&mode==='list')list()});
 labels();
 })();
 </script>
