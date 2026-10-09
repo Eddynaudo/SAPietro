@@ -1344,14 +1344,19 @@ async function bioVerify(){
   return !!a;
 }
 function showLock(){$('#lock').classList.add('on');$('#lkm').textContent='';tryUnlock()}
+let unlocking=false;
+const markUnl=()=>{try{sessionStorage.setItem('dm.unl',String(Date.now()))}catch(e){}};
 async function tryUnlock(){
-  try{if(await bioVerify()){unlocked=true;$('#lock').classList.remove('on')}}
+  if(unlocking)return; // una sola richiesta Face ID alla volta
+  unlocking=true;
+  try{if(await bioVerify()){unlocked=true;markUnl();$('#lock').classList.remove('on')}}
   catch(e){$('#lkm').textContent=t_('bioErr')}
+  finally{unlocking=false}
 }
 $('#unl').onclick=tryUnlock;
-$('#unp').onclick=async()=>{try{localStorage.removeItem(bk())}catch(e){}$('#lock').classList.remove('on');unlocked=true;try{await sb.auth.signOut()}catch(e){}};
+$('#unp').onclick=async()=>{try{localStorage.removeItem(bk());sessionStorage.removeItem('dm.unl')}catch(e){}$('#lock').classList.remove('on');unlocked=true;try{await sb.auth.signOut()}catch(e){}};
 function bioGate(){ // all'apertura: se Face ID è attivo, l'app resta coperta finché non si sblocca
-  try{const t=+sessionStorage.getItem('dm.unl')||0;sessionStorage.removeItem('dm.unl');if(t&&Date.now()-t<120000&&bioGet())unlocked=true}catch(e){}
+  try{const t=+sessionStorage.getItem('dm.unl')||0;if(t&&Date.now()-t<60000&&bioGet())unlocked=true}catch(e){}
   if(bioGet()&&!unlocked&&!fresh){$('#lock').classList.add('on');showLock()}
 }
 async function offerBio(){
@@ -1377,7 +1382,8 @@ $('#bioT').onclick=async()=>{
   try{await bioEnable();toast(t_('bioOk'))}catch(e){toast(t_('bioErr'))}
 };
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){hiddenAt=Date.now();return}
+  if(document.hidden){hiddenAt=Date.now();if(unlocked)markUnl();return}
+  if(unlocking)return;
   if(user&&bioGet()&&hiddenAt&&Date.now()-hiddenAt>60000){unlocked=false;showLock()}
 });
 
