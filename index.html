@@ -802,7 +802,7 @@ function renderNote(){
     +(t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<span class="ph" style="height:56px" role="img" aria-label="${t_('loadAud')}"></span>`):'');
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
-  $('#nvx2').hidden=!(nvKind==='remind'||(nvKind==='main'&&!t.done));$('#nvcl').hidden=nvKind!=='main';$('#nvsz').hidden=true;
+  $('#nvx2').hidden=!(nvKind==='main'&&!t.done);$('#nvcl').hidden=nvKind!=='main';$('#nvsz').hidden=true;
   const ok=$('#nvok');ok.disabled=false;ok.classList.toggle('grn',nvKind==='main');
   if(nvKind==='remind')ok.textContent=t_('ok');else if(nvKind==='main')ok.textContent='✅ '+t_('confirmed');else ok.textContent=t.done?t_('done'):t_('complete')
 }
