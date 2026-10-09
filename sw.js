@@ -1,4 +1,4 @@
-const V='daymarck-v30',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html'];
+const V='daymarck-v31',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
@@ -13,7 +13,7 @@ self.addEventListener('fetch',e=>{
   if(r.method!=='GET')return;
   if(u.origin!==location.origin&&u.hostname!=='cdn.jsdelivr.net')return;
   e.respondWith(
-    fetch(r).then(res=>{
+    fetch(r,u.origin===location.origin?{cache:'no-cache'}:undefined).then(res=>{
       if(res.ok){const c=res.clone();caches.open(V).then(ch=>ch.put(r,c))}
       return res;
     }).catch(()=>caches.match(r,{ignoreSearch:true}).then(x=>x||caches.match('./index.html')))

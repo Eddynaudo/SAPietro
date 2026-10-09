@@ -1743,5 +1743,19 @@ anApply();
 labels();
 })();
 </script>
-<script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+<script>
+/* Aggiornamenti automatici: quando c'è una versione nuova l'app si ricarica da sola appena non stai scrivendo o guardando una nota. */
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
+  const had=!!navigator.serviceWorker.controller;let pending=false;
+  const busy=()=>!!document.querySelector('#ov.on,#nv.on,#hp.on,#sup.on,#cl.on,#usr.on,#usl.on,#rf.on');
+  const go=()=>{if(!pending)return;if(busy())return;pending=false;location.reload()};
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had){pending=true;go()}});
+  setInterval(go,5000);
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').then(reg=>{
+    const chk=()=>reg.update().catch(()=>{});
+    setInterval(chk,30*60*1000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
+  }).catch(()=>{}));
+}
+</script>
 </body></html>
