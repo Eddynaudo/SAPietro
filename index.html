@@ -585,7 +585,7 @@ const SUN_RISE=6.2,SUN_SET=19.8;
 let MH=100;
 function meadowH(){return Math.max(78,Math.min(124,Math.round(window.innerHeight*.12)))}
 function fxCtx(id,w,h,dpr){const c=$('#'+id),x=c.getContext&&c.getContext('2d');if(!x)return null;c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c.style.aspectRatio=w+'/'+h;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);return x}
-function drawMeadow(){MH=Math.max(96,Math.min(Math.round(window.innerHeight*.16),Math.round(window.innerWidth*390/954)));document.documentElement.style.setProperty('--mh',MH+'px')}
+function drawMeadow(){MH=Math.max(96,Math.min(Math.round(window.innerHeight*.145),Math.round(window.innerWidth*390/954)));document.documentElement.style.setProperty('--mh',MH+'px')}
 function moonPhase(d){return(((d.getTime()-Date.UTC(2000,0,6,18,14))/864e5)%29.530588+29.530588)%29.530588/29.530588}
 function drawMoon(x,cx,cy,R,ph,al){
   x.save();x.globalAlpha=al;
