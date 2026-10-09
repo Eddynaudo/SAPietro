@@ -312,6 +312,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <div class="stack">
     <button type="button" class="btn" id="syn" data-i="syn">Sincronizza ora</button>
     <button type="button" class="btn" id="bioT" hidden></button>
+    <button type="button" class="btn" id="bioG" hidden></button>
     <button type="button" class="btn" id="supb"><span data-i="supb">Assistenza</span><span class="dot" id="udn" hidden></span></button>
     <button type="button" class="btn" id="pwb" data-i="pwb">Cambia password</button>
     <button type="button" class="btn" id="anb"></button>
@@ -469,7 +470,7 @@ const setSync=k=>{syncKey=k;$('#sy').textContent=k?t_(k):''};
 const TX={
 en:{
 anA:'Avatar animation: automatic',anO:'Avatar animation: always on',anF:'Avatar animation: off',prv:'Privacy notice',updB:'Update',updLat:'You already have the latest version',updT:'New update available',updGo:'Update now',updLater:'Later',updVer:'Version',updIc:'This update also changes the app icon. To see it on your home screen, remove the DayMarck icon and add it again from your browser (iPhone: Safari → Share → Add to Home Screen). Your data is safe.',supb:'Support',supa:'Support messages',pwb:'Change password',pwNew:'New password (min. 8 characters):',pwOk:'Password changed.',pwBad:'The password must have at least 8 characters.',
-radd:'+ Add reminder',othD:'Notifications only on this phone',othOk:'Done: other phones and old installs no longer get notifications.',othAsk:'Stop notifications on every other phone or old install of this account? Open DayMarck on them again to turn them back on.',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
+radd:'+ Add reminder',bioG:'Ask for Face ID after: {m}',gm1:'1 minute',gm15:'15 minutes',gm60:'1 hour',gm240:'4 hours',gm1440:'1 day',othD:'Notifications only on this phone',othOk:'Done: other phones and old installs no longer get notifications.',othAsk:'Stop notifications on every other phone or old install of this account? Open DayMarck on them again to turn them back on.',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
 rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
@@ -503,7 +504,7 @@ lgNet:'Sign-in service unreachable. Check your connection and reload.',lgBad:'In
 lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes are not synced yet and will be lost. Log out anyway?',appName:'DayMarck',pushBody:'Reminder'},
 it:{
 anA:'Animazione avatar: automatica',anO:'Animazione avatar: sempre attiva',anF:'Animazione avatar: ferma',prv:'Informativa sulla privacy',updB:'Aggiorna',updLat:'Ultima versione già presente',updT:'Nuovo aggiornamento disponibile',updGo:'Aggiorna ora',updLater:'Più tardi',updVer:'Versione',updIc:'Questo aggiornamento cambia anche l\'icona dell\'app. Per vederla nella schermata Home, elimina l\'icona DayMarck e aggiungila di nuovo dal browser (iPhone: Safari → Condividi → Aggiungi a Home). I tuoi dati restano al sicuro.',supb:'Assistenza',supa:'Messaggi assistenza',pwb:'Cambia password',pwNew:'Nuova password (min. 8 caratteri):',pwOk:'Password cambiata.',pwBad:'La password deve avere almeno 8 caratteri.',
-radd:'+ Aggiungi promemoria',othD:'Notifiche solo su questo telefono',othOk:'Fatto: gli altri telefoni e le vecchie installazioni non ricevono più notifiche.',othAsk:'Fermare le notifiche su ogni altro telefono o vecchia installazione di questo account? Riaprendo DayMarck su quelli si riattivano.',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
+radd:'+ Aggiungi promemoria',bioG:'Chiedi Face ID dopo: {m}',gm1:'1 minuto',gm15:'15 minuti',gm60:'1 ora',gm240:'4 ore',gm1440:'1 giorno',othD:'Notifiche solo su questo telefono',othOk:'Fatto: gli altri telefoni e le vecchie installazioni non ricevono più notifiche.',othAsk:'Fermare le notifiche su ogni altro telefono o vecchia installazione di questo account? Riaprendo DayMarck su quelli si riattivano.',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
 rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
@@ -1328,7 +1329,12 @@ async function bioProbe(){
   try{bioOK=!!(window.PublicKeyCredential&&navigator.credentials&&await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())}catch(e){bioOK=false}
   bioBtn();
 }
-function bioBtn(){const b=$('#bioT');b.hidden=!bioOK;b.textContent=t_(bioGet()?'bioOn':'bioOff')}
+const GR=[1,15,60,240,1440];
+const graceMin=()=>{let m=60;try{const v=+localStorage.getItem('dm.bio.g');if(GR.includes(v))m=v}catch(e){}return m};
+const lastTs=()=>{try{return +localStorage.getItem('dm.last')||0}catch(e){return 0}};
+const touchLast=()=>{try{localStorage.setItem('dm.last',String(Date.now()))}catch(e){}};
+function bioBtn(){const b=$('#bioT');b.hidden=!bioOK;b.textContent=t_(bioGet()?'bioOn':'bioOff');
+  const g=$('#bioG');g.hidden=!(bioOK&&bioGet());g.textContent=t_('bioG',{m:t_('gm'+graceMin())})}
 async function bioEnable(){
   const cred=await navigator.credentials.create({publicKey:{challenge:rnd(32),rp:{name:'DayMarck',id:location.hostname},
     user:{id:new TextEncoder().encode(user.id),name:user.email,displayName:user.email},
@@ -1345,7 +1351,9 @@ async function bioVerify(){
 }
 function showLock(){$('#lock').classList.add('on');$('#lkm').textContent='';tryUnlock()}
 let unlocking=false;
-const markUnl=()=>{try{sessionStorage.setItem('dm.unl',String(Date.now()))}catch(e){}};
+const markUnl=touchLast;
+setInterval(()=>{if(unlocked&&!document.hidden&&user)touchLast()},15000);
+addEventListener('pagehide',()=>{if(unlocked)touchLast()});
 async function tryUnlock(){
   if(unlocking)return; // una sola richiesta Face ID alla volta
   unlocking=true;
@@ -1354,9 +1362,9 @@ async function tryUnlock(){
   finally{unlocking=false}
 }
 $('#unl').onclick=tryUnlock;
-$('#unp').onclick=async()=>{try{localStorage.removeItem(bk());sessionStorage.removeItem('dm.unl')}catch(e){}$('#lock').classList.remove('on');unlocked=true;try{await sb.auth.signOut()}catch(e){}};
+$('#unp').onclick=async()=>{try{localStorage.removeItem(bk());localStorage.removeItem('dm.last')}catch(e){}$('#lock').classList.remove('on');unlocked=true;try{await sb.auth.signOut()}catch(e){}};
 function bioGate(){ // all'apertura: se Face ID è attivo, l'app resta coperta finché non si sblocca
-  try{const t=+sessionStorage.getItem('dm.unl')||0;if(t&&Date.now()-t<60000&&bioGet())unlocked=true}catch(e){}
+  if(bioGet()&&lastTs()&&Date.now()-lastTs()<graceMin()*60000)unlocked=true; // visto da poco: niente richiesta (come WhatsApp)
   if(bioGet()&&!unlocked&&!fresh){$('#lock').classList.add('on');showLock()}
 }
 async function offerBio(){
@@ -1377,6 +1385,7 @@ $('#othD').onclick=async()=>{
     if(error)throw error;toast(t_('othOk'));
   }catch(e){toast(t_('pushFail'))}
 };
+$('#bioG').onclick=()=>{const m=GR[(GR.indexOf(graceMin())+1)%GR.length];try{localStorage.setItem('dm.bio.g',String(m))}catch(e){}bioBtn()};
 $('#bioT').onclick=async()=>{
   if(bioGet()){try{localStorage.removeItem(bk())}catch(e){}bioBtn();return}
   try{await bioEnable();toast(t_('bioOk'))}catch(e){toast(t_('bioErr'))}
@@ -1384,7 +1393,7 @@ $('#bioT').onclick=async()=>{
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){hiddenAt=Date.now();if(unlocked)markUnl();return}
   if(unlocking)return;
-  if(user&&bioGet()&&hiddenAt&&Date.now()-hiddenAt>60000){unlocked=false;showLock()}
+  if(user&&bioGet()&&unlocked&&Date.now()-lastTs()>graceMin()*60000){unlocked=false;showLock()}
 });
 
 /* ---------- accesso ---------- */
@@ -1413,7 +1422,7 @@ $('#out').onclick=async()=>{
   await sync();
   if(items.some(t=>t.dirty)&&!confirm(t_('leave')))return;
   try{const s=await getSub();if(s){await sb.from('push_subscriptions').delete().eq('endpoint',s.endpoint);await s.unsubscribe()}}catch(e){}
-  try{localStorage.removeItem(KEYU());localStorage.removeItem(bk())}catch(e){}
+  try{localStorage.removeItem(KEYU());localStorage.removeItem(bk());localStorage.removeItem('dm.last')}catch(e){}
   $('#usr').classList.remove('on');
   await sb.auth.signOut();
 };
@@ -1485,7 +1494,7 @@ it:{wel:'Ciao, benvenuto in DayMarck! 👋 Vuoi sapere qualcosa? Ti propongo alc
  ['Come modifico o elimino un’attività?','Nell’elenco scorri la scheda <b>verso sinistra</b>: compaiono <b>Modifica</b> ed <b>Elimina</b> (per eliminare tocca due volte, ti chiede “Sicuro?”).','modificare cambiare eliminare cancellare togliere attivita scorri'],
  ['Cosa significano Tutti, Da fare e Fatti?','Nella vista <b>Tutti gli impegni</b> i filtri mostrano: <b>Tutti</b> ogni attività, <b>Da fare</b> quelle ancora aperte, <b>Fatti</b> quelle completate. In <b>Calendario</b> tocchi un giorno per vedere le sue attività.','filtro filtri tutti fare fatti calendario elenco'],
  ['Funziona anche senza internet?','Sì: puoi guardare e modificare le attività e le modifiche si salvano sul telefono. Appena torna la connessione si sincronizzano da sole (in alto vedi “Sincronizzato”). Le notifiche però arrivano solo con la connessione attiva.','offline internet connessione sincronizza sincronizzazione'],
- ['Posso usare Face ID o l’impronta?','Sì, se il telefono li ha. Dopo l’accesso ti viene proposto di attivarli. Puoi cambiare idea dall’<b>Area utente</b> 👤, voce “Face ID / impronta”.','face id impronta biometrico sblocco accesso veloce'],
+ ['Posso usare Face ID o l’impronta?','Sì, se il telefono li ha. Dopo l’accesso ti viene proposto di attivarli. Puoi cambiare idea dall’<b>Area utente</b> 👤, voce “Face ID / impronta”. Lì puoi anche scegliere dopo quanto tempo di inattività richiederlo (1 minuto, 15 minuti, 1 ora, 4 ore, 1 giorno): se riapri l’app prima, non lo chiede di nuovo.','face id impronta biometrico sblocco accesso veloce'],
  ['Come cambio la password?','Apri l’<b>Area utente</b> 👤 e tocca <b>Cambia password</b>: scrivi la nuova (almeno 8 caratteri). Se non ricordi quella attuale e non riesci più a entrare, scrivi all’assistenza e ti viene reimpostata.','password cambiare cambio modificare dimenticata dimenticato reimpostare reset accesso'],
  ['Come cambio l’email dell’account?','L’email la cambia l’amministratore: scrivi all’assistenza indicando la nuova email che vuoi usare.','email mail indirizzo cambiare cambio modificare account'],
  ['Come cambio lingua?','Tocca <b>IT / EN</b> in alto: l’app passa da italiano a inglese e viceversa.','lingua italiano inglese english'],
@@ -1519,7 +1528,7 @@ en:{wel:'Hi, welcome to DayMarck! 👋 Want to know something? Here are a few us
  ['How do I edit or delete a task?','In the list swipe the card <b>left</b>: <b>Edit</b> and <b>Delete</b> appear (to delete, tap twice; it asks “Sure?”).','edit change delete remove task swipe'],
  ['What do All, To do and Done mean?','In the <b>All tasks</b> view the filters show: <b>All</b> every task, <b>To do</b> the open ones, <b>Done</b> the completed ones. In <b>Calendar</b> tap a day to see its tasks.','filter filters all todo done calendar list'],
  ['Does it work offline?','Yes: you can view and edit tasks and changes are saved on the phone. When the connection returns they sync automatically (you’ll see “Synced” at the top). Notifications need a connection.','offline internet connection sync'],
- ['Can I use Face ID or fingerprint?','Yes, if your phone has them. After signing in you’re offered to turn it on. Change it later in the <b>User area</b> 👤, “Face ID / fingerprint”.','face id fingerprint biometric unlock'],
+ ['Can I use Face ID or fingerprint?','Yes, if your phone has them. After signing in you’re offered to turn it on. Change it later in the <b>User area</b> 👤, “Face ID / fingerprint”. There you can also choose after how long away it asks again (1 minute, 15 minutes, 1 hour, 4 hours, 1 day): if you come back sooner, it won’t ask.','face id fingerprint biometric unlock'],
  ['How do I change my password?','Open the <b>User area</b> 👤 and tap <b>Change password</b>: type the new one (at least 8 characters). If you can’t remember the current one and can’t sign in, message support and it will be reset.','password change forgot forgotten reset access'],
  ['How do I change my account email?','The administrator changes the email: message support with the new email you want to use.','email address change account'],
  ['How do I change language?','Tap <b>IT / EN</b> at the top to switch between Italian and English.','language italian english'],
@@ -1804,7 +1813,7 @@ setTimeout(()=>cap(false),6000);setInterval(()=>cap(false),30*60*1000);
 (function(){
 const q=s=>document.querySelector(s),lg=()=>document.documentElement.lang==='en'?'en':'it';
 const busy=()=>!!document.querySelector('#ov.on,#nv.on,#hp.on,#sup.on,#cl.on,#usr.on,#usl.on,#rf.on,#upd.on,#lock.on');
-const rl=()=>{try{if(unlocked)sessionStorage.setItem('dm.unl',String(Date.now()))}catch(e){}location.reload()};
+const rl=()=>{if(typeof unlocked!=='undefined'&&unlocked&&typeof touchLast==='function')touchLast();location.reload()};
 const dm=window.dmRel={rel:null,dismissed:0};
 q('#uver').textContent=t_('updVer')+' '+APP_VERSION+(CHANNEL==='next'?' β':'');
 if(CHANNEL==='next'){const r=document.createElement('div');r.className='ribbon';r.textContent='ANTEPRIMA · PROVA AMMINISTRATORE';document.body.appendChild(r);const m=q('#upb');if(m)m.hidden=true}
