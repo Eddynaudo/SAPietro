@@ -1350,6 +1350,7 @@ async function tryUnlock(){
 $('#unl').onclick=tryUnlock;
 $('#unp').onclick=async()=>{try{localStorage.removeItem(bk())}catch(e){}$('#lock').classList.remove('on');unlocked=true;try{await sb.auth.signOut()}catch(e){}};
 function bioGate(){ // all'apertura: se Face ID è attivo, l'app resta coperta finché non si sblocca
+  try{const t=+sessionStorage.getItem('dm.unl')||0;sessionStorage.removeItem('dm.unl');if(t&&Date.now()-t<120000&&bioGet())unlocked=true}catch(e){}
   if(bioGet()&&!unlocked&&!fresh){$('#lock').classList.add('on');showLock()}
 }
 async function offerBio(){
@@ -1770,7 +1771,8 @@ labels();
 /* Aggiornamenti: quelli "di sistema" arrivano da soli. Quelli importanti (nuove funzioni, icona) li approva l'amministratore: tabella app_release -> popup. */
 (function(){
 const q=s=>document.querySelector(s),lg=()=>document.documentElement.lang==='en'?'en':'it';
-const busy=()=>!!document.querySelector('#ov.on,#nv.on,#hp.on,#sup.on,#cl.on,#usr.on,#usl.on,#rf.on,#upd.on');
+const busy=()=>!!document.querySelector('#ov.on,#nv.on,#hp.on,#sup.on,#cl.on,#usr.on,#usl.on,#rf.on,#upd.on,#lock.on');
+const rl=()=>{try{if(unlocked)sessionStorage.setItem('dm.unl',String(Date.now()))}catch(e){}location.reload()};
 const dm=window.dmRel={rel:null,dismissed:0};
 q('#uver').textContent=t_('updVer')+' '+APP_VERSION+(CHANNEL==='next'?' β':'');
 if(CHANNEL==='next'){const r=document.createElement('div');r.className='ribbon';r.textContent='ANTEPRIMA · PROVA AMMINISTRATORE';document.body.appendChild(r);const m=q('#upb');if(m)m.hidden=true}
@@ -1778,7 +1780,7 @@ dm.fetch=async()=>{if(!sb)return null;try{const {data}=await sb.from('app_releas
 dm.newer=()=>!!dm.rel&&dm.rel.build>APP_BUILD&&CHANNEL!=='next';
 dm.show=()=>{const r=dm.rel;if(!r)return;q('#updn').innerHTML=((lg()==='en'?r.notes_en:r.notes_it)||'').replace(/</g,'&lt;');q('#updi').hidden=!r.reinstall;q('#upd').classList.add('on')};
 dm.check=async(manual)=>{await dm.fetch();if(dm.newer()){if(manual||dm.dismissed!==dm.rel.build)dm.show();return true}return false};
-dm.apply=async()=>{try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update().catch(()=>{})));const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}location.reload()};
+dm.apply=async()=>{try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update().catch(()=>{})));const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}rl()};
 q('#updG').onclick=dm.apply;
 q('#updL').onclick=()=>{dm.dismissed=dm.rel?dm.rel.build:0;q('#upd').classList.remove('on')};
 q('#upb').onclick=async()=>{const b=q('#upb');b.disabled=true;const n=await dm.check(true);b.disabled=false;if(!n)toast(t_('updLat'))};
@@ -1787,7 +1789,7 @@ setInterval(poll,10*60*1000);document.addEventListener('visibilitychange',poll);
 /* aggiornamenti di sistema silenziosi, ma se c'è una release importante in attesa si mostra il popup invece di ricaricare */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const had=!!navigator.serviceWorker.controller;let pending=false;
-  const go=()=>{if(!pending||busy())return;pending=false;location.reload()};
+  const go=()=>{if(!pending||busy())return;pending=false;rl()};
   navigator.serviceWorker.addEventListener('controllerchange',async()=>{if(!had)return;await dm.fetch();if(dm.newer()){dm.show();return}pending=true;go()});
   setInterval(go,5000);
   addEventListener('load',()=>navigator.serviceWorker.register('sw.js').then(reg=>{
