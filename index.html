@@ -35,7 +35,7 @@ button,input,textarea{font:inherit;color:inherit}
 #sky canvas{position:absolute;inset:0;width:100%;height:100%;opacity:var(--stars)}
 #bgp{position:absolute;inset:0;background:url(bg.webp) center/cover no-repeat;filter:var(--bf,none);transform:translateZ(0)}
 #bgt{position:absolute;inset:0;background:var(--bt,transparent)}
-.cap{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;background:var(--field)}.cap b{font-size:14px}.cap .bar{height:8px;border-radius:5px;background:rgba(255,255,255,.18);margin:4px 0 8px;overflow:hidden}.cap .bar i{display:block;height:100%;background:#3DDC84}.cap .bar i.w{background:#FFB020}.cap .bar i.c{background:#FF5C5C}.cap .big{font-size:20px;font-weight:800}.cap small{opacity:.75;display:block;margin-top:4px}.ufoot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:14px}.ufoot #upb{justify-self:end}.ufoot #uver{font-size:12px;opacity:.75}.ufoot #upb{padding:8px 14px;font-size:14px}.ribbon{position:fixed;top:0;left:0;right:0;z-index:50;background:#E8590C;color:#fff;font:700 11px system-ui;text-align:center;padding:2px;letter-spacing:.1em;pointer-events:none}#upd .sheet{text-align:center}#upd p{margin:8px 0}#upd .ic{font-size:13px;opacity:.9}.ulogo{display:block;width:76px;height:76px;margin:0 auto;filter:drop-shadow(0 4px 14px rgba(40,150,255,.55))}
+.cap{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;background:var(--field)}.cap b{font-size:14px}.cap .bar{height:8px;border-radius:5px;background:rgba(255,255,255,.18);margin:4px 0 8px;overflow:hidden}.cap .bar i{display:block;height:100%;background:#3DDC84}.cap .bar i.w{background:#FFB020}.cap .bar i.c{background:#FF5C5C}.cap .big{font-size:20px;font-weight:800}.cap small{opacity:.75;display:block;margin-top:4px}.cd h3{margin:18px 0 6px;font-size:16px}.cd .g2{display:grid;grid-template-columns:1fr;gap:10px}.cd .cc{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--field);font-size:13px}.cd .cc b{font-size:14px}.cd .kv2{display:flex;justify-content:space-between;gap:8px;padding:2px 0}.cd .kv2 span:first-child{opacity:.75}.cd .st{display:inline-block;border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px;color:#06140b;background:#3DDC84}.cd .st.y{background:#F4D03F}.cd .st.o{background:#FF9F1C}.cd .st.r{background:#FF5C5C;color:#fff}.cd .bar{height:9px;border-radius:5px;background:rgba(255,255,255,.18);margin:4px 0 6px;overflow:hidden}.cd .bar i{display:block;height:100%;background:#3DDC84}.cd .bar i.y{background:#F4D03F}.cd .bar i.o{background:#FF9F1C}.cd .bar i.r{background:#FF5C5C}.cd table{width:100%;border-collapse:collapse;font-size:12px}.cd th,.cd td{text-align:left;padding:4px 5px;border-bottom:1px solid var(--line);vertical-align:top}.cd .al{border-radius:10px;padding:8px 10px;margin:6px 0;font-size:13px;border:1px solid var(--line)}.cd .al.o{background:rgba(255,159,28,.18)}.cd .al.r{background:rgba(255,92,92,.2)}.cd .al.y{background:rgba(244,208,63,.16)}.cd .mut{opacity:.7;font-size:12px}.cd .sel{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.cd .sel button{border:1px solid var(--line);background:var(--field);color:inherit;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer}.cd .sel button.on{background:#2F5BFF;color:#fff}.cd input,.cd select{width:100%;box-sizing:border-box;padding:7px 8px;border-radius:8px;border:1px solid var(--line);background:var(--field);color:inherit;font-size:13px}.cd .fg{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px;align-items:center;margin:3px 0;font-size:12px}.cd svg{width:100%;height:auto;display:block}.cd .nd{opacity:.7;font-size:12px;padding:14px 0;text-align:center}.cd .dis{font-size:11px;opacity:.75;margin-top:8px}.ufoot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:14px}.ufoot #upb{justify-self:end}.ufoot #uver{font-size:12px;opacity:.75}.ufoot #upb{padding:8px 14px;font-size:14px}.ribbon{position:fixed;top:0;left:0;right:0;z-index:50;background:#E8590C;color:#fff;font:700 11px system-ui;text-align:center;padding:2px;letter-spacing:.1em;pointer-events:none}#upd .sheet{text-align:center}#upd p{margin:8px 0}#upd .ic{font-size:13px;opacity:.9}.ulogo{display:block;width:76px;height:76px;margin:0 auto;filter:drop-shadow(0 4px 14px rgba(40,150,255,.55))}
 .plk{color:inherit;font-size:14px;opacity:.85}
 .sheet .sub{color:var(--mute);text-shadow:none}
 /* riquadri con sfumatura e bagliore bianco, per leggerli bene sullo sfondo */
@@ -396,6 +396,12 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <p class="am" id="ulm" role="status" style="color:#fff"></p>
   <div id="ulb"></div>
   <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#usl" data-i="back">← Back</button><button type="button" class="btn" id="ulx" data-i="close">Close</button></div>
+</div></div>
+
+<div class="ov" id="cpx"><div class="sheet cd" role="dialog" aria-modal="true" aria-labelledby="cpt">
+  <h2 id="cpt">Supabase — Database &amp; Infrastructure Capacity</h2>
+  <div id="cpb"><p class="mut">Caricamento…</p></div>
+  <div class="row" style="justify-content:space-between;margin-top:14px"><button type="button" class="btn" data-bk="#cpx">← Indietro</button><button type="button" class="btn" id="cpc">Chiudi</button></div>
 </div></div>
 
 <div class="ov" id="adr"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="art">
@@ -1801,13 +1807,160 @@ async function cap(show){
     '<div class="big">'+(E?'~'+d.users_left+' more users':'~'+d.users_left+' utenti ancora attivabili')+'</div>'+
     '<small>'+(E?'Now '+d.users+' users. Estimate per user: files ':'Ora '+d.users+' utenti. Stima per utente: file ')+mb(d.per_user_storage)+(E?', data ':', dati ')+mb(d.per_user_db)+'. '+
     (d.storage_estimated?(E?'Files: prudent assumption until at least 3 users upload attachments; it becomes a real average afterwards.':'File: ipotesi prudente finché almeno 3 utenti non caricano allegati; poi diventa una media reale.'):(E?'Based on real averages.':'Basata sulle medie reali.'))+
-    (low?'<br><b style="color:#FFB020">⚠ '+(E?'Time to plan the Supabase upgrade.':'È il momento di pianificare l’upgrade di Supabase.')+'</b>':'')+'</small>';
-  el.hidden=false;
+    '<br><button type="button" class="btn" id="cpo" style="margin-top:8px;padding:8px 12px">📊 Dashboard completa</button>'+(low?'<br><b style="color:#FFB020">⚠ '+(E?'Time to plan the Supabase upgrade.':'È il momento di pianificare l’upgrade di Supabase.')+'</b>':'')+'</small>';
+  el.hidden=false;const ob=q('#cpo');if(ob)ob.onclick=()=>window.dmCapOpen&&window.dmCapOpen();
   if(low&&alerted!==String(d.users_left)&&!show){alerted=String(d.users_left);toast((E?'⚠ Supabase: about ':'⚠ Supabase: circa ')+d.users_left+(E?' users left before the upgrade':' utenti prima dell’upgrade'))}
 }
 window.dmCap=cap;
 const b=q('#ubtn');if(b)b.addEventListener('click',()=>cap(true));
 setTimeout(()=>cap(false),6000);setInterval(()=>cap(false),30*60*1000);
+})();
+/* Dashboard Supabase completa (solo amministratore) */
+(function(){
+const q=s=>document.querySelector(s);
+const B=n=>{n=+n||0;return n>=1073741824?(n/1073741824).toFixed(2)+' GB':n>=1048576?(n/1048576).toFixed(n<1.05e7?2:1)+' MB':(n/1024).toFixed(0)+' KB'};
+const N=n=>(+n||0).toLocaleString('it-IT');
+const USD=n=>'$'+(+n||0).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let D=null,range=30,scen=1000,custom='',busy=false,timer=null,err='';
+const T=()=>D.settings.thresholds;
+const cl=p=>p>=T().crit?'r':p>=T().high?'o':p>=T().warn?'y':'';
+const bar=(p)=>'<div class="bar"><i class="'+cl(p)+'" style="width:'+Math.min(100,Math.max(p>0?1:0,p))+'%"></i></div>';
+const kv=(a,b)=>'<div class="kv2"><span>'+a+'</span><b>'+b+'</b></div>';
+const un='<b style="opacity:.75">Non disponibile</b>';
+const PL=()=>D.settings.plans[D.settings.plan];
+
+function cost(S,mau,dbB,stB,eg,egc){ // stessa formula del database
+  const f=S.plans.free,p=S.plans.pro,pr=S.pricing;
+  const fits=S.plan==='free'&&mau<=f.mau&&dbB/1048576<=f.db_mb&&stB/1048576<=f.storage_mb;
+  const L={base:p.price,mau:Math.max(0,mau-p.mau)*pr.mau_extra,disk:Math.max(0,dbB/1073741824-p.db_mb/1024)*pr.disk_gb,
+    stor:Math.max(0,stB/1073741824-p.storage_mb/1024)*pr.storage_gb,
+    traf:Math.max(0,(eg||0)-p.egress_gb)*pr.egress_gb+Math.max(0,(egc||0)-p.egress_cached_gb)*pr.egress_cached_gb,
+    comp:+(S.manual.compute||0),ext:+(S.manual.external||0)};
+  L.total=fits?0:Object.values(L).reduce((a,b)=>a+b,0);L.fits=fits;return L;
+}
+function sim(n){
+  const m=D.metrics,S=D.settings,a=S.assume,act=Math.round(n*a.active_pct/100);
+  const realDb=m.users>=10,realSt=m.uploaders>=3;
+  const dbu=realDb?m.public_bytes/m.users:(a.tasks_per_user*a.kb_per_task*1024+100*1024);
+  const tpu=m.users>=10&&m.tasks>0?m.tasks/m.users:a.tasks_per_user;
+  const stu=realSt?m.storage_bytes/m.users:a.mb_files_per_user*1048576;
+  const db=m.system_bytes+n*dbu,st=n*stu,eg=act*a.egress_mb_per_user/1024;
+  return{n,act,db,st,eg,tasks:Math.round(n*tpu),realDb,realSt,dbu,stu,c:cost(S,act,db,st,eg,0)};
+}
+function status(){
+  const m=D.metrics,pl=PL(),r=[];
+  r.push({n:'Database',p:m.db_bytes*100/(pl.db_mb*1048576),d:B(m.db_bytes)+' / '+B(pl.db_mb*1048576)});
+  r.push({n:'Storage file',p:m.storage_bytes*100/(pl.storage_mb*1048576),d:B(m.storage_bytes)+' / '+B(pl.storage_mb*1048576)});
+  r.push({n:'Utenti attivi mensili (MAU)',p:m.active30*100/pl.mau,d:N(m.active30)+' / '+N(pl.mau)});
+  const eg=D.settings.manual.egress_gb;if(eg!=null&&eg!=='')r.push({n:'Egress (inserito a mano)',p:eg*100/pl.egress_gb,d:eg+' / '+pl.egress_gb+' GB'});
+  const ei=D.settings.manual.edge_inv;if(ei!=null&&ei!=='')r.push({n:'Edge Functions (inserito a mano)',p:ei*100/pl.edge_inv,d:N(ei)+' / '+N(pl.edge_inv)});
+  r.forEach(x=>x.p=Math.round(x.p*10)/10);return r;
+}
+function chart(title,pts,fmt){
+  const H=D.history.filter(x=>new Date(x.day)>=new Date(Date.now()-range*864e5));
+  const v=H.map(x=>[x.day,+x[pts]||0]);
+  if(v.length<2)return '<div class="cc"><b>'+title+'</b><div class="nd">Not enough data yet</div></div>';
+  const W=300,Hh=90,mx=Math.max(...v.map(a=>a[1]),1e-9),mn=Math.min(...v.map(a=>a[1]),0);
+  const X=i=>6+i*(W-12)/(v.length-1),Y=y=>Hh-8-(y-mn)/(mx-mn||1)*(Hh-20);
+  const d=v.map((a,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(a[1]).toFixed(1)).join(' ');
+  return '<div class="cc"><b>'+title+'</b> <span class="mut">'+fmt(v[v.length-1][1])+'</span><svg viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="'+title+'"><path d="'+d+'" fill="none" stroke="#6C8CFF" stroke-width="2"/><circle cx="'+X(v.length-1).toFixed(1)+'" cy="'+Y(v[v.length-1][1]).toFixed(1)+'" r="3" fill="#6C8CFF"/></svg><div class="mut">'+v[0][0]+' → '+v[v.length-1][0]+' · '+v.length+' rilevazioni</div></div>';
+}
+const LIM=[['price','Prezzo base $/mese'],['mau','MAU inclusi'],['db_mb','Database/disco (MB)'],['storage_mb','File storage (MB)'],['egress_gb','Egress non in cache (GB)'],['egress_cached_gb','Egress in cache (GB)'],['edge_inv','Edge invocations/mese'],['rt_msgs','Realtime messages/mese'],['rt_conn','Realtime peak conn.']];
+const PRC=[['mau_extra','$ per MAU extra'],['disk_gb','$ disco extra /GB'],['storage_gb','$ storage extra /GB'],['egress_gb','$ egress extra /GB'],['egress_cached_gb','$ egress cache extra /GB']];
+const ASM=[['tasks_per_user','Attività per utente (ipotesi)'],['kb_per_task','KB per attività (ipotesi)'],['mb_files_per_user','MB di foto/audio per utente (ipotesi)'],['egress_mb_per_user','Traffico MB/mese per utente attivo (ipotesi)'],['active_pct','% utenti attivi sul registrato']];
+const MAN=[['egress_gb','Egress non in cache usato (GB)'],['egress_cached_gb','Egress in cache usato (GB)'],['edge_inv','Edge invocations usate'],['mau_billable','MAU fatturabili (da Supabase)'],['compute','Compute/altri servizi $/mese'],['external','Servizi esterni $/mese']];
+
+function render(){
+  const el=q('#cpb');if(!D){el.innerHTML='<p class="mut">'+(err||'Caricamento…')+'</p>';return}
+  const m=D.metrics,S=D.settings,pl=PL(),isP=S.plan==='pro',st=status(),worst=Math.max(...st.map(x=>x.p));
+  const state=worst>=T().crit?['Critical','r']:worst>=T().warn?['Warning','y']:['Healthy',''];
+  const lv=S.alert_levels.map(Number).sort((a,b)=>a-b);
+  let h='<div class="cc"><div class="kv2"><span>Progetto</span><b>'+esc(S.project)+'</b></div>'+kv('Piano attivo',(isP?'Pro':'Free')+' <span class="mut">(impostato da te)</span>')+kv('Connessione','<span class="st">Connected</span>')+kv('Ultimo aggiornamento',new Date(D.at).toLocaleString('it-IT'))+kv('Stato risorse','<span class="st '+state[1]+'">'+state[0]+'</span>')+'<div style="margin-top:8px"><button class="btn" id="cpr">Refresh Data</button></div><div class="mut" style="margin-top:6px">Il piano non è leggibile automaticamente (serve un token della Management API, che non conservo per sicurezza): cambialo in Impostazioni quando fai l’upgrade.</div></div>';
+  // avvisi
+  const al=[];
+  st.forEach(x=>{if(x.p>=lv[0]){al.push([x.p>=T().crit?'r':x.p>=T().high?'o':'y',(x.p>=T().crit?'Critical: capacity threshold reached':'Warning: approaching included capacity')+' — '+x.n+' al '+x.p+'% ('+x.d+')'])}});
+  if(al.length){al.push([isP?'o':'r',isP?'Additional usage charges may apply: DB/disco +$'+S.pricing.disk_gb+'/GB oltre 8 GB; storage +$'+S.pricing.storage_gb+'/GB oltre 100 GB; MAU +$'+S.pricing.mau_extra+' oltre '+N(pl.mau)+'.':'Upgrade recommended: passa a Supabase Pro ($'+S.plans.pro.price+'/mese: 8 GB disco, 100 GB storage, 100.000 MAU, backup giornalieri). Da Supabase › Organization › Billing › Upgrade.'])}
+  h+=al.map(a=>'<div class="al '+a[0]+'">'+esc(a[1])+'</div>').join('');
+  // indicatori
+  const dbp=m.db_bytes*100/(pl.db_mb*1048576),sp=m.storage_bytes*100/(pl.storage_mb*1048576),mp=m.active30*100/pl.mau;
+  const others=m.alerts+m.support_msgs+m.push_subs+m.referral_rows;
+  h+='<h3>Capacità</h3><div class="g2">';
+  h+='<div class="cc"><b>Database Usage</b>'+bar(dbp)+kv('Usato',B(m.db_bytes)+' ('+dbp.toFixed(1)+'%)')+kv(isP?'Disco incluso (non è la quota DB Free)':'Incluso nel piano',B(pl.db_mb*1048576))+kv('Disponibile',B(Math.max(0,pl.db_mb*1048576-m.db_bytes)))+kv('Dati DayMarck',B(m.public_bytes))+kv('Sistema Supabase',B(m.system_bytes))+kv('Attività salvate',N(m.tasks))+kv('Note',N(m.notes))+kv('Altri record (avvisi, assistenza, push, referral)',N(others))+kv('Media dati per utente',m.users?B(m.public_bytes/m.users)+' <span class="mut">reale</span>':'—')+'</div>';
+  const byt=m.storage_by_type||{},byb=m.storage_by_bucket||{};
+  h+='<div class="cc"><b>Storage Usage</b>'+bar(sp)+kv('Occupato (foto e file)',B(m.storage_bytes)+' ('+sp.toFixed(1)+'%)')+kv('Incluso nel piano',B(pl.storage_mb*1048576))+kv('File caricati',N(m.storage_files))+kv('Dimensione media file',m.storage_files?B(m.storage_bytes/m.storage_files):'—')+kv('Foto',N((byt.photos||{}).files||0)+' · '+B((byt.photos||{}).bytes||0))+kv('Audio',N((byt.audio||{}).files||0)+' · '+B((byt.audio||{}).bytes||0))+kv('Altro',N((byt.other||{}).files||0)+' · '+B((byt.other||{}).bytes||0))+Object.keys(byb).map(k=>kv('Bucket «'+esc(k)+'»',N(byb[k].files)+' · '+B(byb[k].bytes))).join('')+'</div>';
+  h+='<div class="cc"><b>Monthly Active Users</b>'+bar(mp)+kv('Utenti registrati',N(m.users))+kv('Attivi ultimi 30 giorni',N(m.active30)+' <span class="mut">(accesso o attività)</span>')+kv('MAU fatturabili Supabase',S.manual.mau_billable!=null&&S.manual.mau_billable!==''?N(S.manual.mau_billable)+' <span class="mut">manuale</span>':un)+kv('Inattivi',N(Math.max(0,m.users-m.active30)))+kv('Nuove registrazioni nel mese',N(m.new_month))+kv('Quota MAU usata',mp.toFixed(2)+'% di '+N(pl.mau))+'<div class="mut">Gli attivi sono una stima applicativa, non i MAU fatturati da Supabase. Autenticazione: Supabase Auth (non Clerk), quindi nessun Third-Party MAU. Le quote MAU, storage ed egress sono dell’organizzazione; database/disco sono per progetto.</div></div>';
+  const mg=k=>S.manual[k]!=null&&S.manual[k]!==''?S.manual[k]:null;
+  h+='<div class="cc"><b>Network &amp; API Usage</b>'+(mg('egress_gb')!=null?bar(mg('egress_gb')*100/pl.egress_gb):'')+kv('Egress non in cache',mg('egress_gb')!=null?mg('egress_gb')+' GB / '+pl.egress_gb+' GB <span class="mut">manuale</span>':un)+kv('Egress in cache',mg('egress_cached_gb')!=null?mg('egress_cached_gb')+' GB / '+pl.egress_cached_gb+' GB <span class="mut">manuale</span>':un)+kv('Richieste API / errori / tempi',un)+kv('Realtime',un+' <span class="mut">(non usato)</span>')+kv('Edge Functions',mg('edge_inv')!=null?N(mg('edge_inv'))+' / '+N(pl.edge_inv)+' <span class="mut">manuale</span>':un)+'<div class="mut">Questi dati stanno nella sezione Usage di Supabase e non sono leggibili dall’app senza un token della Management API: puoi inserirli a mano in Impostazioni (sono segnati «manuale»). Per le richieste API non c’è un limite numerico, quindi niente barra.</div></div>';
+  h+='</div>';
+  // piani
+  const rows=[['Prezzo base','$'+S.plans.free.price,'Da $'+S.plans.pro.price],['MAU',N(S.plans.free.mau),N(S.plans.pro.mau)+' inclusi'],['Database / disco',N(S.plans.free.db_mb)+' MB per progetto',B(S.plans.pro.db_mb*1048576)+' di disco inclusi per progetto'],['File Storage',B(S.plans.free.storage_mb*1048576),B(S.plans.pro.storage_mb*1048576)],['Egress non in cache',S.plans.free.egress_gb+' GB/mese',S.plans.pro.egress_gb+' GB/mese'],['Egress in cache',S.plans.free.egress_cached_gb+' GB/mese',S.plans.pro.egress_cached_gb+' GB/mese'],['Edge Functions',N(S.plans.free.edge_inv)+'/mese',N(S.plans.pro.edge_inv)+'/mese'],['Realtime messages',N(S.plans.free.rt_msgs)+'/mese',N(S.plans.pro.rt_msgs)+'/mese'],['Realtime connessioni',S.plans.free.rt_conn,S.plans.pro.rt_conn+' incluse'],['Backup giornalieri','Non inclusi','Inclusi']];
+  h+='<h3>Piani Supabase</h3><div class="cc"><table><tr><th></th><th>Free</th><th>Pro</th></tr>'+rows.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>').join('')+'</table><div class="mut" style="margin-top:6px">Gli 8 GB di Pro sono disco incluso, non una quota uguale ai 500 MB del database Free. Valori di riferimento modificabili in Impostazioni.</div></div>';
+  // simulatore
+  const SC=[1000,10000,50000,100000,250000,500000,1000000];
+  const n=custom!==''?Math.max(0,Math.floor(+custom||0)):scen,r=sim(n),c=r.c;
+  const ex=(v,lim)=>v>lim?'⚠ supera':'✓ nei limiti';
+  h+='<h3>Capacity Forecast &amp; User Growth Simulator</h3><div class="cc"><div class="sel">'+SC.map(x=>'<button data-sc="'+x+'" class="'+(custom===''&&scen===x?'on':'')+'">'+N(x)+'</button>').join('')+'</div><div class="fg" style="grid-template-columns:1fr 1fr"><span>Quantità personalizzata (registrati)</span><input id="cpn" type="number" min="0" inputmode="numeric" value="'+esc(custom)+'" placeholder="es. 20000"></div>'+
+   kv('Utenti registrati',N(r.n))+kv('Utenti attivi mensili ('+S.assume.active_pct+'% ipotesi)',N(r.act))+kv('Database previsto',B(r.db)+' <span class="mut">'+(r.realDb?'media reale':'ipotesi')+'</span>')+kv('Attività e note previste',N(r.tasks))+kv('Foto e allegati',B(r.st)+' <span class="mut">'+(r.realSt?'media reale':'ipotesi')+'</span>')+kv('Traffico mensile previsto',B(r.eg*1073741824)+' <span class="mut">ipotesi</span>')+
+   '<table style="margin-top:8px"><tr><th>Risorsa</th><th>Free</th><th>Pro</th></tr><tr><td>MAU</td><td>'+ex(r.act,S.plans.free.mau)+'</td><td>'+ex(r.act,S.plans.pro.mau)+'</td></tr><tr><td>Database</td><td>'+ex(r.db/1048576,S.plans.free.db_mb)+'</td><td>'+ex(r.db/1048576,S.plans.pro.db_mb)+'</td></tr><tr><td>Storage</td><td>'+ex(r.st/1048576,S.plans.free.storage_mb)+'</td><td>'+ex(r.st/1048576,S.plans.pro.storage_mb)+'</td></tr><tr><td>Egress</td><td>'+ex(r.eg,S.plans.free.egress_gb)+'</td><td>'+ex(r.eg,S.plans.pro.egress_gb)+'</td></tr></table>'+
+   kv('Costo mensile stimato',c.fits?'<b>$0</b> (il piano Free basta)':'<b>'+USD(c.total)+'</b> (Pro)')+'<div class="mut">SIMULAZIONE: gli utenti attivi sono una percentuale ipotetica dei registrati; dove non ci sono dati sufficienti (meno di 10 utenti per il database, meno di 3 con allegati per i file) uso ipotesi modificabili in Impostazioni. Si aggiorna da sola quando cambiano le medie reali.</div>';
+  const need=[];if(!c.fits){need.push('Piano Pro');if(c.disk>0)need.push('disco extra '+(r.db/1073741824-S.plans.pro.db_mb/1024).toFixed(1)+' GB');if(c.stor>0)need.push('storage extra '+(r.st/1073741824-S.plans.pro.storage_mb/1024).toFixed(1)+' GB');if(c.mau>0)need.push(N(r.act-S.plans.pro.mau)+' MAU extra');if(c.traf>0)need.push('traffico extra');if(r.act>250000||r.db/1073741824>50)need.push('valuta Compute più grande (Team/Enterprise)')}
+  h+=kv('Risorse da potenziare',need.length?need.join(', '):'nessuna')+'</div>';
+  // costi
+  h+='<h3>Infrastructure Cost Estimator</h3><div class="cc"><div class="mut">Scenario selezionato sopra: '+N(r.n)+' registrati, '+N(r.act)+' MAU. Piano Pro:</div>'+kv('1. Abbonamento base',USD(c.base))+kv('2. Utenti attivi aggiuntivi',USD(c.mau))+kv('3. Spazio disco aggiuntivo',USD(c.disk))+kv('4. Storage aggiuntivo',USD(c.stor))+kv('5. Traffico aggiuntivo',USD(c.traf))+kv('6. Compute e altri servizi',USD(c.comp))+kv('7. Servizi esterni (es. Clerk)',USD(c.ext))+kv('8. Totale stimato mensile (Pro)',USD(c.base+c.mau+c.disk+c.stor+c.traf+c.comp+c.ext))+
+   '<table style="margin-top:8px"><tr><th>MAU</th><th>Base Pro + MAU</th></tr>'+[1000,10000,100000,250000,500000,1000000].map(x=>'<tr><td>'+N(x)+'</td><td>'+USD(S.plans.pro.price+Math.max(0,x-S.plans.pro.mau)*S.pricing.mau_extra)+'</td></tr>').join('')+'</table><div class="dis">Estimated infrastructure cost — actual charges depend on usage, configuration, billing rules and additional services.</div></div>';
+  // grafici
+  h+='<h3>Grafici di crescita</h3><div class="sel">'+[7,30,90].map(x=>'<button data-rg="'+x+'" class="'+(range===x?'on':'')+'">'+x+' giorni</button>').join('')+'</div><div class="g2">'+chart('Utenti registrati','users',N)+chart('Utenti attivi (30 gg)','active',N)+chart('Occupazione database','db_bytes',B)+chart('Occupazione Storage','storage_bytes',B)+'<div class="cc"><b>Traffico dati</b><div class="nd">Non disponibile: Supabase non lo espone all’app</div></div>'+chart('Costo stimato infrastruttura','est_cost',USD)+'</div><div class="mut">Solo rilevazioni reali, raccolte ogni 6 ore e a ogni apertura. Non ci sono dati storici precedenti alla prima rilevazione.</div>';
+  // impostazioni
+  const inp=(id,v,st)=>'<input id="'+id+'" type="number" step="any" value="'+(v==null?'':esc(v))+'"'+(st||'')+'>';
+  h+='<h3>Impostazioni</h3><div class="cc"><div class="fg" style="grid-template-columns:1fr 1fr"><span>Piano attivo</span><select id="sp"><option value="free"'+(S.plan==='free'?' selected':'')+'>Free</option><option value="pro"'+(isP?' selected':'')+'>Pro</option></select></div>'+
+   '<div class="fg"><span>Soglie colore %</span>'+inp('t1',T().warn)+inp('t2',T().high)+'</div><div class="mut">giallo da · arancione da · (rosso da '+T().crit+')</div><div class="fg"><span>Rosso da %</span>'+inp('t3',T().crit)+'<span></span></div>'+
+   '<div class="fg" style="grid-template-columns:1fr 1fr"><span>Livelli avviso (email + notifica) %</span><input id="al" value="'+esc(S.alert_levels.join(', '))+'"></div>'+
+   '<div class="fg"><b>Limiti piano</b><b>Free</b><b>Pro</b></div>'+LIM.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('lf_'+l[0],S.plans.free[l[0]])+inp('lp_'+l[0],S.plans.pro[l[0]])+'</div>').join('')+
+   '<div class="fg"><b>Prezzi extra (Pro)</b></div>'+PRC.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('pr_'+l[0],S.pricing[l[0]])+'<span></span></div>').join('')+
+   '<div class="fg"><b>Ipotesi simulatore</b></div>'+ASM.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('as_'+l[0],S.assume[l[0]])+'<span></span></div>').join('')+
+   '<div class="fg"><b>Dati inseriti a mano</b></div>'+MAN.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('mn_'+l[0],S.manual[l[0]])+'<span></span></div>').join('')+
+   '<div style="margin-top:8px"><button class="btn" id="cps">Salva impostazioni</button></div><div class="mut" id="cpm" role="status"></div></div>';
+  const keep=el.scrollTop,sy=q('#cpx .sheet').scrollTop;
+  el.innerHTML=h;q('#cpx .sheet').scrollTop=sy;
+}
+async function load(manual){
+  if(!sb||busy)return;busy=true;
+  try{const r=await sb.rpc('admin_capacity_full');if(r.error||!r.data)throw new Error((r.error&&r.error.message)||'no data');D=r.data;err=''}
+  catch(e){err='Errore di connessione: '+(e.message||e)}
+  busy=false;render();
+}
+function num(id){const v=q('#'+id).value;return v===''?null:+v}
+async function save(){
+  const S=JSON.parse(JSON.stringify(D.settings));
+  S.plan=q('#sp').value;S.thresholds={warn:num('t1')||60,high:num('t2')||80,crit:num('t3')||95};
+  S.alert_levels=q('#al').value.split(/[ ,;]+/).map(Number).filter(x=>x>0&&x<=100).sort((a,b)=>a-b);if(!S.alert_levels.length)S.alert_levels=[70,85,95];
+  LIM.forEach(l=>{S.plans.free[l[0]]=num('lf_'+l[0])??S.plans.free[l[0]];S.plans.pro[l[0]]=num('lp_'+l[0])??S.plans.pro[l[0]]});
+  PRC.forEach(l=>{S.pricing[l[0]]=num('pr_'+l[0])??S.pricing[l[0]]});
+  ASM.forEach(l=>{S.assume[l[0]]=num('as_'+l[0])??S.assume[l[0]]});
+  MAN.forEach(l=>{S.manual[l[0]]=num('mn_'+l[0])});
+  const r=await sb.rpc('admin_capacity_save',{p:S});
+  q('#cpm').textContent=r.error?'Errore nel salvataggio':'Salvato.';
+  if(!r.error){await load();if(window.dmCap)window.dmCap(true)}
+}
+function open(){
+  if(typeof isAdmin!=='function'||!isAdmin())return;
+  ['#usr','#hp'].forEach(i=>{const e=q(i);if(e)e.classList.remove('on')});
+  q('#cpx').classList.add('on');D=null;render();load();
+  clearInterval(timer);timer=setInterval(()=>{if(q('#cpx').classList.contains('on'))load()},15*60*1000);
+}
+window.dmCapOpen=open;
+q('#cpc').onclick=()=>q('#cpx').classList.remove('on');
+q('#cpb').addEventListener('click',e=>{
+  const t=e.target;
+  if(t.id==='cpr'){t.disabled=true;load(true)}
+  else if(t.id==='cps')save();
+  else if(t.dataset&&t.dataset.sc){scen=+t.dataset.sc;custom='';render()}
+  else if(t.dataset&&t.dataset.rg){range=+t.dataset.rg;render()}
+});
+q('#cpb').addEventListener('change',e=>{if(e.target.id==='cpn'){custom=e.target.value;render();const i=q('#cpn');if(i)i.focus()}});
+if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='open-capacity')setTimeout(open,400)});
+try{if(new URLSearchParams(location.search).get('capacity')){history.replaceState(null,'',location.pathname);let t=0;const w=setInterval(()=>{if(typeof isAdmin==='function'&&isAdmin()){clearInterval(w);open()}else if(++t>30)clearInterval(w)},500)}}catch(e){}
 })();
 /* Aggiornamenti: quelli "di sistema" arrivano da soli. Quelli importanti (nuove funzioni, icona) li approva l'amministratore: tabella app_release -> popup. */
 (function(){
