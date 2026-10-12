@@ -775,7 +775,7 @@ function dayLabel(k){
 }
 function cardHTML(t,now){
   const late=!t.done&&t.due&&new Date(lastAt(t))<now;
-  return `<div class="sw" data-id="${t.id}"><div class="acts"><button class="ab ed" data-a="edit">${t_('edit')}</button><button class="ab dl" data-a="del">${t_('del')}</button></div>
+  return `<div class="sw" data-id="${t.id}"${t.done?' data-aw="85"':''}><div class="acts">${t.done?'':`<button class="ab ed" data-a="edit">${t_('edit')}</button>`}<button class="ab dl" data-a="del">${t_('del')}</button></div>
 <article class="card ${t.done?'done':late?'late':''}" tabindex="0">
 <input type="checkbox" class="chk" data-a="chk" aria-label="${t_('mark')}" ${t.done?'checked':''}>
 <div><div class="t">${esc(t.title)}</div>${t.note?`<div class="n">${esc(t.note)}</div>`:''}
@@ -832,7 +832,7 @@ document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>{view=b.data
 document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 
 /* ---------- scorrimento a sinistra: Modifica / Elimina ---------- */
-const AW=170;let drag=null,openSw=null,lastDrag=0;
+const AW=170,awOf=sw=>+sw.dataset.aw||AW;let drag=null,openSw=null,lastDrag=0;
 function setX(sw,x,anim){
   const c=sw.querySelector('.card'),a=sw.querySelector('.acts');
   c.style.transition=anim?'transform .2s ease':'none';
@@ -847,7 +847,7 @@ $('#list').addEventListener('pointerdown',e=>{
   if(e.target.closest('audio,input,.ab'))return;
   if(e.pointerType==='mouse'&&e.button!==0)return;
   if(openSw&&openSw!==sw)closeSw();
-  drag={sw,x0:e.clientX,y0:e.clientY,base:sw===openSw?-AW:0,on:false,id:e.pointerId,x:null};
+  drag={sw,x0:e.clientX,y0:e.clientY,base:sw===openSw?-awOf(sw):0,on:false,id:e.pointerId,x:null};
 });
 addEventListener('pointermove',e=>{
   if(!drag||e.pointerId!==drag.id)return;
@@ -857,7 +857,7 @@ addEventListener('pointermove',e=>{
     else if(Math.abs(dy)>10){drag=null;return}
     else return;
   }
-  drag.x=Math.max(-AW,Math.min(0,drag.base+dx));
+  drag.x=Math.max(-awOf(drag.sw),Math.min(0,drag.base+dx));
   setX(drag.sw,drag.x,false);
 });
 function endDrag(e){
@@ -865,8 +865,8 @@ function endDrag(e){
   const d=drag;drag=null;
   if(!d.on)return;
   lastDrag=Date.now();
-  const open=(d.x===null?d.base:d.x)<-AW/2;
-  setX(d.sw,open?-AW:0,true);openSw=open?d.sw:null;
+  const W=awOf(d.sw),open=(d.x===null?d.base:d.x)<-W/2;
+  setX(d.sw,open?-W:0,true);openSw=open?d.sw:null;
 }
 addEventListener('pointerup',endDrag);addEventListener('pointercancel',endDrag);
 
@@ -876,7 +876,7 @@ $('#list').addEventListener('click',e=>{
   const t=items.find(x=>x.id===sw.dataset.id);if(!t)return;
   const b=e.target.closest('[data-a]'),a=b&&b.dataset.a;
   if(a==='chk'){t.done=b.checked;t.dirty=true;commit();return}
-  if(a==='edit'){closeSw();openF(t);return}
+  if(a==='edit'){if(t.done)return;closeSw();openF(t);return}
   if(a==='del'){
     if(b.dataset.arm){
       items=items.filter(x=>x!==t);
@@ -894,7 +894,7 @@ $('#list').addEventListener('keydown',e=>{
   const card=e.target.closest&&e.target.classList.contains('card')?e.target:null;if(!card)return;
   const sw=card.closest('.sw'),t=items.find(x=>x.id===sw.dataset.id);if(!t)return;
   if(e.key==='Enter'||e.key===' '){e.preventDefault();openNote(t.id)}
-  else if(e.key==='ArrowLeft'){e.preventDefault();closeSw();setX(sw,-AW,true);openSw=sw;const f=sw.querySelector('.ab');if(f)f.focus()}
+  else if(e.key==='ArrowLeft'){e.preventDefault();closeSw();setX(sw,-awOf(sw),true);openSw=sw;const f=sw.querySelector('.ab');if(f)f.focus()}
   else if(e.key==='ArrowRight'||e.key==='Escape'){closeSw()}
 });
 $('#lb').onclick=()=>$('#lb').classList.remove('on');
@@ -1599,7 +1599,7 @@ it:{wel:'Ciao, benvenuto in DayMarck! 👋 Vuoi sapere qualcosa? Ti propongo alc
  ['Come funziona “Rimanda”?','Sulla notifica scegli di rimandarla di <b>5, 10, 30 o 60 minuti</b>: dopo quel tempo ti arriva di nuovo.','rimanda posticipa rimandare snooze minuti'],
  ['Cosa succede se premo “Chiudi”?','Ti avvisa che, se non confermi né rimandi, l’attività <b>non ti avviserà più</b> finché non cambi l’ora: resta in elenco ma inattiva. Puoi scegliere <b>Modificala</b>, <b>Eliminala</b>, <b>Lasciala così</b> oppure annullare.','chiudi chiudere notifica inattiva'],
  ['Come segno un’attività come fatta?','Spunta la <b>casella</b> accanto al titolo, oppure apri la scheda e tocca <b>Completa</b>, oppure usa <b>Confermato</b> dalla notifica.','completare completata fatta segnare spunta casella'],
- ['Come modifico o elimino un’attività?','Nell’elenco scorri la scheda <b>verso sinistra</b>: compaiono <b>Modifica</b> ed <b>Elimina</b> (per eliminare tocca due volte, ti chiede “Sicuro?”).','modificare cambiare eliminare cancellare togliere attivita scorri'],
+ ['Come modifico o elimino un’attività?','Nell’elenco scorri la scheda <b>verso sinistra</b>: compaiono <b>Modifica</b> ed <b>Elimina</b> (le attività già completate si possono solo <b>eliminare</b>, non modificare; per eliminare tocca due volte, ti chiede “Sicuro?”).','modificare cambiare eliminare cancellare togliere attivita scorri'],
  ['Cosa significano Tutti, Da fare e Fatti?','Nella vista <b>Tutti gli impegni</b> i filtri mostrano: <b>Tutti</b> ogni attività, <b>Da fare</b> quelle ancora aperte, <b>Fatti</b> quelle completate. In <b>Calendario</b> tocchi un giorno per vedere le sue attività.','filtro filtri tutti fare fatti calendario elenco'],
  ['Funziona anche senza internet?','Sì: puoi guardare e modificare le attività e le modifiche si salvano sul telefono. Appena torna la connessione si sincronizzano da sole (in alto vedi “Sincronizzato”). Le notifiche però arrivano solo con la connessione attiva.','offline internet connessione sincronizza sincronizzazione'],
  ['Posso usare Face ID o l’impronta?','Sì, se il telefono li ha. Dopo l’accesso ti viene proposto di attivarli. Puoi cambiare idea dall’<b>Area utente</b> 👤, voce “Face ID / impronta”. Lì puoi anche scegliere dopo quanto tempo di inattività richiederlo (1 minuto, 15 minuti, 1 ora, 4 ore, 1 giorno): se riapri l’app prima, non lo chiede di nuovo.','face id impronta biometrico sblocco accesso veloce'],
@@ -1635,7 +1635,7 @@ en:{wel:'Hi, welcome to DayMarck! 👋 Want to know something? Here are a few us
  ['How does “Snooze” work?','On the notification choose <b>5, 10, 30 or 60 minutes</b>: it comes back after that time.','snooze postpone delay minutes'],
  ['What happens if I tap “Close”?','It warns you that, unless you confirm or snooze, the task <b>won’t notify you again</b> until you change its time: it stays listed but inactive. You can choose <b>Edit it</b>, <b>Delete it</b>, <b>Leave it</b> or cancel.','close notification inactive'],
  ['How do I mark a task as done?','Tick the <b>checkbox</b> next to the title, or open the card and tap <b>Complete</b>, or use <b>Confirmed</b> on the notification.','complete completed done mark tick checkbox'],
- ['How do I edit or delete a task?','In the list swipe the card <b>left</b>: <b>Edit</b> and <b>Delete</b> appear (to delete, tap twice; it asks “Sure?”).','edit change delete remove task swipe'],
+ ['How do I edit or delete a task?','In the list swipe the card <b>left</b>: <b>Edit</b> and <b>Delete</b> appear (completed tasks can only be <b>deleted</b>, not edited; to delete, tap twice; it asks “Sure?”).','edit change delete remove task swipe'],
  ['What do All, To do and Done mean?','In the <b>All tasks</b> view the filters show: <b>All</b> every task, <b>To do</b> the open ones, <b>Done</b> the completed ones. In <b>Calendar</b> tap a day to see its tasks.','filter filters all todo done calendar list'],
  ['Does it work offline?','Yes: you can view and edit tasks and changes are saved on the phone. When the connection returns they sync automatically (you’ll see “Synced” at the top). Notifications need a connection.','offline internet connection sync'],
  ['Can I use Face ID or fingerprint?','Yes, if your phone has them. After signing in you’re offered to turn it on. Change it later in the <b>User area</b> 👤, “Face ID / fingerprint”. There you can also choose after how long away it asks again (1 minute, 15 minutes, 1 hour, 4 hours, 1 day): if you come back sooner, it won’t ask.','face id fingerprint biometric unlock'],
