@@ -775,15 +775,15 @@ ${t.audio?(t.audio.url?`<audio controls src="${t.audio.url}"></audio>`:`<div cla
 }
 function render(){
   const now=new Date(),calV=view==='cal';
-  $('#cal').hidden=!calV;$('#dayh').hidden=!calV;$('#filters').hidden=calV;
+  $('#cal').hidden=!calV;$('#dayh').hidden=!calV;$('#filters').hidden=false;
   document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===view));
   const n=items.filter(t=>!t.done).length;
   $('#cnt').textContent=n===0?t_('left0'):n===1?t_('left1'):t_('leftN',{n});
   let html='';
   if(calV){
     $('#dayh').textContent=dayLabel(sel);
-    const v=items.filter(t=>t.due&&t.due.slice(0,10)===sel).sort(byDate);
-    html=v.length?v.map(t=>cardHTML(t,now)).join(''):`<p class="empty">${t_('emptyDay')}</p>`;
+    const v=items.filter(t=>t.due&&t.due.slice(0,10)===sel&&(filter==='all'||(filter==='todo'?!t.done:t.done))).sort(byDate);
+    html=v.length?v.map(t=>cardHTML(t,now)).join(''):`<p class="empty">${filter==='done'?t_('emptyDone'):t_('emptyDay')}</p>`;
   }else{
     const v=items.filter(t=>filter==='all'||(filter==='todo'?!t.done:t.done)).sort(byDate);
     if(!v.length)html=`<p class="empty">${filter==='done'?t_('emptyDone'):t_('emptyAll')}</p>`;
