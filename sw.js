@@ -1,4 +1,4 @@
-const V='daymarck-v41',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html'];
+const V='daymarck-v42',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
@@ -27,7 +27,7 @@ self.addEventListener('push',e=>{
   e.waitUntil((async()=>{
     await self.registration.showNotification(d.title||'DayMarck',{
       body:d.body||'',
-      tag:d.kind==='support'?'support':d.kind==='capacity'?'capacity':(d.aid||d.id||'daymarck'),
+      tag:d.kind==='support'?'support':d.kind==='capacity'?'capacity':d.kind==='adm'?'adm-'+(d.id||''):(d.aid||d.id||'daymarck'),
       icon:'icon-192.png',
       badge:'icon-192.png',
       data:{id:d.id,aid:d.aid,kind:d.kind},
@@ -43,6 +43,14 @@ self.addEventListener('push',e=>{
 self.addEventListener('notificationclick',e=>{
   e.notification.close();
   const id=e.notification.data&&e.notification.data.id,kind=(e.notification.data&&e.notification.data.kind)||'remind',aid=e.notification.data&&e.notification.data.aid;
+  if(kind==='adm'){
+    const t=id||'users';
+    e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{
+      if(l.length){l[0].postMessage({type:'open-admin',target:t});return l[0].focus()}
+      return clients.openWindow('./index.html?admin='+encodeURIComponent(t));
+    }));
+    return;
+  }
   if(kind==='capacity'){
     e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{
       if(l.length){l[0].postMessage({type:'open-capacity'});return l[0].focus()}

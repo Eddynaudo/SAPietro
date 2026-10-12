@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DayMarck · Promemoria che non dimentichi</title>
+<meta name="description" content="DayMarck: l'app di promemoria con notifiche che confermi. Pagamento Lifetime una tantum.">
+<meta name="theme-color" content="#0b1636">
+<link rel="icon" href="../favicon-32.png">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<style>
+*{box-sizing:border-box}
+html{background:#0b1636}
+body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#17203a;background:#0b1636 url(../bg.webp) center top/cover fixed no-repeat;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;background:rgba(6,11,32,.5);z-index:-1}
+.wrap{max-width:760px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top,0px)) 16px calc(30px + env(safe-area-inset-bottom,0px))}
+.top{display:flex;justify-content:flex-end}
+.top button{color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}
+.hero{text-align:center;color:#fff;padding:18px 0 8px}
+.hero img{width:104px;height:104px;filter:drop-shadow(0 6px 20px rgba(40,150,255,.6))}
+.hero h1{margin:8px 0 6px;font-size:clamp(32px,9vw,48px);line-height:1.05;letter-spacing:-.02em}
+.hero p{margin:0 auto 18px;max-width:520px;font-size:18px;opacity:.95}
+.cta{display:inline-block;border:0;border-radius:14px;background:#2F5BFF;color:#fff;font:800 20px inherit;font-family:inherit;padding:16px 38px;cursor:pointer;box-shadow:0 8px 26px rgba(47,91,255,.55)}
+.card{background:rgba(255,255,255,.97);border-radius:18px;padding:20px;margin-top:16px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+h2{margin:0 0 8px;font-size:20px;color:#0b1636}
+ul{margin:6px 0;padding-left:20px}li{margin:4px 0}
+.steps{counter-reset:s;list-style:none;padding:0}.steps li{counter-increment:s;position:relative;padding-left:40px;margin:12px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#2F5BFF;color:#fff;text-align:center;line-height:28px;font-weight:800}
+.big{font-size:22px;font-weight:800;color:#2F5BFF}
+form{display:grid;gap:10px;margin-top:10px}
+input[type=email],input[type=text]{width:100%;padding:13px 12px;border-radius:10px;border:1px solid #c6cde0;font:inherit;font-size:16px}
+.hp{position:absolute;left:-9999px;opacity:0}
+form button{border:0;border-radius:12px;background:#2F5BFF;color:#fff;font:800 17px inherit;font-family:inherit;padding:14px;cursor:pointer}
+form button:disabled{opacity:.6}
+.msg{margin-top:10px;font-weight:600}.msg.ok{color:#127a3a}.msg.er{color:#b3261e}
+.ref{background:#eef3ff;border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}footer a{color:#fff}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><button id="lang" type="button">EN</button></div>
+  <header class="hero">
+    <img src="../icon-512.png" alt="DayMarck">
+    <h1>DayMarck</h1>
+    <p data-i="sub"></p>
+    <button class="cta" id="go" type="button" data-i="cta"></button>
+  </header>
+
+  <section class="card">
+    <h2 data-i="whT"></h2>
+    <ul data-i="whL"></ul>
+  </section>
+
+  <section class="card">
+    <h2 data-i="rfT"></h2>
+    <p data-i="rfP"></p>
+    <ol class="steps" data-i="rfS"></ol>
+    <p class="big" data-i="rfB"></p>
+    <p data-i="rfN" style="font-size:14px;color:#4a5578"></p>
+  </section>
+
+  <section class="card" id="dl">
+    <h2 data-i="dlT"></h2>
+    <p data-i="dlP"></p>
+    <form id="f" novalidate>
+      <input type="text" id="n" autocomplete="name" maxlength="80" data-ph="phN">
+      <input type="email" id="e" autocomplete="email" inputmode="email" maxlength="254" required data-ph="phE">
+      <input class="hp" type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="ref" id="rf" hidden></div>
+      <button type="submit" id="sb" data-i="dlB"></button>
+    </form>
+    <p class="msg" id="m" role="status"></p>
+  </section>
+
+  <section class="card">
+    <h2 data-i="inT"></h2>
+    <p data-i="inP"></p>
+  </section>
+
+  <footer><a href="../privacy.html" data-i="pv"></a></footer>
+</div>
+<script>
+const API='https://jhupjstzpwmpvkntxosd.supabase.co/functions/v1/access-request';
+const TX={
+it:{sub:'I promemoria che non dimentichi: la notifica arriva, tu confermi, e la cosa è fatta.',cta:'SCARICA',
+whT:'A cosa serve',whL:'<li><b>Promemoria che insistono</b> finché non confermi o rimandi: niente più cose dimenticate.</li><li><b>Fino a 5 avvisi</b> per ogni attività, anche prima della scadenza.</li><li><b>Calendario e filtri</b> “Da fare / Fatti” per avere tutto sotto controllo.</li><li><b>Allegati e note</b> collegati a ogni attività.</li><li><b>Face ID / impronta</b> opzionale e assistente integrato per ogni dubbio.</li><li>Si installa sul telefono come un’app, <b>senza store</b>.</li>',
+rfT:'Come funziona il Referral',rfP:'Invita i tuoi amici e guadagna: è semplice e senza limiti.',
+rfS:'<li>Entri con il <b>Referral</b>: pagamento <b>Lifetime una tantum di 9,89 €</b> (“Pagamento Lifetime webapp DayMarck”), per sempre, senza abbonamenti.</li><li>Appena il pagamento è confermato ricevi via email un <b>codice</b>: lo inserisci nell’app e si sblocca tutto, compreso il tuo link personale.</li><li>Mandi il tuo link agli amici. Ogni amico che completa il pagamento conta.</li><li>Ogni <b>10 amici</b> ricevi un <b>buono Amazon da 10 €</b>.</li>',
+rfB:'Ogni 10 amici = buono Amazon da 10 €. Senza limiti: 20 amici = 20 €, 30 amici = 30 €…',rfN:'Contano solo gli amici che completano il pagamento: clic e semplici registrazioni non valgono. Puoi anche usare l’app senza Referral.',
+dlT:'Scarica DayMarck',dlP:'Lascia la tua email: la tua richiesta arriva a noi e, appena approvata, ricevi le credenziali per entrare.',phN:'Il tuo nome (facoltativo)',phE:'La tua email',dlB:'Invia richiesta',
+ref:'Sei stato invitato con il codice',sending:'Invio…',ok:'Richiesta inviata! Sei in attesa di approvazione: ti scriveremo via email.',er:'Non sono riuscito a inviare. Riprova tra poco.',bad:'Inserisci un’email valida.',lim:'Troppe richieste. Riprova più tardi.',
+inT:'Come si installa',inP:'Dopo l’approvazione ricevi le credenziali via email. Su iPhone apri il link in Safari → Condividi → “Aggiungi alla schermata Home”. Su Android in Chrome → menu ⋮ → “Installa app”.',pv:'Informativa sulla privacy'},
+en:{sub:'Reminders you never forget: the alert arrives, you confirm, and it’s done.',cta:'DOWNLOAD',
+whT:'What it does',whL:'<li><b>Persistent reminders</b> until you confirm or snooze: no more forgotten things.</li><li><b>Up to 5 alerts</b> per task, also before the deadline.</li><li><b>Calendar and filters</b> “To do / Done” to keep everything under control.</li><li><b>Attachments and notes</b> on every task.</li><li>Optional <b>Face ID / fingerprint</b> and a built-in assistant for any question.</li><li>Installs on your phone like an app, <b>no store needed</b>.</li>',
+rfT:'How Referral works',rfP:'Invite your friends and earn: simple and unlimited.',
+rfS:'<li>You join with <b>Referral</b>: a <b>one-time Lifetime payment of €9.89</b> (“Pagamento Lifetime webapp DayMarck”), forever, no subscriptions.</li><li>As soon as the payment is confirmed you get a <b>code</b> by email: enter it in the app and everything unlocks, including your personal link.</li><li>Send your link to friends. Every friend who completes the payment counts.</li><li>Every <b>10 friends</b> you get a <b>€10 Amazon voucher</b>.</li>',
+rfB:'Every 10 friends = €10 Amazon voucher. No limit: 20 friends = €20, 30 friends = €30…',rfN:'Only friends who complete the payment count: clicks and sign-ups alone don’t. You can also use the app without Referral.',
+dlT:'Download DayMarck',dlP:'Leave your email: your request reaches us and, once approved, you receive your login by email.',phN:'Your name (optional)',phE:'Your email',dlB:'Send request',
+ref:'You were invited with code',sending:'Sending…',ok:'Request sent! You are waiting for approval: we will email you.',er:'Could not send. Please try again shortly.',bad:'Enter a valid email.',lim:'Too many requests. Try again later.',
+inT:'How to install',inP:'After approval you receive your login by email. On iPhone open the link in Safari → Share → “Add to Home Screen”. On Android in Chrome → menu ⋮ → “Install app”.',pv:'Privacy policy'}
+};
+let L=(localStorage.getItem('dm.lang')||(navigator.language||'it').slice(0,2))==='en'?'en':'it';
+const $=s=>document.querySelector(s);
+let REF='';
+try{const r=new URLSearchParams(location.search).get('ref');if(r&&/^[A-Za-z0-9]{4,16}$/.test(r)){REF=r.toUpperCase();sessionStorage.setItem('dm.ref',REF)}else REF=sessionStorage.getItem('dm.ref')||''}catch(e){}
+function apply(){
+  document.documentElement.lang=L;$('#lang').textContent=L==='en'?'IT':'EN';
+  document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=TX[L][e.dataset.i]});
+  document.querySelectorAll('[data-ph]').forEach(e=>{e.placeholder=TX[L][e.dataset.ph]});
+  const r=$('#rf');r.hidden=!REF;if(REF)r.textContent=TX[L].ref+' '+REF;
+}
+$('#lang').onclick=()=>{L=L==='en'?'it':'en';try{localStorage.setItem('dm.lang',L)}catch(e){}apply()};
+$('#go').onclick=()=>{$('#dl').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#e').focus({preventScroll:true}),500)};
+$('#f').onsubmit=async ev=>{
+  ev.preventDefault();const m=$('#m'),e=$('#e').value.trim();
+  m.className='msg';
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){m.className='msg er';m.textContent=TX[L].bad;return}
+  $('#sb').disabled=true;m.textContent=TX[L].sending;
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,name:$('#n').value.trim(),ref:REF,lang:L,hp:$('#hp').value})});
+    if(r.status===429){m.className='msg er';m.textContent=TX[L].lim;$('#sb').disabled=false;return}
+    if(!r.ok)throw 0;
+    m.className='msg ok';m.textContent=TX[L].ok;$('#f').querySelectorAll('input').forEach(i=>i.disabled=true);
+  }catch(_){m.className='msg er';m.textContent=TX[L].er;$('#sb').disabled=false}
+};
+apply();
+</script>
+</body>
+</html>
