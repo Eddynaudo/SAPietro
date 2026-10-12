@@ -8,4 +8,4 @@ for f in index.html sw.js manifest.webmanifest privacy.html avatar.png bg.webp i
 sed -i "s/CHANNEL='prod'/CHANNEL='next'/" next/index.html
 sed -i "s/const V='daymarck-/const V='daymarck-next-/" next/sw.js
 sed -i 's/"name":"DayMarck","short_name":"DayMarck"/"name":"DayMarck β","short_name":"DM β"/' next/manifest.webmanifest
-echo "next/ pronto: https://pmbusiness.it/app/next/"
+echo "next/ pronto: https://daymarck.tech/app/next/"
