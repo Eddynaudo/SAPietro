@@ -5,7 +5,7 @@ Due tipi di aggiornamento:
 - **Importanti** (nuove funzioni, icona): passano da `next/` (anteprima per l'amministratore), poi popup a tutti.
 
 Flusso importante:
-1. `tools/stage.sh` → copia in `next/`; si lavora lì. Prova su https://eddynaudo.github.io/SAPietro/next/ (barra arancione "ANTEPRIMA", stessi dati).
+1. `tools/stage.sh` → copia in `next/`; si lavora lì. Prova su https://eddynaudo.pmbusiness.it/app/next/ (barra arancione "ANTEPRIMA", stessi dati).
 2. Via libera dell'amministratore → `tools/promote.sh <build> <versione>`.
 3. Aggiornare la riga `app_release` (build, version, notes_it, notes_en, reinstall=true se cambia l'icona), POI commit+push.
 4. Gli utenti vedono il popup "Aggiorna ora"; chi preme "Aggiorna" in area utente senza novità legge "Ultima versione già presente".
