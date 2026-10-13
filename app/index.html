@@ -1683,7 +1683,7 @@ render();
 /* Assistente: risposte predefinite (nessuna AI) + chat con l'assistenza (amministratore). */
 (function(){
 const H={
-it:{wel:'Ciao, benvenuto in DayMarck! 👋 Vuoi sapere qualcosa? Ti propongo alcune cose utili da conoscere subito:',nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda che ti serve, oppure scrivimi la tua.',more:'← Altre domande',
+it:{inst:'Benvenuto in DayMarck! 🎉 Un passaggio importante: <b>installa l’app sul telefono</b>. Senza installazione <b>le notifiche delle tue attività non arrivano</b> (le vedresti solo aprendo il sito). Ci vogliono 30 secondi: ti mostro come.',instB:'📱 Come installo l’app',wel:'Ciao, benvenuto in DayMarck! 👋 Vuoi sapere qualcosa? Ti propongo alcune cose utili da conoscere subito:',nm:'Assistente DayMarck',sb:'Risposte rapide',hi:'Ciao! Scegli la domanda che ti serve, oppure scrivimi la tua.',more:'← Altre domande',
  ask:'✍️ Scrivi la tua domanda',chat:'💬 Scrivi all’assistenza',inb:'📥 Apri i messaggi ricevuti',askPh:'Es. come cambio la password?',askGo:'Chiedi',
  noMatch:'Non ho una risposta precisa a questa domanda nell’app. Puoi scrivere all’assistenza: ti risponde direttamente l’amministratore.',noMatchAdm:'Non ho una risposta precisa a questa domanda.',
  rel:'Potrebbe interessarti anche:',unknown:'Se hai un dubbio che non trovi qui, scrivi all’assistenza.',unknownAdm:'',
@@ -1719,7 +1719,7 @@ it:{wel:'Ciao, benvenuto in DayMarck! 👋 Vuoi sapere qualcosa? Ti propongo alc
  ['Ho pagato ma non ho ricevuto il codice','Il codice arriva via email appena Stripe conferma il pagamento, di solito in pochi secondi. Controlla anche <b>spam/promozioni</b>. Nella schermata di blocco tocca “Ho già pagato” per ricontrollare. Se dopo qualche minuto non c’è, scrivi all’assistenza dal pulsante qui sotto. Attenzione: hai 5 tentativi per inserire il codice.','codice pagamento pagato email bloccata stripe conferma non arrivato'],
  ['Come installo DayMarck sul telefono?','Apri la pagina di DayMarck dal browser e tocca <b>SCARICA</b>. Dopo l’approvazione ricevi le credenziali via email. Poi: su iPhone apri il sito in <b>Safari</b> → Condividi → <b>Aggiungi alla schermata Home</b>; su Android in <b>Chrome</b> → menu ⋮ → <b>Installa app</b>. Per le notifiche, accettale quando richiesto.','installare scaricare app telefono iphone android schermata home download'],
  ]},
-en:{wel:'Hi, welcome to DayMarck! 👋 Want to know something? Here are a few useful things to learn right away:',nm:'DayMarck Assistant',sb:'Quick answers',hi:'Hi! Pick the question you need, or type your own.',more:'← More questions',
+en:{inst:'Welcome to DayMarck! 🎉 One important step: <b>install the app on your phone</b>. Without installing it, <b>you will not receive your task notifications</b> (you would only see them by opening the website). It takes 30 seconds: here is how.',instB:'📱 How to install the app',wel:'Hi, welcome to DayMarck! 👋 Want to know something? Here are a few useful things to learn right away:',nm:'DayMarck Assistant',sb:'Quick answers',hi:'Hi! Pick the question you need, or type your own.',more:'← More questions',
  ask:'✍️ Type your question',chat:'💬 Message support',inb:'📥 Open received messages',askPh:'E.g. how do I change my password?',askGo:'Ask',
  noMatch:'I don’t have a precise answer to that in the app. You can message support: the administrator replies to you directly.',noMatchAdm:'I don’t have a precise answer to that.',
  rel:'You may also like:',unknown:'If you have a doubt that isn’t covered here, message support.',unknownAdm:'',
@@ -1854,6 +1854,12 @@ function openHelp(m){
   if(m==='chat'&&!adm())chat();else list();
   $('#hx').focus();
 }
+function installed(){try{return !!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))}catch(e){return false}}
+function nagInstall(){
+  labels();hp.classList.add('on');mode='list';const h=L();
+  bd.innerHTML='<div class="hm bot">'+h.inst+'</div><div class="hq"><button type="button" data-q="5">'+h.instB+'</button></div><div class="hq"><button type="button" data-more="1">'+h.more.replace('← ','')+'</button></div>';
+  bd.scrollTop=0;
+}
 function welcome(set){
   labels();hp.classList.add('on');mode='list';const h=L();
   bd.innerHTML='<div class="hm bot">'+h.wel+'</div><div class="hq">'+set.map(i=>'<button type="button" data-q="'+i+'">'+h.q[i][0]+'</button>').join('')+'</div><div class="hq"><button type="button" data-more="1">'+h.more.replace('← ','')+'</button></div>';
@@ -1866,7 +1872,12 @@ function maybeWelcome(){
   if(welDone||!me()||adm())return;
   const ca=me().created_at;if(ca&&Date.now()-new Date(ca)>14*864e5){welDone=true;return}
   if(document.querySelector('#ov.on,#nv.on,#usr.on,#pwd.on,#act.on,#cl.on,#upd.on,#lock.on,#rf.on'))return;
+  if(document.querySelector('#gate.on'))return;
   welDone=true;
+  if(!installed()){
+    let k=0;try{k=+localStorage.getItem('dm.nag:'+me().id)||0}catch(e){}
+    if(k<30){try{localStorage.setItem('dm.nag:'+me().id,String(k+1))}catch(e){}nagInstall();return}
+  }
   let n=0;try{n=+localStorage.getItem('dm.opens:'+me().id)||0}catch(e){}
   if(n>=3)return;
   try{localStorage.setItem('dm.opens:'+me().id,String(n+1))}catch(e){}
