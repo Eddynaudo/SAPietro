@@ -28,6 +28,14 @@ ul{padding-left:20px}
 table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
 th,td{border:1px solid #d7dcec;padding:7px 9px;text-align:left;vertical-align:top}
 th{background:#f3f5fb}
+.pf{margin-top:26px;border-top:1px solid #d7dcec;padding-top:6px}
+.pf label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px;color:#0b1636}
+.pf input,.pf select,.pf textarea{width:100%;padding:11px;border:1px solid #b9c3e6;border-radius:10px;font:inherit;background:#fff;color:#17203a}
+.pf textarea{min-height:110px;resize:vertical}
+.pf button{margin-top:14px;padding:12px 18px;border:0;border-radius:10px;background:#2F5BFF;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.pf button[disabled]{opacity:.6}
+.pf .m{margin-top:10px;font-size:14px}.pf .m.ok{color:#0a7a3b}.pf .m.er{color:#b3261e}
+.pf .hpf{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 [hidden]{display:none!important}
 a{color:#2c4fd6}
 </style>
@@ -117,7 +125,7 @@ P. IVA 02194410995
 
 <h2>14. Modifiche a questa informativa</h2>
 <p>Possiamo aggiornare questa informativa, per esempio quando vengono attivati nuovi servizi come i pagamenti. La versione in vigore è sempre quella pubblicata in questa pagina, con la data dell’ultimo aggiornamento in alto.</p>
-</article>
+<div class="pf" data-pf="it"></div></article>
 
 <article class="card" lang="en" data-l="en" hidden>
 <h1>Privacy notice</h1>
@@ -200,7 +208,7 @@ VAT no. (P. IVA) 02194410995
 
 <h2>14. Changes to this notice</h2>
 <p>We may update this notice, for example when new services such as payments are enabled. The version in force is always the one published on this page, with the date of the last update at the top.</p>
-</article>
+<div class="pf" data-pf="en"></div></article>
 <div class="bar bot"><a href="index.html">← DayMarck</a></div>
 </div>
 <script>
@@ -215,6 +223,41 @@ VAT no. (P. IVA) 02194410995
   }
   document.getElementById('lg').onclick=function(){L=L==='en'?'it':'en';try{localStorage.setItem('dm.lang',L)}catch(e){}show()};
   show();
+})();
+
+(function(){
+  var API='https://jhupjstzpwmpvkntxosd.supabase.co/functions/v1/privacy-request';
+  var TX={
+    it:{t:'Invia una richiesta sulla privacy',p:'Per esercitare i tuoi diritti o farci una domanda sui tuoi dati compila il modulo: la richiesta arriva direttamente al titolare.',n:'Nome (facoltativo)',e:'La tua email',k:'Tipo di richiesta',m:'Messaggio',s:'Invia richiesta',
+      kinds:[['access','Accesso ai miei dati'],['rectify','Rettifica dei dati'],['erase','Cancellazione dei dati'],['limit','Limitazione o opposizione'],['port','Portabilità dei dati'],['other','Altra richiesta']],
+      wait:'Invio in corso…',ok:'Richiesta inviata. Ti risponderemo all’indirizzo indicato.',bad:'Controlla email e messaggio (almeno 5 caratteri).',lim:'Troppe richieste: riprova più tardi.',er:'Invio non riuscito. Riprova tra poco.'},
+    en:{t:'Send a privacy request',p:'To exercise your rights or ask a question about your data, fill in the form: the request goes straight to the Controller.',n:'Name (optional)',e:'Your email',k:'Type of request',m:'Message',s:'Send request',
+      kinds:[['access','Access to my data'],['rectify','Rectification'],['erase','Erasure'],['limit','Restriction or objection'],['port','Data portability'],['other','Other request']],
+      wait:'Sending…',ok:'Request sent. We will reply to the address you gave.',bad:'Check your email and message (at least 5 characters).',lim:'Too many requests: try again later.',er:'Could not send. Please try again shortly.'}
+  };
+  document.querySelectorAll('[data-pf]').forEach(function(box){
+    var L=box.dataset.pf,T=TX[L],id=function(x){return 'pf'+L+x};
+    box.innerHTML='<h2>'+T.t+'</h2><p>'+T.p+'</p>'+
+      '<label for="'+id('n')+'">'+T.n+'</label><input id="'+id('n')+'" maxlength="80" autocomplete="name">'+
+      '<label for="'+id('e')+'">'+T.e+'</label><input id="'+id('e')+'" type="email" maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none">'+
+      '<label for="'+id('k')+'">'+T.k+'</label><select id="'+id('k')+'">'+T.kinds.map(function(k){return '<option value="'+k[0]+'">'+k[1]+'</option>'}).join('')+'</select>'+
+      '<label for="'+id('m')+'">'+T.m+'</label><textarea id="'+id('m')+'" maxlength="2000"></textarea>'+
+      '<input class="hpf" id="'+id('h')+'" tabindex="-1" autocomplete="off" aria-hidden="true">'+
+      '<button type="button" id="'+id('s')+'">'+T.s+'</button><div class="m" id="'+id('o')+'" role="status"></div>';
+    var g=function(x){return document.getElementById(id(x))};
+    g('s').onclick=function(){
+      var o=g('o'),email=g('e').value.trim(),msg=g('m').value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||msg.length<5){o.className='m er';o.textContent=T.bad;return}
+      g('s').disabled=true;o.className='m';o.textContent=T.wait;
+      fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:g('n').value,email:email,kind:g('k').value,message:msg,lang:L,hp:g('h').value})})
+        .then(function(r){
+          if(r.status===429){o.className='m er';o.textContent=T.lim;g('s').disabled=false;return}
+          if(r.status===400){o.className='m er';o.textContent=T.bad;g('s').disabled=false;return}
+          if(!r.ok)throw 0;
+          o.className='m ok';o.textContent=T.ok;g('m').value='';
+        }).catch(function(){o.className='m er';o.textContent=T.er;g('s').disabled=false});
+    };
+  });
 })();
 </script>
 </body>
