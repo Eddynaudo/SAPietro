@@ -124,6 +124,7 @@ audio{width:100%;margin-top:8px;height:36px}
 .sheet{background:var(--glass2);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
 .sheet h2{margin:0 0 4px;font-size:22px}
 .sheet h3{margin:0 0 4px;font-size:17px}
+#act{z-index:21;align-items:center;background:rgba(5,8,20,.35);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}#pwd{z-index:80;align-items:center}
 #auth{z-index:20;align-items:center;background:rgba(5,8,20,.35);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 #auth .sheet,#usr .sheet{max-width:440px}
 #auth .sheet{border-radius:20px;margin:0 16px}
@@ -160,6 +161,7 @@ select option{color:#0B1230}
 .lock h2{margin:0;font-size:28px;color:var(--lkInk,#F2F6FF);text-shadow:var(--lkShadow,none)}
 .lock p{margin:0;max-width:320px;color:var(--lkInk,#F2F6FF);text-shadow:var(--lkShadow,none)}
 .lk2{background:none;border:0;color:var(--lkInk,#F2F6FF);text-decoration:underline;cursor:pointer;padding:8px}
+.pwr{position:relative;display:block}.pwr input{padding-right:46px}.eye{position:absolute;right:2px;top:0;bottom:0;width:44px;border:0;background:none;color:var(--ink);font-size:18px;opacity:.75;cursor:pointer}
 input[type=datetime-local]{display:block;min-width:0;max-width:100%;min-height:46px;-webkit-appearance:none;appearance:none;text-align:left}
 input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-width:0}
 .rl input{min-width:0}
@@ -334,7 +336,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
     <p class="sub" data-i="aHint" style="margin:0 0 4px;color:#fff;text-shadow:none">Crea l’accesso per un’altra persona.</p>
     <label for="nem" data-i="aEm">Email della persona</label><input type="email" id="nem" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="email">
     <label for="nrf" data-i="nrfL">Referral program</label><select id="nrf"><option value="1" data-i="nrfOn">With referral</option><option value="0" data-i="nrfOff">Without referral</option></select>
-    <label for="npw" data-i="aPw">Password</label><input type="text" id="npw" autocomplete="off" autocapitalize="none" spellcheck="false">
+    <label for="npw" data-i="aPw">Password</label><input type="password" id="npw" autocomplete="new-password" autocapitalize="none" spellcheck="false">
     <div class="row" style="margin-top:10px">
       <button type="button" class="btn pri" id="mku" data-i="aMku">Create now</button>
       <button type="button" class="btn" id="nsd" data-i="aSend">Send code</button>
@@ -430,6 +432,26 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#adr" data-i="back">← Back</button><button type="button" class="btn" id="adx" data-i="close">Close</button></div>
 </div></div>
 
+<div class="ov" id="pwd"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pwt">
+  <h2 id="pwt" data-i="pwT">Scegli la tua password</h2>
+  <p class="sub" id="pwh" style="margin:0" data-i="pwH">Almeno 8 caratteri. Usa l’occhio per controllare quello che scrivi.</p>
+  <label for="pwv" data-i="aPw">Password</label><input type="password" id="pwv" autocomplete="new-password" autocapitalize="none" spellcheck="false">
+  <p class="am" id="pwm" role="status" style="color:#fff"></p>
+  <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" id="pwc" data-i="close">Chiudi</button><button type="button" class="btn pri" id="pws" data-i="pwSv">Salva</button></div>
+</div></div>
+
+<div class="ov" id="act"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="act_t">
+  <img class="ulogo" src="icon-192.png" alt="" style="margin-bottom:10px">
+  <h2 id="act_t" data-i="acT">Attiva il tuo account</h2>
+  <p class="sub" style="margin:0" data-i="acH">Inserisci il codice che hai ricevuto per email e scegli la tua password.</p>
+  <label for="ace" data-i="lgE">Email</label><input type="email" id="ace" autocomplete="email" inputmode="email" autocapitalize="none">
+  <label for="acc" data-i="acC">Codice di conferma</label><input type="text" id="acc" maxlength="12" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false">
+  <label for="acp" data-i="acP">Scegli la tua password</label><input type="password" id="acp" autocomplete="new-password" autocapitalize="none" spellcheck="false">
+  <p class="am" id="acm" role="status"></p>
+  <button type="button" class="btn pri" id="acg" style="width:100%;margin-top:10px;padding:13px" data-i="acB">Attiva e accedi</button>
+  <p style="text-align:center;margin:12px 0 0"><a class="plk" href="#" id="acl" data-i="acL">Ho già una password: accedi</a></p>
+</div></div>
+
 <div class="ov" id="auth"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="at">
   <h2 id="at" data-i="lgT">Accedi a DayMarck</h2>
   <p class="sub" style="margin:0" data-i="lgH">Non hai un account? Chiedilo all’amministratore.</p>
@@ -497,7 +519,7 @@ rfLink:'Your link',rfCopy:'Copy link',rfShare:'Share',rfCopied:'Copied.',rfInv:'
 rfProg:'{n}/10 friends',rfLeft:'You need {n} more friends for the next Amazon gift card!',rfLeft1:'You need 1 more friend for the next Amazon gift card!',rfCongrats:'Congratulations! You reached 10 valid referrals. Your reward is being prepared.',
 rwT:'My rewards',rwNone:'No rewards yet.',rwPrep:'In preparation',rwAvail:'Available',rwDel:'Delivered',rwItem:'Amazon gift card {v}',rwDone:'Congratulations! You received your Amazon gift card of {v}!',
 rwShow:'Show code',rwCopy:'Copy code',rwDate:'Assigned on {d}',rwHow:'Redeem it on Amazon from “Redeem a gift card”. DayMarck cannot know whether it has been used.',rwErr:'Could not load. Try again.',
-usEdit:'Change email',usPw:'Reset password',usVer:'verified',usUn:'not verified',usNewE:'New email for this user:',usNewP:'New password for this user (min 8 characters):',usOk:'Saved.',usLoad:'Loading…',usSelf:'You',usDel:'Delete account',usDelQ:'Permanently delete this account and all its data (activities, attachments, notifications)? This cannot be undone.\n\nAccount: ',usDelOk:'Account deleted.',gtPT:'One step left',gtPP:'Your account has the Referral program. To activate it, complete the one-time Lifetime payment of €9.89. We also emailed you the link.',gtPay:'Pay now',gtPaid:'I already paid',gtOut:'Sign out',gtCT:'Payment received',gtCP:'Check your email: we sent you a confirmation code. Enter it here to unlock DayMarck and your Referral (look in spam too).',gtCB:'Confirm code',gtBad:'Wrong code. Try again.',gtLock:'Too many attempts. Contact support.',gtWait:'Payment not received yet. It can take a minute.',gtOk:'Welcome! Referral activated.',rqT:'Access requests',rqAppR:'Approve with referral',rqAppN:'Approve without referral',rqRej:'Reject',rqRejQ:'Reject this request?',rqOk:'Done.',rqBy:'Invited by',stPay:'Waiting for payment',stCode:'Paid: code sent',stPaid:'Paid',usRefQ:'Turn on referral for this user? The app will be BLOCKED for them until they pay €9.89, and we email them the payment link.',usRefM:'Referral requested: the app is locked until payment. Payment link emailed.',usRefNM:'Locked until payment, but the email could not be sent.',usRefP:'Referral on.',usRPay:'Resend payment link',usGrant:'Send code',usManual:'Mark as paid + send code',usMOk:'Sent.',usManQ:'Mark this user as having paid (outside Stripe) and email the code?',
+pwT:'Choose your password',pwH:'At least 8 characters. Use the eye to check what you type.',pwSv:'Save',eyeS:'Show password',eyeH:'Hide password',acT:'Activate your account',acH:'Enter the code you received by email and choose your password.',acC:'Confirmation code',acP:'Choose your password',acB:'Activate and sign in',acL:'I already have a password: sign in',acBad:'Email or code not correct.',acLock:'Too many attempts: the code is locked. Write to support.',acPw:'The password must be 8 to 72 characters.',acNeed:'Fill in email, code and password.',acOk:'Account activated. Welcome!',pwSaved:'Password saved.',usEdit:'Change email',usPw:'Reset password',usVer:'verified',usUn:'not verified',usNewE:'New email for this user:',usNewP:'New password for this user (min 8 characters):',usOk:'Saved.',usLoad:'Loading…',usSelf:'You',usDel:'Delete account',usDelQ:'Permanently delete this account and all its data (activities, attachments, notifications)? This cannot be undone.\n\nAccount: ',usDelOk:'Account deleted.',gtPT:'One step left',gtPP:'Your account has the Referral program. To activate it, complete the one-time Lifetime payment of €9.89. We also emailed you the link.',gtPay:'Pay now',gtPaid:'I already paid',gtOut:'Sign out',gtCT:'Payment received',gtCP:'Check your email: we sent you a confirmation code. Enter it here to unlock DayMarck and your Referral (look in spam too).',gtCB:'Confirm code',gtBad:'Wrong code. Try again.',gtLock:'Too many attempts. Contact support.',gtWait:'Payment not received yet. It can take a minute.',gtOk:'Welcome! Referral activated.',rqT:'Access requests',rqAppR:'Approve with referral',rqAppN:'Approve without referral',rqRej:'Reject',rqRejQ:'Reject this request?',rqOk:'Done.',rqBy:'Invited by',stPay:'Waiting for payment',stCode:'Paid: code sent',stPaid:'Paid',usRefQ:'Turn on referral for this user? The app will be BLOCKED for them until they pay €9.89, and we email them the payment link.',usRefM:'Referral requested: the app is locked until payment. Payment link emailed.',usRefNM:'Locked until payment, but the email could not be sent.',usRefP:'Referral on.',usRPay:'Resend payment link',usGrant:'Send code',usManual:'Mark as paid + send code',usMOk:'Sent.',usManQ:'Mark this user as having paid (outside Stripe) and email the code?',
 adf:'Users with rewards to deliver',adNone:'Nothing to show.',adReg:'registered',adVal:'valid',adEarn:'earned',adDel:'delivered',adTo:'to deliver',adCode:'Amazon code',adAssign:'Confirm assignment',adWho:'Assigned by {a} on {d}',adNeed:'Enter the gift card code.',adSure:'Assign this code to {e}? It becomes visible to them.',adDone:'Reward assigned.',
 pmT:'Manual purchases',pmH:'Until payments are connected, record a confirmed purchase by hand to test or to register one. Refunds remove it from the count.',pmId:'Purchase reference',pmR:'Record purchase',pmF:'Refund purchase',pmOk:'Purchase recorded.',pmRf:'Purchase refunded.',pmNeed:'Enter the email and the purchase reference.',
 cal:'Calendar',all:'All tasks',fAll:'All',fTodo:'To do',fDone:'Done',add:'+ New',lTitle:'Title',phTitle:'What do you need to do?',lNote:'Notes',phNote:'Details (optional)',
@@ -531,7 +553,7 @@ rfLink:'Il tuo link',rfCopy:'Copia link',rfShare:'Condividi',rfCopied:'Copiato.'
 rfProg:'{n}/10 amici',rfLeft:'Ti mancano {n} amici per il prossimo buono Amazon!',rfLeft1:'Ti manca 1 amico per il prossimo buono Amazon!',rfCongrats:'Complimenti! Hai raggiunto 10 referral validi. Il tuo premio è in preparazione: lo riceverai entro 15 giorni.',
 rwT:'I miei premi',rwNone:'Ancora nessun premio.',rwPrep:'In preparazione',rwAvail:'Disponibile',rwDel:'Consegnato',rwItem:'Buono Amazon da {v}',rwDone:'Complimenti! Hai ricevuto il tuo buono Amazon da {v}!',
 rwShow:'Mostra codice',rwCopy:'Copia codice',rwDate:'Assegnato il {d}',rwHow:'Riscattalo su Amazon da “Riscatta un buono regalo”. DayMarck non può sapere se è stato usato.',rwErr:'Impossibile caricare. Riprova.',
-usEdit:'Cambia email',usPw:'Reimposta password',usVer:'verificato',usUn:'non verificato',usNewE:'Nuova email per questo utente:',usNewP:'Nuova password per questo utente (min. 8 caratteri):',usOk:'Salvato.',usLoad:'Caricamento…',usSelf:'Tu',usDel:'Elimina account',usDelQ:'Eliminare definitivamente questo account e tutti i suoi dati (attività, allegati, notifiche)? Non si può annullare.\n\nAccount: ',usDelOk:'Account eliminato.',gtPT:'Manca un passo',gtPP:'Il tuo account ha il programma Referral. Per attivarlo completa il pagamento Lifetime una tantum di 9,89 €. Ti abbiamo mandato il link anche via email.',gtPay:'Paga ora',gtPaid:'Ho già pagato',gtOut:'Esci',gtCT:'Pagamento ricevuto',gtCP:'Controlla la tua email: ti abbiamo inviato un codice di conferma. Inseriscilo qui per sbloccare DayMarck e il Referral (guarda anche nello spam).',gtCB:'Conferma codice',gtBad:'Codice errato. Riprova.',gtLock:'Troppi tentativi. Contatta l’assistenza.',gtWait:'Pagamento non ancora ricevuto. Può servire un minuto.',gtOk:'Benvenuto! Referral attivato.',rqT:'Richieste di accesso',rqAppR:'Approva con referral',rqAppN:'Approva senza referral',rqRej:'Rifiuta',rqRejQ:'Rifiutare questa richiesta?',rqOk:'Fatto.',rqBy:'Invitato da',stPay:'In attesa di pagamento',stCode:'Pagato: codice inviato',stPaid:'Pagato',usRefQ:'Attivare il referral per questo utente? L’app gli verrà BLOCCATA finché non paga 9,89 € e gli mandiamo il link di pagamento via email.',usRefM:'Referral richiesto: app bloccata fino al pagamento. Link di pagamento inviato via email.',usRefNM:'App bloccata fino al pagamento, ma l’email non è partita.',usRefP:'Referral attivo.',usRPay:'Reinvia link pagamento',usGrant:'Invia codice',usManual:'Segna come pagato + invia codice',usMOk:'Inviato.',usManQ:'Segnare questo utente come pagato (fuori da Stripe) e mandargli il codice via email?',
+pwT:'Scegli la tua password',pwH:'Almeno 8 caratteri. Usa l\'occhio per controllare quello che scrivi.',pwSv:'Salva',eyeS:'Mostra password',eyeH:'Nascondi password',acT:'Attiva il tuo account',acH:'Inserisci il codice che hai ricevuto per email e scegli la tua password.',acC:'Codice di conferma',acP:'Scegli la tua password',acB:'Attiva e accedi',acL:'Ho già una password: accedi',acBad:'Email o codice non corretti.',acLock:'Troppi tentativi: il codice è bloccato. Scrivi all\'assistenza.',acPw:'La password deve avere da 8 a 72 caratteri.',acNeed:'Compila email, codice e password.',acOk:'Account attivato. Benvenuto!',pwSaved:'Password salvata.',usEdit:'Cambia email',usPw:'Reimposta password',usVer:'verificato',usUn:'non verificato',usNewE:'Nuova email per questo utente:',usNewP:'Nuova password per questo utente (min. 8 caratteri):',usOk:'Salvato.',usLoad:'Caricamento…',usSelf:'Tu',usDel:'Elimina account',usDelQ:'Eliminare definitivamente questo account e tutti i suoi dati (attività, allegati, notifiche)? Non si può annullare.\n\nAccount: ',usDelOk:'Account eliminato.',gtPT:'Manca un passo',gtPP:'Il tuo account ha il programma Referral. Per attivarlo completa il pagamento Lifetime una tantum di 9,89 €. Ti abbiamo mandato il link anche via email.',gtPay:'Paga ora',gtPaid:'Ho già pagato',gtOut:'Esci',gtCT:'Pagamento ricevuto',gtCP:'Controlla la tua email: ti abbiamo inviato un codice di conferma. Inseriscilo qui per sbloccare DayMarck e il Referral (guarda anche nello spam).',gtCB:'Conferma codice',gtBad:'Codice errato. Riprova.',gtLock:'Troppi tentativi. Contatta l’assistenza.',gtWait:'Pagamento non ancora ricevuto. Può servire un minuto.',gtOk:'Benvenuto! Referral attivato.',rqT:'Richieste di accesso',rqAppR:'Approva con referral',rqAppN:'Approva senza referral',rqRej:'Rifiuta',rqRejQ:'Rifiutare questa richiesta?',rqOk:'Fatto.',rqBy:'Invitato da',stPay:'In attesa di pagamento',stCode:'Pagato: codice inviato',stPaid:'Pagato',usRefQ:'Attivare il referral per questo utente? L’app gli verrà BLOCCATA finché non paga 9,89 € e gli mandiamo il link di pagamento via email.',usRefM:'Referral richiesto: app bloccata fino al pagamento. Link di pagamento inviato via email.',usRefNM:'App bloccata fino al pagamento, ma l’email non è partita.',usRefP:'Referral attivo.',usRPay:'Reinvia link pagamento',usGrant:'Invia codice',usManual:'Segna come pagato + invia codice',usMOk:'Inviato.',usManQ:'Segnare questo utente come pagato (fuori da Stripe) e mandargli il codice via email?',
 adf:'Utenti con premi da erogare',adNone:'Niente da mostrare.',adReg:'registrati',adVal:'validi',adEarn:'maturati',adDel:'consegnati',adTo:'da erogare',adCode:'Codice Amazon',adAssign:'Conferma assegnazione',adWho:'Assegnato da {a} il {d}',adNeed:'Inserisci il codice del buono.',adSure:'Assegnare questo codice a {e}? Diventa visibile a lui/lei.',adDone:'Premio assegnato.',
 pmT:'Acquisti manuali',pmH:'Finché i pagamenti non sono collegati, registra a mano un acquisto confermato per provare o per inserirne uno. I rimborsi lo tolgono dal conteggio.',pmId:'Riferimento acquisto',pmR:'Registra acquisto',pmF:'Rimborsa acquisto',pmOk:'Acquisto registrato.',pmRf:'Acquisto rimborsato.',pmNeed:'Inserisci email e riferimento acquisto.',
 cal:'Calendario',all:'Tutti gli impegni',fAll:'Tutti',fTodo:'Da fare',fDone:'Fatti',add:'+ Nuovo',lTitle:'Titolo',phTitle:'Cosa devi fare?',lNote:'Note',phNote:'Dettagli (facoltativo)',
@@ -1246,8 +1268,7 @@ $('#ulb').onclick=async e=>{
       if(!confirm(t_('usManQ')+'\n\n'+box.dataset.em))return;
       await callFn('admin-users',{action:'grant_code',id,manual_paid:true});toast(t_('usMOk'));loadUsers();return;
     }else{
-      const v=prompt(t_('usNewP'));if(!v)return;
-      await callFn('admin-users',{action:'set_password',id,password:v});
+      askPw(async v=>{try{await callFn('admin-users',{action:'set_password',id,password:v});toast(t_('usOk'));loadUsers();return null}catch(e){return String(e.message||e)}},t_('usNewP'));return;
     }
     toast(t_('usOk'));loadUsers();
   }catch(err){toast(String(err.message||err))}
@@ -1369,6 +1390,52 @@ function openAdmin(t){
   openUsr();
   if(t==='referral')$('#adb').click();else $('#usb').click();
 }
+/* ---------- occhio sulle password, scelta password, attivazione dal link ---------- */
+function eyeify(i){
+  if(!i||i.dataset.eye)return;i.dataset.eye='1';
+  const w=document.createElement('span');w.className='pwr';i.parentNode.insertBefore(w,i);w.appendChild(i);
+  const b=document.createElement('button');b.type='button';b.className='eye';b.textContent='👁';b.setAttribute('aria-label',t_('eyeS'));
+  b.onclick=()=>{const sh=i.type==='password';i.type=sh?'text':'password';b.textContent=sh?'🙈':'👁';b.setAttribute('aria-label',t_(sh?'eyeH':'eyeS'))};
+  w.appendChild(b);
+}
+document.querySelectorAll('input[type=password]').forEach(eyeify);
+let pwCb=null;
+function askPw(cb,title){
+  pwCb=cb;$('#pwv').value='';$('#pwv').type='password';$('#pwm').textContent='';
+  $('#pwt').textContent=title||t_('pwT');$('#pwd').classList.add('on');
+  setTimeout(()=>{try{$('#pwv').focus()}catch(e){}},80);
+}
+$('#pwc').onclick=()=>{pwCb=null;$('#pwd').classList.remove('on')};
+$('#pws').onclick=async()=>{
+  const v=$('#pwv').value;
+  if(v.length<8||v.length>72){$('#pwm').textContent=t_('pwBad');return}
+  const cb=pwCb;if(!cb)return;
+  $('#pws').disabled=true;
+  const err=await cb(v);
+  $('#pws').disabled=false;
+  if(err){$('#pwm').textContent=err;return}
+  pwCb=null;$('#pwd').classList.remove('on');toast(t_('pwSaved'));
+};
+$('#pwv').addEventListener('keydown',e=>{if(e.key==='Enter')$('#pws').click()});
+const actQ=new URLSearchParams(location.search).get('activate');
+function openAct(em){$('#ace').value=em||'';$('#acm').textContent='';$('#act').classList.add('on')}
+$('#acl').onclick=e=>{e.preventDefault();$('#act').classList.remove('on')};
+$('#acg').onclick=async()=>{
+  const email=$('#ace').value.trim(),code=$('#acc').value.trim(),password=$('#acp').value;
+  if(!email||!code||!password){$('#acm').textContent=t_('acNeed');return}
+  if(password.length<8||password.length>72){$('#acm').textContent=t_('acPw');return}
+  $('#acm').textContent=t_('lgWait');$('#acg').disabled=true;
+  try{
+    await callFn('activate-account',{email,code,password});
+    const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;
+    fresh=true;$('#act').classList.remove('on');toast(t_('acOk'));
+  }catch(e){
+    const m=String(e&&e.message||e);
+    $('#acm').textContent=m==='locked'?t_('acLock'):m==='bad'?t_('acBad'):m==='password'?t_('acPw'):errIt(e);
+  }
+  $('#acg').disabled=false;
+};
+if(actQ){try{history.replaceState(null,'',location.pathname)}catch(e){}}
 /* ---------- accesso a pagamento: blocco finché non si paga e si inserisce il codice ---------- */
 let pendingAdm=null;
 let gateSt='active',gateUrl='',gateT=0,gateBusy=false;
@@ -1407,7 +1474,7 @@ $('#gtb').onclick=async()=>{
   gateBusy=true;
   try{
     const {data,error}=await sb.rpc('redeem_access_code',{p_code:c});if(error)throw error;
-    if(data==='ok'){gateBusy=false;await checkAccess(true);return}
+    if(data==='ok'){gateBusy=false;await checkAccess(true);askPw(async v=>{const {error}=await sb.auth.updateUser({password:v});return error?String(error.message||error):null});return}
     $('#gtm').textContent=t_(data==='locked'?'gtLock':'gtBad');
   }catch(err){$('#gtm').textContent=String(err.message||err)}
   gateBusy=false;
@@ -1556,15 +1623,15 @@ if(sb){
     if(u&&(!user||user.id!==u.id))setTimeout(()=>start(u),0);
     else if(!u&&(ev==='SIGNED_OUT'||ev==='INITIAL_SESSION')){
       if(ev==='SIGNED_OUT'){showGate('active');user=null;unlocked=false;items=[];tomb=[];synced=false;closeNote();render();setSync('')}
-      showAuth();
+      showAuth();if(actQ&&!user)openAct(actQ);
     }
   });
 }else showAuth(t_('lgNet'));
 
 /* ---------- X in alto a destra su ogni finestra + lo sfondo non scorre ---------- */
 (function(){
-  const skip=['gate','upd','bio','cl','auth','lb','hp'];
-  const act={usr:'#ucl',usl:'#ulx',rf:'#rfx',adr:'#adx',cpx:'#cpc',ov:'#cancel'};
+  const skip=['gate','act','upd','bio','cl','auth','lb','hp'];
+  const act={usr:'#ucl',usl:'#ulx',rf:'#rfx',adr:'#adx',cpx:'#cpc',ov:'#cancel',pwd:'#pwc'};
   document.querySelectorAll('.ov').forEach(ov=>{
     if(skip.includes(ov.id))return;const sh=ov.querySelector('.sheet');if(!sh)return;
     const w=document.createElement('div');w.className='xw';
@@ -1797,7 +1864,7 @@ let welDone=false;
 function maybeWelcome(){
   if(welDone||!me()||adm())return;
   const ca=me().created_at;if(ca&&Date.now()-new Date(ca)>14*864e5){welDone=true;return}
-  if(document.querySelector('#ov.on,#nv.on,#usr.on,#cl.on,#upd.on,#lock.on,#rf.on'))return;
+  if(document.querySelector('#ov.on,#nv.on,#usr.on,#pwd.on,#act.on,#cl.on,#upd.on,#lock.on,#rf.on'))return;
   welDone=true;
   let n=0;try{n=+localStorage.getItem('dm.opens:'+me().id)||0}catch(e){}
   if(n>=3)return;
@@ -1911,12 +1978,10 @@ try{if(new URLSearchParams(location.search).get('support')){want=true;history.re
 /* ----- area utente ----- */
 $('#supb').onclick=()=>openHelp();
 $('#supa').onclick=openInbox;
-$('#pwb').onclick=async()=>{
-  const v=prompt(t_('pwNew'));if(v===null||v==='')return;
-  if(v.length<8||v.length>72){toast(t_('pwBad'));return}
+$('#pwb').onclick=()=>askPw(async v=>{
   const {error}=await sb.auth.updateUser({password:v});
-  toast(error?String(error.message||error):t_('pwOk'));
-};
+  return error?String(error.message||error):null;
+});
 $('#lang').addEventListener('click',()=>{labels();anApply();if(hp.classList.contains('on')&&mode==='list')list()});
 /* ----- animazione dell'avatar: automatica (segue il telefono) / sempre attiva / ferma ----- */
 const AN=['auto','on','off'],ANK={auto:'anA',on:'anO',off:'anF'};
