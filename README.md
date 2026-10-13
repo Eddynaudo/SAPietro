@@ -4,4 +4,4 @@ Reminder app with calendar, attachments (photos and audio) and alerts. Installab
 
 
 ---
-© 2026 DayMarck — Tutti i diritti riservati / All rights reserved. Vedi [LICENSE](LICENSE).
+© 2026 DayMarck — MBL di Pietro M. P. — Tutti i diritti riservati / All rights reserved. Vedi [LICENSE](LICENSE).
