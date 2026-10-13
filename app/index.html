@@ -1387,6 +1387,7 @@ async function pendingBadge(){
 }
 function openAdmin(t){
   if(!isAdmin())return;
+  if(t==='capacity'){if(window.dmCapOpen)window.dmCapOpen();return}
   openUsr();
   if(t==='referral')$('#adb').click();else $('#usb').click();
 }
@@ -2001,19 +2002,22 @@ labels();
 const q=s=>document.querySelector(s),en=()=>document.documentElement.lang==='en';
 const mb=b=>b>=1073741824?(b/1073741824).toFixed(2)+' GB':(b/1048576).toFixed(b<10485760?2:1)+' MB';
 const cls=p=>p>=85?'c':p>=70?'w':'';
+const esc2=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let alerted='';
 async function cap(show){
   if(!sb||typeof isAdmin!=='function'||!isAdmin())return;
   let d;try{const r=await sb.rpc('admin_capacity');d=r.data;if(r.error||!d)return}catch(e){return}
-  const E=en(),worst=Math.max(d.db_pct,d.storage_pct),low=d.users_left<=10||worst>=80;
+  let ml=null;try{const r2=await sb.rpc('admin_mail_usage');if(!r2.error)ml=r2.data}catch(e){}
+  const E=en(),worst=Math.max(d.db_pct,d.storage_pct),low=d.users_left<=10||worst>=80,mlow=ml&&ml.pct>=70;
   const bar=(l,u,t,p)=>'<div>'+l+': <b>'+mb(u)+'</b> / '+mb(t)+' ('+p+'%)</div><div class="bar"><i class="'+cls(p)+'" style="width:'+Math.min(p,100)+'%"></i></div>';
   const el=q('#cap');if(!el)return;
   el.innerHTML='<b>'+(E?'Supabase capacity (real time)':'Capienza Supabase (tempo reale)')+'</b>'+
     bar(E?'Database':'Database',d.db_bytes,d.db_limit,d.db_pct)+bar(E?'Files (photos/audio)':'Archivio file (foto/audio)',d.storage_bytes,d.storage_limit,d.storage_pct)+
+    (ml?'<div style="margin-top:8px">'+(E?'Email (Resend): today ':'Email (Resend): oggi ')+'<b>'+ml.day+(ml.day_limit?' / '+ml.day_limit:'')+'</b> · '+(E?'month ':'mese ')+'<b>'+ml.month+' / '+ml.month_limit+'</b> ('+ml.pct+'%)</div><div class="bar"><i class="'+cls(ml.pct)+'" style="width:'+Math.min(Math.max(ml.pct,ml.pct>0?1:0),100)+'%"></i></div>'+(mlow?'<div style="color:'+(ml.pct>=85?'#FF6B6B':'#FFB020')+';font-weight:700">⚠ '+(E?'Resend upgrade recommended: ':'Upgrade Resend consigliato: ')+esc2(ml.next_plan)+'</div>':''):'')+
     '<div class="big">'+(E?'~'+d.users_left+' more users':'~'+d.users_left+' utenti ancora attivabili')+'</div>'+
     '<small>'+(E?'Now '+d.users+' users. Estimate per user: files ':'Ora '+d.users+' utenti. Stima per utente: file ')+mb(d.per_user_storage)+(E?', data ':', dati ')+mb(d.per_user_db)+'. '+
     (d.storage_estimated?(E?'Files: prudent assumption until at least 3 users upload attachments; it becomes a real average afterwards.':'File: ipotesi prudente finché almeno 3 utenti non caricano allegati; poi diventa una media reale.'):(E?'Based on real averages.':'Basata sulle medie reali.'))+
-    '<br><button type="button" class="btn" id="cpo" style="margin-top:8px;padding:8px 12px">📊 Dashboard completa</button>'+(low?'<br><b style="color:#FFB020">⚠ '+(E?'Time to plan the Supabase upgrade.':'È il momento di pianificare l’upgrade di Supabase.')+'</b>':'')+'</small>';
+    '<br><button type="button" class="btn" id="cpo" style="margin-top:8px;padding:8px 12px">📊 Dashboard completa</button>'+((low||mlow)?'<br><b style="color:#FFB020">⚠ '+(E?'Time to plan the Supabase upgrade.':'È il momento di pianificare l’upgrade di Supabase.')+'</b>':'')+'</small>';
   el.hidden=false;const ob=q('#cpo');if(ob)ob.onclick=()=>window.dmCapOpen&&window.dmCapOpen();
   if(low&&alerted!==String(d.users_left)&&!show){alerted=String(d.users_left);toast((E?'⚠ Supabase: about ':'⚠ Supabase: circa ')+d.users_left+(E?' users left before the upgrade':' utenti prima dell’upgrade'))}
 }
@@ -2086,6 +2090,7 @@ function render(){
   // avvisi
   const al=[];
   st.forEach(x=>{if(x.p>=lv[0]){al.push([x.p>=T().crit?'r':x.p>=T().high?'o':'y',(x.p>=T().crit?'Critical: capacity threshold reached':'Warning: approaching included capacity')+' — '+x.n+' al '+x.p+'% ('+x.d+')'])}});
+  if(D.mail&&D.mail.pct>=lv[0]){al.push([D.mail.pct>=T().crit?'r':D.mail.pct>=85?'r':'o',(D.mail.pct>=95?'Critical: ':'Warning: ')+'Email Resend al '+D.mail.pct+'% — oggi '+D.mail.day+(D.mail.day_limit?'/'+D.mail.day_limit:'')+', mese '+D.mail.month+'/'+D.mail.month_limit+'. Upgrade consigliato: '+D.mail.next_plan+' (resend.com › Settings › Billing). Se il limite viene superato le email con codici e pagamenti non partono.'])}
   if(al.length){al.push([isP?'o':'r',isP?'Additional usage charges may apply: DB/disco +$'+S.pricing.disk_gb+'/GB oltre 8 GB; storage +$'+S.pricing.storage_gb+'/GB oltre 100 GB; MAU +$'+S.pricing.mau_extra+' oltre '+N(pl.mau)+'.':'Upgrade recommended: passa a Supabase Pro ($'+S.plans.pro.price+'/mese: 8 GB disco, 100 GB storage, 100.000 MAU, backup giornalieri). Da Supabase › Organization › Billing › Upgrade.'])}
   h+=al.map(a=>'<div class="al '+a[0]+'">'+esc(a[1])+'</div>').join('');
   // indicatori
@@ -2098,6 +2103,7 @@ function render(){
   h+='<div class="cc"><b>Monthly Active Users</b>'+bar(mp)+kv('Utenti registrati',N(m.users))+kv('Attivi ultimi 30 giorni',N(m.active30)+' <span class="mut">(accesso o attività)</span>')+kv('MAU fatturabili Supabase',S.manual.mau_billable!=null&&S.manual.mau_billable!==''?N(S.manual.mau_billable)+' <span class="mut">manuale</span>':un)+kv('Inattivi',N(Math.max(0,m.users-m.active30)))+kv('Nuove registrazioni nel mese',N(m.new_month))+kv('Quota MAU usata',mp.toFixed(2)+'% di '+N(pl.mau))+'<div class="mut">Gli attivi sono una stima applicativa, non i MAU fatturati da Supabase. Autenticazione: Supabase Auth (non Clerk), quindi nessun Third-Party MAU. Le quote MAU, storage ed egress sono dell’organizzazione; database/disco sono per progetto.</div></div>';
   const mg=k=>S.manual[k]!=null&&S.manual[k]!==''?S.manual[k]:null;
   h+='<div class="cc"><b>Network &amp; API Usage</b>'+(mg('egress_gb')!=null?bar(mg('egress_gb')*100/pl.egress_gb):'')+kv('Egress non in cache',mg('egress_gb')!=null?mg('egress_gb')+' GB / '+pl.egress_gb+' GB <span class="mut">manuale</span>':un)+kv('Egress in cache',mg('egress_cached_gb')!=null?mg('egress_cached_gb')+' GB / '+pl.egress_cached_gb+' GB <span class="mut">manuale</span>':un)+kv('Richieste API / errori / tempi',un)+kv('Realtime',un+' <span class="mut">(non usato)</span>')+kv('Edge Functions',mg('edge_inv')!=null?N(mg('edge_inv'))+' / '+N(pl.edge_inv)+' <span class="mut">manuale</span>':un)+'<div class="mut">Questi dati stanno nella sezione Usage di Supabase e non sono leggibili dall’app senza un token della Management API: puoi inserirli a mano in Impostazioni (sono segnati «manuale»). Per le richieste API non c’è un limite numerico, quindi niente barra.</div></div>';
+  if(D.mail){const M=D.mail;h+='<div class="cc"><b>Email — Resend</b>'+bar(M.pct)+kv('Piano Resend',(M.plan==='pro'?'Pro':'Free')+' <span class="mut">(impostato da te)</span>')+kv('Inviate oggi',M.day+(M.day_limit?' / '+M.day_limit:' <span class="mut">nessun limite giornaliero</span>')+(M.day_limit?' ('+M.day_pct+'%)':''))+kv('Inviate questo mese',M.month+' / '+N(M.month_limit)+' ('+M.month_pct+'%)')+kv('Se serve di più',esc(M.next_plan))+'<div class="mut">Conteggio delle email inviate dall’app (codici, pagamenti, avvisi). L’avviso arriva a 70%, 85% e 95% su app, Telegram ed email; la barra diventa rossa da 85%.</div></div>'}
   h+='</div>';
   // piani
   const rows=[['Prezzo base','$'+S.plans.free.price,'Da $'+S.plans.pro.price],['MAU',N(S.plans.free.mau),N(S.plans.pro.mau)+' inclusi'],['Database / disco',N(S.plans.free.db_mb)+' MB per progetto',B(S.plans.pro.db_mb*1048576)+' di disco inclusi per progetto'],['File Storage',B(S.plans.free.storage_mb*1048576),B(S.plans.pro.storage_mb*1048576)],['Egress non in cache',S.plans.free.egress_gb+' GB/mese',S.plans.pro.egress_gb+' GB/mese'],['Egress in cache',S.plans.free.egress_cached_gb+' GB/mese',S.plans.pro.egress_cached_gb+' GB/mese'],['Edge Functions',N(S.plans.free.edge_inv)+'/mese',N(S.plans.pro.edge_inv)+'/mese'],['Realtime messages',N(S.plans.free.rt_msgs)+'/mese',N(S.plans.pro.rt_msgs)+'/mese'],['Realtime connessioni',S.plans.free.rt_conn,S.plans.pro.rt_conn+' incluse'],['Backup giornalieri','Non inclusi','Inclusi']];
@@ -2122,6 +2128,7 @@ function render(){
   h+='<h3>Impostazioni</h3><div class="cc"><div class="fg" style="grid-template-columns:1fr 1fr"><span>Piano attivo</span><select id="sp"><option value="free"'+(S.plan==='free'?' selected':'')+'>Free</option><option value="pro"'+(isP?' selected':'')+'>Pro</option></select></div>'+
    '<div class="fg"><span>Soglie colore %</span>'+inp('t1',T().warn)+inp('t2',T().high)+'</div><div class="mut">giallo da · arancione da · (rosso da '+T().crit+')</div><div class="fg"><span>Rosso da %</span>'+inp('t3',T().crit)+'<span></span></div>'+
    '<div class="fg" style="grid-template-columns:1fr 1fr"><span>Livelli avviso (email + notifica) %</span><input id="al" value="'+esc(S.alert_levels.join(', '))+'"></div>'+
+   '<div class="fg" style="grid-template-columns:1fr 1fr"><span>Piano Resend</span><select id="rsp"><option value="free"'+(D.mail&&D.mail.plan==='free'?' selected':'')+'>Free (100/giorno, 3.000/mese)</option><option value="pro"'+(D.mail&&D.mail.plan==='pro'?' selected':'')+'>Pro (50.000/mese)</option></select></div>'+
    '<div class="fg"><b>Limiti piano</b><b>Free</b><b>Pro</b></div>'+LIM.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('lf_'+l[0],S.plans.free[l[0]])+inp('lp_'+l[0],S.plans.pro[l[0]])+'</div>').join('')+
    '<div class="fg"><b>Prezzi extra (Pro)</b></div>'+PRC.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('pr_'+l[0],S.pricing[l[0]])+'<span></span></div>').join('')+
    '<div class="fg"><b>Ipotesi simulatore</b></div>'+ASM.map(l=>'<div class="fg"><span>'+l[1]+'</span>'+inp('as_'+l[0],S.assume[l[0]])+'<span></span></div>').join('')+
@@ -2132,7 +2139,7 @@ function render(){
 }
 async function load(manual){
   if(!sb||busy)return;busy=true;
-  try{const r=await sb.rpc('admin_capacity_full');if(r.error||!r.data)throw new Error((r.error&&r.error.message)||'no data');D=r.data;err=''}
+  try{const r=await sb.rpc('admin_capacity_full');if(r.error||!r.data)throw new Error((r.error&&r.error.message)||'no data');D=r.data;err='';try{const r2=await sb.rpc('admin_mail_usage');D.mail=r2.error?null:r2.data}catch(e){D.mail=null}}
   catch(e){err='Errore di connessione: '+(e.message||e)}
   busy=false;render();
 }
@@ -2145,6 +2152,7 @@ async function save(){
   PRC.forEach(l=>{S.pricing[l[0]]=num('pr_'+l[0])??S.pricing[l[0]]});
   ASM.forEach(l=>{S.assume[l[0]]=num('as_'+l[0])??S.assume[l[0]]});
   MAN.forEach(l=>{S.manual[l[0]]=num('mn_'+l[0])});
+  try{const rp=q('#rsp');if(rp&&D.mail&&rp.value!==D.mail.plan)await sb.rpc('admin_set_resend_plan',{p:rp.value})}catch(e){}
   const r=await sb.rpc('admin_capacity_save',{p:S});
   q('#cpm').textContent=r.error?'Errore nel salvataggio':'Salvato.';
   if(!r.error){await load();if(window.dmCap)window.dmCap(true)}
