@@ -22,6 +22,7 @@ body::before{content:"";position:fixed;inset:0;background:rgba(6,11,32,.5);z-ind
 .hero h1{margin:8px 0 6px;font-size:clamp(32px,9vw,48px);line-height:1.05;letter-spacing:-.02em}
 .hero p{margin:0 auto 18px;max-width:520px;font-size:18px;opacity:.95}
 .cta{display:inline-block;border:0;border-radius:14px;background:#2F5BFF;color:#fff;font:800 20px inherit;font-family:inherit;padding:16px 38px;cursor:pointer;box-shadow:0 8px 26px rgba(47,91,255,.55)}
+.ctp{margin:12px auto 0!important;font-size:15px!important;font-weight:700;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 12px rgba(0,0,0,.5)}.cts{margin:4px auto 0!important;font-size:14px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 12px rgba(0,0,0,.5)}
 .card{background:rgba(255,255,255,.97);border-radius:18px;padding:20px;margin-top:16px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
 h2{margin:0 0 8px;font-size:20px;color:#0b1636}
 ul{margin:6px 0;padding-left:20px}li{margin:4px 0}
@@ -60,11 +61,18 @@ footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}f
     <h1>DayMarck</h1>
     <p data-i="sub"></p>
     <button class="cta" id="go" type="button" data-i="cta"></button>
+    <p class="ctp" data-i="ctp"></p>
+    <p class="cts" data-i="cts"></p>
   </header>
 
   <section class="card">
     <h2 data-i="whT"></h2>
     <ul data-i="whL"></ul>
+  </section>
+
+  <section class="card">
+    <h2 data-i="hwT"></h2>
+    <ol class="steps" data-i="hwS"></ol>
   </section>
 
   <section class="card rfc">
@@ -73,7 +81,6 @@ footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}f
       <div class="rfa"><b>10 €</b><span data-i="rfL"></span></div>
       <div class="rfd" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="g">🎁</i></div>
     </div>
-    <ol class="steps" data-i="rfS"></ol>
     <p class="rfb" data-i="rfB"></p>
     <p class="rfn" data-i="rfN"></p>
   </section>
@@ -104,22 +111,24 @@ footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}f
 <script>
 const API='https://jhupjstzpwmpvkntxosd.supabase.co/functions/v1/access-request';
 const TX={
-it:{login:'Accedi all’app',sub:'I promemoria che non dimentichi: la notifica arriva, tu confermi, e la cosa è fatta.',cta:'SCARICA',
+it:{login:'Accedi all’app',sub:'I promemoria che non dimentichi: la notifica arriva, tu confermi, e la cosa è fatta.',cta:'ACQUISTA DAYMARCK',ctp:'9,89 € una tantum · Accesso Lifetime · Nessun abbonamento',cts:'Inserisci i tuoi dati per ricevere automaticamente via email il link di pagamento.',
 whT:'A cosa serve',whL:'<li><b>Promemoria che insistono</b> finché non confermi o rimandi: niente più cose dimenticate.</li><li><b>Fino a 5 avvisi</b> per ogni attività, anche prima della scadenza.</li><li><b>Calendario e filtri</b> “Da fare / Fatti” per avere tutto sotto controllo.</li><li><b>Allegati e note</b> collegati a ogni attività.</li><li><b>Face ID / impronta</b> opzionale e assistente integrato per ogni dubbio.</li><li>Si installa sul telefono come un’app, <b>senza store</b>.</li>',
-rfT:'Come funziona il Referral',rfP:'Invita i tuoi amici e guadagna: è semplice e senza limiti.',rfL:'buono Amazon ogni 10 amici',
-rfS:'<li>Entri con il <b>Referral</b>: pagamento <b>Lifetime una tantum di 9,89 €</b> (“Pagamento Lifetime webapp DayMarck”), per sempre, senza abbonamenti.</li><li>Appena il pagamento è confermato ricevi via email un <b>codice</b> e un link: inserisci il codice, scegli la <b>tua password</b> e si sblocca tutto, compreso il tuo link personale.</li><li>Mandi il tuo <b>link personale</b> agli amici. Ogni amico che completa il pagamento conta.</li><li>Ogni <b>10 amici</b> ricevi un <b>buono Amazon da 10 €</b> (10 $ per l’estero), che ti viene consegnato dopo una <b>verifica di 15 giorni</b> sugli acquisti (rimborsi e contestazioni).</li>',
-rfB:'Ogni 10 amici = buono Amazon da 10 € (consegnato dopo 15 giorni di verifica degli acquisti). Senza limiti: 20 amici = 20 €, 30 amici = 30 €…',rfN:'Contano solo gli amici che completano il pagamento: clic e semplici registrazioni non valgono. Puoi anche usare l’app senza Referral.',
-dlT:'Scarica DayMarck',dlP:'Lascia la tua email: la tua richiesta arriva a noi e, appena approvata, ricevi le credenziali per entrare.',phN:'Nome e cognome',phE:'La tua email',dlB:'Invia richiesta',lbN:'Nome e cognome *',lbE:'Email *',whyN:'Il nome e cognome è obbligatorio: serve per assegnare correttamente i buoni Amazon previsti dal programma referral.',needN:'Inserisci nome e cognome (obbligatorio).',
-ref:'Sei stato invitato con il codice',sending:'Invio…',ok:'Richiesta inviata! Sei in attesa di approvazione: ti scriveremo via email.',er:'Non sono riuscito a inviare. Riprova tra poco.',bad:'Inserisci un’email valida.',lim:'Troppe richieste. Riprova più tardi.',
-inT:'Come si installa',inP:'Dopo l’approvazione ricevi le credenziali via email. Su iPhone apri il link in Safari → Condividi → “Aggiungi alla schermata Home”. Su Android in Chrome → menu ⋮ → “Installa app”.',pv:'Informativa sulla privacy',tm:'Condizioni di acquisto',rr:'Tutti i diritti riservati'},
-en:{login:'Open the app',sub:'Reminders you never forget: the alert arrives, you confirm, and it’s done.',cta:'DOWNLOAD',
+hwT:'Come funziona',hwS:'<li><b>Compila il modulo</b> con nome, cognome ed email.</li><li><b>Ricevi automaticamente l’email</b> e completa il pagamento.</li><li>Dopo la conferma del pagamento ricevi <b>link e codice di attivazione</b> e imposti la tua password.</li><li><b>Installa DayMarck</b> sul telefono e inizia a utilizzarla.</li>',
+rfT:'Invita gli amici e ricevi buoni Amazon',rfP:'Dopo l’attivazione trovi nell’app il tuo link personale. Ogni 10 amici che completano un acquisto valido tramite il tuo link, ricevi un buono Amazon da 10 €.',rfL:'buono Amazon ogni 10 amici',
+rfS:'',
+rfB:'Ogni 10 amici = buono Amazon da 10 €. Senza limiti: 20 amici = 20 €, 30 amici = 30 €…',rfN:'Contano solo gli acquisti validi: clic e semplici registrazioni non valgono. Il buono viene consegnato dopo 15 giorni di verifica degli acquisti, secondo le condizioni del programma. Invitare amici è facoltativo.',
+dlT:'Acquista e attiva DayMarck',dlP:'Compila il modulo: riceverai automaticamente via email il link per pagare 9,89 € e acquistare DayMarck. L’invio del modulo non comporta alcun addebito.',phN:'Nome e cognome',phE:'La tua email',dlB:'RICEVI IL LINK DI PAGAMENTO',lbN:'Nome e cognome *',lbE:'Email *',whyN:'Il nome e cognome è obbligatorio: serve per assegnare correttamente i buoni Amazon previsti dal programma referral.',needN:'Inserisci nome e cognome (obbligatorio).',
+ref:'Sei stato invitato con il codice',sending:'Invio…',ok:'Ti abbiamo inviato il link di pagamento via email. Controlla anche la cartella spam. Dopo la conferma del pagamento riceverai il link e il codice per attivare DayMarck.',okn:'Abbiamo ricevuto i tuoi dati, ma non possiamo ancora confermarti l’invio dell’email. Controlla la posta (anche lo spam) tra qualche minuto; se non arriva, riprova più tardi o scrivici.',er:'Non sono riuscito a inviare. Riprova tra poco.',bad:'Inserisci un’email valida.',lim:'Troppe richieste. Riprova più tardi.',
+inT:'Come si installa',inP:'Dopo aver completato il pagamento e attivato l’account, puoi aggiungere DayMarck alla schermata Home del telefono. Su iPhone apri il link in Safari → Condividi → “Aggiungi alla schermata Home”. Su Android in Chrome → menu ⋮ → “Installa app”.',pv:'Informativa sulla privacy',tm:'Condizioni di acquisto',rr:'Tutti i diritti riservati'},
+en:{login:'Open the app',sub:'Reminders you never forget: the alert arrives, you confirm, and it’s done.',cta:'BUY DAYMARCK',ctp:'€9.89 one-time · Lifetime access · No subscription',cts:'Enter your details to automatically receive the payment link by email.',
 whT:'What it does',whL:'<li><b>Persistent reminders</b> until you confirm or snooze: no more forgotten things.</li><li><b>Up to 5 alerts</b> per task, also before the deadline.</li><li><b>Calendar and filters</b> “To do / Done” to keep everything under control.</li><li><b>Attachments and notes</b> on every task.</li><li>Optional <b>Face ID / fingerprint</b> and a built-in assistant for any question.</li><li>Installs on your phone like an app, <b>no store needed</b>.</li>',
-rfT:'How Referral works',rfP:'Invite your friends and earn: simple and unlimited.',rfL:'Amazon voucher every 10 friends',
-rfS:'<li>You join with <b>Referral</b>: a <b>one-time Lifetime payment of €9.89</b> (“Pagamento Lifetime webapp DayMarck”), forever, no subscriptions.</li><li>As soon as the payment is confirmed you get a <b>code</b> and a link by email: enter the code, choose <b>your own password</b> and everything unlocks, including your personal link.</li><li>Send your <b>personal link</b> to friends. Every friend who completes the payment counts.</li><li>Every <b>10 friends</b> you get a <b>€10 Amazon voucher</b> ($10 abroad), handed over after a <b>15-day verification</b> of the purchases (refunds and chargebacks).</li>',
-rfB:'Every 10 friends = €10 Amazon voucher (handed over after a 15-day purchase verification). No limit: 20 friends = €20, 30 friends = €30…',rfN:'Only friends who complete the payment count: clicks and sign-ups alone don’t. You can also use the app without Referral.',
-dlT:'Download DayMarck',dlP:'Leave your email: your request reaches us and, once approved, you receive your login by email.',phN:'Full name',phE:'Your email',dlB:'Send request',lbN:'Full name *',lbE:'Email *',whyN:'Your full name is required: we need it to assign the Amazon vouchers of the referral program correctly.',needN:'Enter your full name (required).',
-ref:'You were invited with code',sending:'Sending…',ok:'Request sent! You are waiting for approval: we will email you.',er:'Could not send. Please try again shortly.',bad:'Enter a valid email.',lim:'Too many requests. Try again later.',
-inT:'How to install',inP:'After approval you receive your login by email. On iPhone open the link in Safari → Share → “Add to Home Screen”. On Android in Chrome → menu ⋮ → “Install app”.',pv:'Privacy policy',tm:'Terms of purchase',rr:'All rights reserved'}
+hwT:'How it works',hwS:'<li><b>Fill in the form</b> with your first name, last name and email.</li><li><b>Receive the email automatically</b> and complete the payment.</li><li>After the payment is confirmed you receive the <b>activation link and code</b> and set your password.</li><li><b>Install DayMarck</b> on your phone and start using it.</li>',
+rfT:'Invite friends and get Amazon vouchers',rfP:'After activation you will find your personal link in the app. For every 10 friends who complete a valid purchase through your link, you get a €10 Amazon voucher.',rfL:'Amazon voucher every 10 friends',
+rfS:'',
+rfB:'Every 10 friends = €10 Amazon voucher. No limit: 20 friends = €20, 30 friends = €30…',rfN:'Only valid purchases count: clicks and sign-ups alone don’t. The voucher is handed over after a 15-day verification of the purchases, according to the program terms. Inviting friends is optional.',
+dlT:'Buy and activate DayMarck',dlP:'Fill in the form: you will automatically receive by email the link to pay €9.89 and buy DayMarck. Submitting the form does not charge you anything.',phN:'Full name',phE:'Your email',dlB:'GET THE PAYMENT LINK',lbN:'Full name *',lbE:'Email *',whyN:'Your full name is required: we need it to assign the Amazon vouchers of the referral program correctly.',needN:'Enter your full name (required).',
+ref:'You were invited with code',sending:'Sending…',ok:'We have emailed you the payment link. Please check your spam folder too. After the payment is confirmed you will receive the link and the code to activate DayMarck.',okn:'We received your details, but we cannot confirm yet that the email was sent. Check your inbox (and spam) in a few minutes; if it does not arrive, try again later or contact us.',er:'Could not send. Please try again shortly.',bad:'Enter a valid email.',lim:'Too many requests. Try again later.',
+inT:'How to install',inP:'After completing the payment and activating your account, you can add DayMarck to your phone’s Home Screen. On iPhone open the link in Safari → Share → “Add to Home Screen”. On Android in Chrome → menu ⋮ → “Install app”.',pv:'Privacy policy',tm:'Terms of purchase',rr:'All rights reserved'}
 };
 let L=(localStorage.getItem('dm.lang')||(navigator.language||'it').slice(0,2))==='en'?'en':'it';
 const $=s=>document.querySelector(s);
@@ -145,7 +154,8 @@ $('#f').onsubmit=async ev=>{
     if(r.status===400){const j=await r.json().catch(()=>({}));m.className='msg er';m.textContent=j.error==='name_required'?TX[L].needN:TX[L].bad;$('#sb').disabled=false;return}
     if(r.status===429){m.className='msg er';m.textContent=TX[L].lim;$('#sb').disabled=false;return}
     if(!r.ok)throw 0;
-    m.className='msg ok';m.textContent=TX[L].ok;$('#f').querySelectorAll('input').forEach(i=>i.disabled=true);
+    const j=await r.json().catch(()=>({}));
+    m.className='msg ok';m.textContent=j.sent===true?TX[L].ok:TX[L].okn;$('#f').querySelectorAll('input').forEach(i=>i.disabled=true);
   }catch(_){m.className='msg er';m.textContent=TX[L].er;$('#sb').disabled=false}
 };
 apply();
