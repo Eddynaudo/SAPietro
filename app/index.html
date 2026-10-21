@@ -166,6 +166,17 @@ input[type=datetime-local]{display:block;min-width:0;max-width:100%;min-height:4
 input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-width:0}
 .rl input{min-width:0}
 .rl{display:flex;gap:8px;margin:0 0 8px}.rl input{flex:1}.rl .sm{flex:none}
+.bcards{display:grid;gap:10px;margin:10px 0}
+.bcard{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;background:var(--field);border:1px solid var(--line);border-radius:14px;padding:10px}
+.bcard img{width:96px;height:96px;object-fit:contain;border-radius:10px;background:#111}
+.bcard.off{opacity:.62}
+.bcard h4{margin:0 0 2px;font-size:17px}.bcard p{margin:2px 0 6px;font-size:13px}
+.bcard .btn{min-height:40px}
+.credit{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.credit>div{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px}
+.credit b{display:block;font-size:20px}.credit span{font-size:12.5px;opacity:.85}
+.credit .main{grid-column:1/-1;background:linear-gradient(135deg,#3b4fd8,#7a3bd8);border:0;color:#fff}
+.credit .main b{font-size:30px}
 .pbar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:10px 0 6px}
 .pbar i{height:14px;border-radius:4px;background:var(--field);border:1px solid var(--line)}
 .pbar i.on{background:linear-gradient(180deg,#9db2ff,var(--acc));border-color:transparent}
@@ -326,6 +337,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <div id="adm" hidden>
     <hr>
     <div class="stack" style="margin-top:0">
+      <button type="button" class="btn" id="gcb"><span id="gcbl"></span><span class="dot" id="gcn" hidden></span></button>
       <button type="button" class="btn" id="adb"><span data-i="adb">Referral &amp; Rewards</span><span class="dot" id="adn" hidden></span></button>
       <button type="button" class="btn" id="usb"><span data-i="usb">Users</span><span class="dot blink" id="rqn" hidden></span></button>
       <div id="cap" class="cap" hidden></div>
@@ -393,6 +405,20 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <p class="sub" data-i="rfH" style="color:#fff;text-shadow:none;margin:0 0 8px"></p>
   <div id="rfb2"></div>
   <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#rf" data-i="back">← Back</button><button type="button" class="btn" id="rfx" data-i="close">Close</button></div>
+</div></div>
+
+<div class="ov" id="gcf"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gcft">
+  <h2 id="gcft"></h2>
+  <div id="gcfb"></div>
+  <p class="am" id="gcfm" role="status" style="color:#fff"></p>
+  <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" id="gcfn"></button><button type="button" class="btn pri" id="gcfy"></button></div>
+</div></div>
+
+<div class="ov" id="gcr"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gcrt">
+  <h2 id="gcrt"></h2>
+  <p class="am" id="gcrm" role="status" style="color:#fff"></p>
+  <div id="gcrb"></div>
+  <div class="row" style="justify-content:space-between;margin-top:12px"><button type="button" class="btn" data-bk="#gcr" id="gcrk"></button><button type="button" class="btn" id="gcrx"></button></div>
 </div></div>
 
 <div class="ov" id="gate"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gtt">
@@ -515,13 +541,13 @@ const TX={
 en:{
 anA:'Avatar animation: automatic',anO:'Avatar animation: always on',anF:'Avatar animation: off',prv:'Privacy notice',updB:'Update',updLat:'You already have the latest version',updT:'New update available',updGo:'Update now',updLater:'Later',updVer:'Version',updIc:'This update also changes the app icon. To see it on your home screen, remove the DayMarck icon and add it again from your browser (iPhone: Safari → Share → Add to Home Screen). Your data is safe.',supb:'Support',supa:'Support messages',pwb:'Change password',pwNew:'New password (min. 8 characters):',pwOk:'Password changed.',pwBad:'The password must have at least 8 characters.',
 radd:'+ Add reminder',bioG:'Ask for Face ID after: {m}',gm1:'1 minute',gm15:'15 minutes',gm60:'1 hour',gm240:'4 hours',gm1440:'1 day',othD:'Notifications only on this phone',othOk:'Done: other phones and old installs no longer get notifications.',othAsk:'Stop notifications on every other phone or old install of this account? Open DayMarck on them again to turn them back on.',snzB:'Snooze',clsB:'Close',clT:'Close this notification?',clH:'If you close it without confirming or snoozing, this activity will not notify you again unless you change its time. It stays in the list but inactive. What do you want to do?',clE:'Edit it',clD:'Delete it',clK:'Leave it as it is',snzDone:'Snoozed by {m} min.',lMain:'Activity date and time <small>you get a notification, then confirm it</small>',confirmed:'Confirmed',lkH:'Unlock with Face ID or fingerprint.',lkB:'Unlock',lkP:'Use password instead',bioT:'Faster sign-in',bioH:'Use Face ID or your fingerprint, if this phone has them, to open DayMarck instead of typing the password every time.',bioY:'Enable',bioN:'Not now',bioOn:'Face ID / fingerprint: on',bioOff:'Face ID / fingerprint: off',bioErr:'Could not verify. Try again.',bioOk:'Enabled.',back:'← Back',nrfL:'Referral program',nrfOn:'With referral',nrfOff:'Without referral',usRefOn:'Referral: on',usRefOff:'Referral: off',usRefT:'Turn on referral',usRefF:'Turn off referral',lDue:'Reminders <small>up to 5, they only need an OK</small>',ok:'OK',rmRem:'Remove reminder',maxRem:'Maximum 5 reminders.',
-rfb:'🎁 Invite friends and earn',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
+rfb:'🎁 My rewards',adb:'Referral & Rewards',usb:'👥 Users',aHint:'Create a login for another person. A code is sent to their email to confirm the address.',
 aSend:'Send email code',aCode:'Code received by email',aPw:'Password <small>at least 8 characters</small>',aCodeSent:'Code sent to {e}. Ask the person for it and enter it below.',
 aNoMail:'Email service not set up yet: use “Create now”.',aMku:'Create now',aNeedCode:'Enter the 6-digit code.',aSending:'Sending…',aMkU:'Create without email check',
-rfT:'Invite friends and earn',rfH:'Share your personal link. Every 10 friends who sign up and complete a confirmed purchase earn you a 10 € / 10 $ Amazon gift card, with no limit. After the 10th purchase the reward stays «under verification» for 15 days (checks on refunds and chargebacks); if all is in order it is approved and the voucher is handed over. Clicks and registrations do not count.',
+rfT:'My rewards',rfH:'Share your personal link. Every 10 friends who buy the app through your invitation earn you 10 € of reward credit, with no limit. Credit adds up and you can redeem it as a gift card when you like. Clicks and registrations do not count.',
 rfLink:'Your link',rfCopy:'Copy link',rfShare:'Share',rfCopied:'Copied.',rfInv:'Friends registered',rfVal:'Valid referrals (purchases)',rfPend:'Registered, not purchased',rfEarn:'Rewards earned',rfRecv:'Rewards received',
-rfProg:'{n}/10 friends',rfLeft:'You need {n} more friends for the next Amazon gift card!',rfLeft1:'You need 1 more friend for the next Amazon gift card!',rfCongrats:'Congratulations! You reached 10 valid purchases: your reward is now «under verification» for 15 days.',
-rwT:'My rewards',rwNone:'No rewards yet.',rwVer:'Under verification',rwRev:'Manual review',rwAppr:'Approved',rwVoid:'Cancelled',rwVerT:'Purchases are being checked until {d}. With no refunds, chargebacks or anomalies the reward is approved.',rwRevT:'A manual check is needed. We will email you the outcome; you can dispute it by writing to support in the app.',rwApprT:'Reward approved: the voucher is registered by the administrator, usually within 15 days.',rwVoidT:'Reward not granted. You can dispute the outcome by writing to support in the app.',rfCondT:'Programme terms',rfCondB:'Only completed purchases count, not refunded (even partly) and not disputed. After the 10th purchase the reward stays under verification for {g} days: then it is approved or sent to manual review. The Amazon voucher is not immediate. Every outcome can be disputed through support.',rfCondL:'Read the terms',adVer:'verifying',adRevN:'in review',adDet:'Details',adApprove:'Approve',adReject:'Reject',adReason:'Reason (required)',adNeedWhy:'Write a reason of at least 5 characters.',adDecided:'Decision recorded.',adBlock:'Purchases behind this reward',adFl:'Signals',adEv:'History',adNoFl:'No anomalies found.',adUntil:'verification until',rwPrep:'In preparation',rwAvail:'Available',rwDel:'Delivered',rwItem:'Amazon gift card {v}',rwDone:'Congratulations! You received your Amazon gift card of {v}!',
+rfProg:'{n}/10 friends',rfLeft:'{n} more friends for your next 10 € of credit!',rfLeft1:'1 more friend for your next 10 € of credit!',rfCongrats:'Congratulations! You reached 10 valid purchases: your reward is now «under verification» for 15 days.',
+rwT:'My rewards',rwNone:'No rewards yet.',rwVer:'Under verification',rwRev:'Manual review',rwAppr:'Approved',rwVoid:'Cancelled',rwVerT:'Purchases are being checked until {d}. With no refunds, chargebacks or anomalies the reward is approved.',rwRevT:'A manual check is needed. We will email you the outcome; you can dispute it by writing to support in the app.',rwApprT:'Reward approved: the voucher is registered by the administrator, usually within 15 days.',rwVoidT:'Reward not granted. You can dispute the outcome by writing to support in the app.',rfCondT:'Programme terms',rfCondB:'Only completed purchases count, not refunded (even partly) and not disputed. After the 10th purchase the credit stays under verification for {g} days. Gift cards are bought and sent manually by our team to your account email: delivery is not instant. Every outcome can be disputed through support.',rfCondL:'Read the terms',adVer:'verifying',adRevN:'in review',adDet:'Details',adApprove:'Approve',adReject:'Reject',adReason:'Reason (required)',adNeedWhy:'Write a reason of at least 5 characters.',adDecided:'Decision recorded.',adBlock:'Purchases behind this reward',adFl:'Signals',adEv:'History',adNoFl:'No anomalies found.',adUntil:'verification until',rwPrep:'In preparation',rwAvail:'Available',rwDel:'Delivered',rwItem:'Amazon gift card {v}',rwDone:'Congratulations! You received your Amazon gift card of {v}!',
 rwShow:'Show code',rwCopy:'Copy code',rwDate:'Assigned on {d}',rwHow:'Redeem it on Amazon from “Redeem a gift card”. DayMarck cannot know whether it has been used.',rwErr:'Could not load. Try again.',
 pwT:'Choose your password',pwH:'At least 8 characters. Use the eye to check what you type.',pwSv:'Save',eyeS:'Show password',eyeH:'Hide password',acT:'Activate your account',acH:'Enter the code you received by email and choose your password.',acC:'Confirmation code',acP:'Choose your password',acB:'Activate and sign in',acL:'I already have a password: sign in',acBad:'Email or code not correct.',acLock:'Too many attempts: the code is locked. Write to support.',acPw:'The password must be 8 to 72 characters.',acNeed:'Fill in email, code and password.',acOk:'Account activated. Welcome!',pwSaved:'Password saved.',usSU:'Users',usSP:'Paid',usSR:'Collected',usDt:'📅 Payment dates',usDh:'Hide payment dates',usMN:'new users',usMP:'payments',usMI:'revenue',usMNo:'No payments yet.',usEdit:'Change email',usPw:'Reset password',usVer:'verified',usUn:'not verified',usNewE:'New email for this user:',usNewP:'New password for this user (min 8 characters):',usOk:'Saved.',usLoad:'Loading…',usSelf:'You',usDel:'Delete account',usDelQ:'Permanently delete this account and all its data (activities, attachments, notifications)? This cannot be undone.\n\nAccount: ',usDelOk:'Account deleted.',gtPT:'One step left',gtPP:'Your account has the Referral program. To activate it, complete the one-time Lifetime payment of €9.89. We also emailed you the link.',gtPay:'Pay now',gtPaid:'I already paid',gtOut:'Sign out',gtCT:'Payment received',gtCP:'Check your email: we sent you a confirmation code. Enter it here to unlock DayMarck and your Referral (look in spam too).',gtCB:'Confirm code',gtBad:'Wrong code. Try again.',gtLock:'Too many attempts. Contact support.',gtWait:'Payment not received yet. It can take a minute.',gtOk:'Welcome! Referral activated.',rqT:'Access requests',rqAppR:'Approve with referral',rqAppN:'Approve without referral',rqRej:'Reject',rqRejQ:'Reject this request?',rqOk:'Done.',rqBy:'Invited by',stPay:'Waiting for payment',stCode:'Paid: code sent',stPaid:'Paid',usRefQ:'Turn on referral for this user? The app will be BLOCKED for them until they pay €9.89, and we email them the payment link.',usRefM:'Referral requested: the app is locked until payment. Email accepted by the provider: delivery not confirmed yet.',usRefNM:'Locked until payment, but the email could not be sent.',aaT:'Automatic payment link',aaD:'When on, a website request creates the account (locked until payment) and emails the payment link by itself. Daily limit protects you from spam.',aaOn:'On',aaOff:'Off (manual approval)',aaCap:'Max per day',aaToday:'today',aaSave:'Save',aaSv:'Saved.',mAcc:'Email accepted by provider · delivery not confirmed',mSent:'Email sent by provider · delivery not confirmed',mDel:'Email delivered ✓ (confirmed)',mDelay:'Email delayed (provider)',mBad:'Email NOT delivered',mNone:'No email tracked',usRefP:'Referral on.',usRPay:'Resend payment link',usGrant:'Send code',usManual:'Mark as paid + send code',usMOk:'Sent.',usManQ:'Mark this user as having paid (outside Stripe) and email the code?',
 adf:'Users with rewards to deliver',adNone:'Nothing to show.',adReg:'registered',adVal:'valid',adEarn:'earned',adDel:'delivered',adTo:'to deliver',adCode:'Amazon code',adAssign:'Confirm assignment',adWho:'Assigned by {a} on {d}',adNeed:'Enter the gift card code.',adSure:'Assign this code to {e}? It becomes visible to them.',adDone:'Reward assigned.',
@@ -549,13 +575,13 @@ lgNeed:'Enter email and password.',lgWait:'One moment…',leave:'Some changes ar
 it:{
 anA:'Animazione avatar: automatica',anO:'Animazione avatar: sempre attiva',anF:'Animazione avatar: ferma',prv:'Informativa sulla privacy',updB:'Aggiorna',updLat:'Ultima versione già presente',updT:'Nuovo aggiornamento disponibile',updGo:'Aggiorna ora',updLater:'Più tardi',updVer:'Versione',updIc:'Questo aggiornamento cambia anche l\'icona dell\'app. Per vederla nella schermata Home, elimina l\'icona DayMarck e aggiungila di nuovo dal browser (iPhone: Safari → Condividi → Aggiungi a Home). I tuoi dati restano al sicuro.',supb:'Assistenza',supa:'Messaggi assistenza',pwb:'Cambia password',pwNew:'Nuova password (min. 8 caratteri):',pwOk:'Password cambiata.',pwBad:'La password deve avere almeno 8 caratteri.',
 radd:'+ Aggiungi promemoria',bioG:'Chiedi Face ID dopo: {m}',gm1:'1 minuto',gm15:'15 minuti',gm60:'1 ora',gm240:'4 ore',gm1440:'1 giorno',othD:'Notifiche solo su questo telefono',othOk:'Fatto: gli altri telefoni e le vecchie installazioni non ricevono più notifiche.',othAsk:'Fermare le notifiche su ogni altro telefono o vecchia installazione di questo account? Riaprendo DayMarck su quelli si riattivano.',snzB:'Rimanda',clsB:'Chiudi',clT:'Chiudere questa notifica?',clH:'Se la chiudi senza confermare né rimandare, questa attività non ti avviserà più finché non cambi l’ora. Resterà in elenco ma inattiva. Cosa vuoi fare?',clE:'Modificala',clD:'Eliminala',clK:'Lasciala così',snzDone:'Rimandata di {m} minuti.',lMain:'Data e ora dell’attività <small>arriva la notifica e la confermi</small>',confirmed:'Confermato',lkH:'Sblocca con Face ID o impronta.',lkB:'Sblocca',lkP:'Usa la password',bioT:'Accesso più veloce',bioH:'Usa il Face ID o l’impronta, se il telefono li ha, per aprire DayMarck senza scrivere ogni volta la password.',bioY:'Attiva',bioN:'Non ora',bioOn:'Face ID / impronta: attivo',bioOff:'Face ID / impronta: disattivo',bioErr:'Verifica non riuscita. Riprova.',bioOk:'Attivato.',back:'← Indietro',nrfL:'Programma referral',nrfOn:'Con referral',nrfOff:'Senza referral',usRefOn:'Referral: attivo',usRefOff:'Referral: disattivo',usRefT:'Attiva referral',usRefF:'Disattiva referral',lDue:'Promemoria <small>fino a 5, basta un OK</small>',ok:'OK',rmRem:'Rimuovi promemoria',maxRem:'Massimo 5 promemoria.',
-rfb:'🎁 Invita amici e guadagna',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
+rfb:'🎁 I miei premi',adb:'Referral & Rewards',usb:'👥 Utenti',aHint:'Crea l’accesso per un’altra persona. Le arriva un codice via email per confermare l’indirizzo.',
 aSend:'Invia codice email',aCode:'Codice ricevuto via email',aPw:'Password <small>almeno 8 caratteri</small>',aCodeSent:'Codice inviato a {e}. Chiedilo alla persona e inseriscilo qui sotto.',
 aNoMail:'Servizio email non ancora configurato: usa “Crea subito”.',aMku:'Crea subito',aNeedCode:'Inserisci il codice di 6 cifre.',aSending:'Invio…',aMkU:'Crea senza controllo email',
-rfT:'Invita amici e guadagna',rfH:'Condividi il tuo link personale. Ogni 10 amici che si registrano e completano un acquisto confermato ti fanno guadagnare un buono Amazon da 10 € / 10 $, senza limiti. Dopo il decimo acquisto il premio resta 15 giorni «in verifica» (controllo su rimborsi e contestazioni); se tutto è regolare viene approvato e il buono ti viene consegnato. Clic e registrazioni non contano.',
+rfT:'I miei premi',rfH:'Condividi il tuo link personale. Per ogni 10 amici che acquistano l’app tramite il tuo invito ricevi 10 € di credito premio, senza limiti. Il credito si accumula e puoi richiederlo come Gift Card quando vuoi. Clic e registrazioni non contano.',
 rfLink:'Il tuo link',rfCopy:'Copia link',rfShare:'Condividi',rfCopied:'Copiato.',rfInv:'Amici registrati',rfVal:'Referral validi (acquisti)',rfPend:'Registrati, senza acquisto',rfEarn:'Premi maturati',rfRecv:'Premi ricevuti',
-rfProg:'{n}/10 amici',rfLeft:'Ti mancano {n} amici per il prossimo buono Amazon!',rfLeft1:'Ti manca 1 amico per il prossimo buono Amazon!',rfCongrats:'Complimenti! Hai raggiunto 10 acquisti validi: il premio ora è «in verifica» per 15 giorni.',
-rwT:'I miei premi',rwNone:'Ancora nessun premio.',rwVer:'In verifica',rwRev:'Revisione manuale',rwAppr:'Approvato',rwVoid:'Annullato',rwVerT:'Verifica degli acquisti fino al {d}. Se non ci sono rimborsi, contestazioni o anomalie il premio viene approvato.',rwRevT:'Serve un controllo manuale. Ti scriviamo l’esito via email; puoi contestare scrivendo all’assistenza dell’app.',rwApprT:'Premio approvato: il buono viene registrato dall’amministratore, di norma entro 15 giorni.',rwVoidT:'Premio non riconosciuto. Puoi contestare l’esito scrivendo all’assistenza dell’app.',rfCondT:'Condizioni del programma',rfCondB:'Contano solo gli acquisti completati, non rimborsati (nemmeno in parte) e non contestati. Dopo il 10° acquisto il premio resta in verifica per {g} giorni: poi viene approvato oppure inviato a revisione manuale. Il buono Amazon non è immediato. Ogni esito si può contestare dall’assistenza.',rfCondL:'Leggi le condizioni',adVer:'in verifica',adRevN:'in revisione',adDet:'Dettagli',adApprove:'Approva',adReject:'Respingi',adReason:'Motivazione (obbligatoria)',adNeedWhy:'Scrivi una motivazione di almeno 5 caratteri.',adDecided:'Decisione registrata.',adBlock:'Acquisti del premio',adFl:'Segnali',adEv:'Storico',adNoFl:'Nessuna anomalia rilevata.',adUntil:'verifica fino al',rwPrep:'In preparazione',rwAvail:'Disponibile',rwDel:'Consegnato',rwItem:'Buono Amazon da {v}',rwDone:'Complimenti! Hai ricevuto il tuo buono Amazon da {v}!',
+rfProg:'{n}/10 amici',rfLeft:'Ti mancano {n} amici per i prossimi 10 € di credito!',rfLeft1:'Ti manca 1 amico per i prossimi 10 € di credito!',rfCongrats:'Complimenti! Hai raggiunto 10 acquisti validi: il premio ora è «in verifica» per 15 giorni.',
+rwT:'I miei premi',rwNone:'Ancora nessun premio.',rwVer:'In verifica',rwRev:'Revisione manuale',rwAppr:'Approvato',rwVoid:'Annullato',rwVerT:'Verifica degli acquisti fino al {d}. Se non ci sono rimborsi, contestazioni o anomalie il premio viene approvato.',rwRevT:'Serve un controllo manuale. Ti scriviamo l’esito via email; puoi contestare scrivendo all’assistenza dell’app.',rwApprT:'Premio approvato: il buono viene registrato dall’amministratore, di norma entro 15 giorni.',rwVoidT:'Premio non riconosciuto. Puoi contestare l’esito scrivendo all’assistenza dell’app.',rfCondT:'Condizioni del programma',rfCondB:'Contano solo gli acquisti completati, non rimborsati (nemmeno in parte) e non contestati. Dopo il 10° acquisto il credito resta in verifica per {g} giorni. Le Gift Card vengono acquistate e inviate manualmente dal nostro team all’email del tuo account: la consegna non è immediata. Ogni esito si può contestare dall’assistenza.',rfCondL:'Leggi le condizioni',adVer:'in verifica',adRevN:'in revisione',adDet:'Dettagli',adApprove:'Approva',adReject:'Respingi',adReason:'Motivazione (obbligatoria)',adNeedWhy:'Scrivi una motivazione di almeno 5 caratteri.',adDecided:'Decisione registrata.',adBlock:'Acquisti del premio',adFl:'Segnali',adEv:'Storico',adNoFl:'Nessuna anomalia rilevata.',adUntil:'verifica fino al',rwPrep:'In preparazione',rwAvail:'Disponibile',rwDel:'Consegnato',rwItem:'Buono Amazon da {v}',rwDone:'Complimenti! Hai ricevuto il tuo buono Amazon da {v}!',
 rwShow:'Mostra codice',rwCopy:'Copia codice',rwDate:'Assegnato il {d}',rwHow:'Riscattalo su Amazon da “Riscatta un buono regalo”. DayMarck non può sapere se è stato usato.',rwErr:'Impossibile caricare. Riprova.',
 pwT:'Scegli la tua password',pwH:'Almeno 8 caratteri. Usa l\'occhio per controllare quello che scrivi.',pwSv:'Salva',eyeS:'Mostra password',eyeH:'Nascondi password',acT:'Attiva il tuo account',acH:'Inserisci il codice che hai ricevuto per email e scegli la tua password.',acC:'Codice di conferma',acP:'Scegli la tua password',acB:'Attiva e accedi',acL:'Ho già una password: accedi',acBad:'Email o codice non corretti.',acLock:'Troppi tentativi: il codice è bloccato. Scrivi all\'assistenza.',acPw:'La password deve avere da 8 a 72 caratteri.',acNeed:'Compila email, codice e password.',acOk:'Account attivato. Benvenuto!',pwSaved:'Password salvata.',usSU:'Utenti',usSP:'Hanno pagato',usSR:'Incassato',usDt:'📅 Date di pagamento',usDh:'Nascondi date di pagamento',usMN:'nuovi utenti',usMP:'pagamenti',usMI:'incasso',usMNo:'Nessun pagamento ancora.',usEdit:'Cambia email',usPw:'Reimposta password',usVer:'verificato',usUn:'non verificato',usNewE:'Nuova email per questo utente:',usNewP:'Nuova password per questo utente (min. 8 caratteri):',usOk:'Salvato.',usLoad:'Caricamento…',usSelf:'Tu',usDel:'Elimina account',usDelQ:'Eliminare definitivamente questo account e tutti i suoi dati (attività, allegati, notifiche)? Non si può annullare.\n\nAccount: ',usDelOk:'Account eliminato.',gtPT:'Manca un passo',gtPP:'Il tuo account ha il programma Referral. Per attivarlo completa il pagamento Lifetime una tantum di 9,89 €. Ti abbiamo mandato il link anche via email.',gtPay:'Paga ora',gtPaid:'Ho già pagato',gtOut:'Esci',gtCT:'Pagamento ricevuto',gtCP:'Controlla la tua email: ti abbiamo inviato un codice di conferma. Inseriscilo qui per sbloccare DayMarck e il Referral (guarda anche nello spam).',gtCB:'Conferma codice',gtBad:'Codice errato. Riprova.',gtLock:'Troppi tentativi. Contatta l’assistenza.',gtWait:'Pagamento non ancora ricevuto. Può servire un minuto.',gtOk:'Benvenuto! Referral attivato.',rqT:'Richieste di accesso',rqAppR:'Approva con referral',rqAppN:'Approva senza referral',rqRej:'Rifiuta',rqRejQ:'Rifiutare questa richiesta?',rqOk:'Fatto.',rqBy:'Invitato da',stPay:'In attesa di pagamento',stCode:'Pagato: codice inviato',stPaid:'Pagato',usRefQ:'Attivare il referral per questo utente? L’app gli verrà BLOCCATA finché non paga 9,89 € e gli mandiamo il link di pagamento via email.',usRefM:'Referral richiesto: app bloccata fino al pagamento. Email accettata dal provider: consegna non ancora confermata.',usRefNM:'App bloccata fino al pagamento, ma l’email non è partita.',aaT:'Link di pagamento automatico',aaD:'Se attivo, una richiesta dal sito crea l’account (bloccato fino al pagamento) e invia da solo il link di pagamento. Il limite giornaliero ti protegge dallo spam.',aaOn:'Attivo',aaOff:'Spento (approvazione manuale)',aaCap:'Massimo al giorno',aaToday:'oggi',aaSave:'Salva',aaSv:'Salvato.',mAcc:'Email accettata dal provider · consegna non confermata',mSent:'Email inviata dal provider · consegna non confermata',mDel:'Email consegnata ✓ (confermata)',mDelay:'Email in ritardo (provider)',mBad:'Email NON consegnata',mNone:'Nessuna email tracciata',usRefP:'Referral attivo.',usRPay:'Reinvia link pagamento',usGrant:'Invia codice',usManual:'Segna come pagato + invia codice',usMOk:'Inviato.',usManQ:'Segnare questo utente come pagato (fuori da Stripe) e mandargli il codice via email?',
 adf:'Utenti con premi da erogare',adNone:'Niente da mostrare.',adReg:'registrati',adVal:'validi',adEarn:'maturati',adDel:'consegnati',adTo:'da erogare',adCode:'Codice Amazon',adAssign:'Conferma assegnazione',adWho:'Assegnato da {a} il {d}',adNeed:'Inserisci il codice del buono.',adSure:'Assegnare questo codice a {e}? Diventa visibile a lui/lei.',adDone:'Premio assegnato.',
@@ -1167,7 +1193,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('messag
 const isAdmin=()=>!!(user&&user.email&&user.email.toLowerCase()===ADMIN_EMAIL);
 function openUsr(){
   $('#uem').textContent=user?user.email:'';
-  $('#adm').hidden=!isAdmin();$('#adb').hidden=!ADMIN_REFERRAL_UI;flags();resetNew();pendingBadge();
+  $('#adm').hidden=!isAdmin();$('#adb').hidden=!ADMIN_REFERRAL_UI;$('#gcb').hidden=!ADMIN_REFERRAL_UI;flags();resetNew();pendingBadge();
   $('#usr').classList.add('on');
 }
 $('#ubtn').onclick=openUsr;
@@ -1322,42 +1348,109 @@ async function copyText(x){
   try{await navigator.clipboard.writeText(x);toast(t_('rfCopied'))}
   catch(e){const i=document.createElement('input');i.value=x;document.body.append(i);i.select();try{document.execCommand('copy');toast(t_('rfCopied'))}catch(_){}i.remove()}
 }
-let RF=null;
+const G={
+it:{inf:'Premi illimitati: ogni 10 amici paganti = 10 € di credito, senza tetto massimo. Il credito si accumula all’infinito e resta tuo finché non lo richiedi.',guide:'Guida al programma referral',guideD:'Rileggila quando vuoi: spiega come funziona e quanto puoi accumulare.',guideV:'APRI LA GUIDA',guideDl:'SCARICA PDF',gcb:'🎁 Gestione Gift Card',rfr:'I MIEI PREMI',av:'Credito disponibile',er:'Credito guadagnato',rs:'In richiesta',us:'Già usato',pe:'In verifica',
+ choose:'SCEGLI IL TUO PREMIO',hide:'Nascondi i premi',soon:'Il riscatto dei premi sarà disponibile a breve. Intanto il tuo credito si accumula.',
+ req:'RICHIEDI',miss:'Ti mancano {m}',val:'Valore {v}',next:'Prossimi 10 €: {n}/10 amici',histT:'Le mie richieste',histN:'Nessuna richiesta per ora.',
+ sPending:'In attesa',sProg:'In lavorazione',sDel:'Consegnato',sCan:'Annullato',sentTo:'Email di consegna',reqOn:'Richiesta del {d}',delOn:'Consegnata il {d}',
+ cTit:'Conferma la richiesta',cBody:'Stai per richiedere una Gift Card <b>{b}</b> del valore di <b>{v}</b>.<br>Verrà inviata all’email verificata del tuo account: <b>{e}</b>.<br>Credito residuo dopo la richiesta: <b>{r}</b>.<br><small>Il credito richiesto viene prenotato subito. Il nostro team acquista e invia il premio manualmente: la consegna non è immediata.</small>',
+ cNo:'Annulla',cYes:'CONFERMA RICHIESTA',cClose:'Chiudi',cWait:'Invio…',
+ ok:'Richiesta ricevuta! Hai scelto una Gift Card {b} del valore di {v}. La tua richiesta è stata inviata correttamente. Il nostro team verificherà il premio e provvederà all’acquisto e all’invio all’indirizzo email associato al tuo account. Potrai seguire lo stato della richiesta nella sezione I miei premi.',
+ code:'Codice richiesta',legT:'Buoni già consegnati',rulesT:'Regolamento programma premi',rulesNone:'Il regolamento sarà pubblicato prima dell’apertura del programma.',
+ indep:'Programma premi indipendente. Amazon, Zalando e Apple non sono sponsor né organizzatori dell’iniziativa.',
+ err:'Operazione non riuscita. Riprova tra poco.',
+ aT:'GESTIONE GIFT CARD E REFERRAL',aOpen:'Programma premi',aOn:'APERTO — gli utenti possono richiedere',aOff:'CHIUSO — richieste disabilitate',aToggle:'Cambia stato',
+ aSure:'Aprire o chiudere il programma premi? Apri solo dopo le verifiche legali, fiscali e privacy.',aReq:'RICHIESTE PREMI',aAll:'Tutte',aNoReq:'Nessuna richiesta.',
+ aTake:'PRENDI IN CARICO',aDeliver:'SEGNA COME CONSEGNATO',aCancel:'ANNULLA RICHIESTA',aRef:'Riferimento consegna (facoltativo, niente codici)',aWhy:'Motivo annullamento (obbligatorio)',
+ aNeedWhy:'Scrivi il motivo (almeno 5 caratteri).',aDone:'Fatto',aValid:'amici validi',aCat:'Catalogo premi',aV:'Valore (€)',aM:'Credito minimo (€)',aAct:'Attivo',aD:'Descrizione',aSave:'Salva',aSaved:'Salvato',
+ aRules:'Regolamento programma premi (modificabile)',aRulesH:'Testo da redigere con il consulente legale: non è precompilato.',aSureD:'Confermi: premio consegnato all’utente? Il credito prenotato verrà scalato definitivamente.',aSureC:'Confermi l’annullamento? Il credito torna all’utente.',aMail:'Email',aAmt:'Importo'},
+en:{inf:'Unlimited rewards: every 10 paying friends = €10 of credit, with no cap. Credit builds up endlessly and stays yours until you request it.',guide:'Referral programme guide',guideD:'Read it again whenever you like: it explains how it works and how much you can earn.',guideV:'OPEN THE GUIDE',guideDl:'DOWNLOAD PDF',gcb:'🎁 Gift card management',rfr:'MY REWARDS',av:'Available credit',er:'Credit earned',rs:'Requested',us:'Already used',pe:'Under verification',
+ choose:'CHOOSE YOUR REWARD',hide:'Hide rewards',soon:'Reward redemption will be available soon. Meanwhile your credit keeps adding up.',
+ req:'REQUEST',miss:'{m} missing',val:'Value {v}',next:'Next 10 €: {n}/10 friends',histT:'My requests',histN:'No requests yet.',
+ sPending:'Pending',sProg:'In progress',sDel:'Delivered',sCan:'Cancelled',sentTo:'Delivery email',reqOn:'Requested on {d}',delOn:'Delivered on {d}',
+ cTit:'Confirm your request',cBody:'You are about to request a <b>{b}</b> gift card worth <b>{v}</b>.<br>It will be sent to your account’s verified email: <b>{e}</b>.<br>Credit left after the request: <b>{r}</b>.<br><small>The requested credit is reserved immediately. Our team buys and sends the reward manually: delivery is not instant.</small>',
+ cNo:'Cancel',cYes:'CONFIRM REQUEST',cClose:'Close',cWait:'Sending…',
+ ok:'Request received! You chose a {b} gift card worth {v}. Your request was sent successfully. Our team will check the reward and will buy it and send it to the email address linked to your account. You can follow the status in the My rewards section.',
+ code:'Request code',legT:'Vouchers already delivered',rulesT:'Rewards programme rules',rulesNone:'The rules will be published before the programme opens.',
+ indep:'Independent rewards programme. Amazon, Zalando and Apple are not sponsors or organisers of this initiative.',
+ err:'Operation failed. Please try again shortly.',
+ aT:'GIFT CARD & REFERRAL MANAGEMENT',aOpen:'Rewards programme',aOn:'OPEN — users can request',aOff:'CLOSED — requests disabled',aToggle:'Change status',
+ aSure:'Open or close the rewards programme? Open only after legal, tax and privacy checks.',aReq:'REWARD REQUESTS',aAll:'All',aNoReq:'No requests.',
+ aTake:'TAKE IN CHARGE',aDeliver:'MARK AS DELIVERED',aCancel:'CANCEL REQUEST',aRef:'Delivery reference (optional, no codes)',aWhy:'Cancellation reason (required)',
+ aNeedWhy:'Write the reason (at least 5 characters).',aDone:'Done',aValid:'valid friends',aCat:'Reward catalogue',aV:'Value (€)',aM:'Minimum credit (€)',aAct:'Active',aD:'Description',aSave:'Save',aSaved:'Saved',
+ aRules:'Rewards programme rules (editable)',aRulesH:'Text to be drafted with your legal advisor: not pre-filled.',aSureD:'Confirm: reward delivered to the user? The reserved credit will be permanently deducted.',aSureC:'Confirm cancellation? The credit goes back to the user.',aMail:'Email',aAmt:'Amount'}
+};
+const g_=(k,v)=>{let x=(G[LANG]||G.en)[k];if(x===undefined)x=G.en[k];if(v)for(const q in v)x=x.split('{'+q+'}').join(v[q]);return x};
+const eur=c=>(c/100).toLocaleString(LOC(),{minimumFractionDigits:0,maximumFractionDigits:2})+' €';
+async function copyText(x){
+  try{await navigator.clipboard.writeText(x);toast(t_('rfCopied'))}
+  catch(e){const i=document.createElement('input');i.value=x;document.body.append(i);i.select();try{document.execCommand('copy');toast(t_('rfCopied'))}catch(_){}i.remove()}
+}
+let RF=null,CR=null,SHOWB=false;
 async function loadRef(){
   $('#rfb2').innerHTML='<p class="am" style="color:#fff">'+t_('usLoad')+'</p>';
   try{
-    const {data,error}=await sb.rpc('my_referral');if(error)throw error;
-    RF=data;renderRef();
+    const {data,error}=await sb.rpc('my_credit');if(error)throw error;
+    CR=data;RF=data.ref;renderRef();
   }catch(e){$('#rfb2').innerHTML='<p class="am" style="color:#fff">'+t_('rwErr')+'</p>'}
 }
+const stPill=s=>({pending:['sPending','wa'],in_progress:['sProg','wa'],delivered:['sDel','ok'],cancelled:['sCan','wa']}[s]||['sPending','wa']);
 function renderRef(){
-  const d=RF,link=refLink(d.code),m=d.valid%10,left=10-m;
-  const prep=d.rewards.some(r=>['verifying','review','to_deliver'].includes(r.status));
-  const recv=d.rewards.filter(r=>r.status==='available'||r.status==='delivered').length;
+  const c=CR,d=RF,link=refLink(d.code),m=d.valid%10,left=10-m;
   let h=`<div class="box"><label style="margin-top:0">${t_('rfLink')}</label><input type="text" readonly class="lnk" id="rfl" value="${esc(link)}">
 <div class="row"><button type="button" class="btn" id="rfc">${t_('rfCopy')}</button>${navigator.share?`<button type="button" class="btn pri" id="rfs">${t_('rfShare')}</button>`:''}</div></div>
-<div class="kv"><div><b>${d.registered}</b><span>${t_('rfInv')}</span></div><div><b>${d.valid}</b><span>${t_('rfVal')}</span></div><div><b>${d.pending}</b><span>${t_('rfPend')}</span></div><div><b>${d.rewards.filter(r=>r.status!=='void').length}</b><span>${t_('rfEarn')}</span></div><div><b>${recv}</b><span>${t_('rfRecv')}</span></div></div>
-<div class="box"><div class="big2">${t_('rfProg',{n:m})}</div><div class="pbar" role="img" aria-label="${t_('rfProg',{n:m})}">${Array.from({length:10},(_,i)=>`<i class="${i<m?'on':''}"></i>`).join('')}</div>
-<div>${left===1?t_('rfLeft1'):t_('rfLeft',{n:left})}</div>${prep&&m===0?`<p style="margin:8px 0 0"><b>🎉 ${t_('rfCongrats')}</b></p>`:''}</div>
-<h3>${t_('rwT')}</h3>`;
-  if(!d.rewards.length)h+=`<p class="am" style="color:#fff">${t_('rwNone')}</p>`;
-  for(const r of d.rewards.slice().reverse()){
-    const issued=r.status==='available'||r.status==='delivered';
-    const st={verifying:['rwVer','wa'],review:['rwRev','wa'],to_deliver:['rwAppr','ok'],available:['rwAvail','ok'],delivered:['rwDel','ok'],void:['rwVoid','wa']}[r.status]||['rwVer','wa'];
-    h+=`<div class="${issued?'cp':'box'}" data-rid="${esc(r.id)}"><b>${t_('rwItem',{v:money(r.currency)})}</b> <span class="pill ${st[1]}">${t_(st[0])}</span>`;
-    if(r.status==='verifying')h+=`<p style="margin:6px 0 0">${t_('rwVerT',{d:fdate(r.verify_until)})}</p>`;
-    else if(r.status==='review')h+=`<p style="margin:6px 0 0">${t_('rwRevT')}</p>`;
-    else if(r.status==='to_deliver')h+=`<p style="margin:6px 0 0">${t_('rwApprT')}</p>`;
-    else if(r.status==='void')h+=`<p style="margin:6px 0 0">${t_('rwVoidT')}${r.reason?'<br><small>'+esc(r.reason)+'</small>':''}</p>`;
-    if(issued)h+=`<p style="margin:6px 0 0">${t_('rwDone',{v:money(r.currency)})}</p><div class="rcode"></div><div class="row"><button type="button" class="btn pri" data-rv>${t_('rwShow')}</button></div><p class="sub" style="margin:8px 0 0;color:#fff;text-shadow:none;font-size:14px">${t_('rwDate',{d:fdate(r.assigned_at)})}<br>${t_('rwHow')}</p>`;
-    h+='</div>';
+<div class="kv"><div><b>${d.registered}</b><span>${t_('rfInv')}</span></div><div><b>${d.valid}</b><span>${t_('rfVal')}</span></div><div><b>${d.pending}</b><span>${t_('rfPend')}</span></div></div>
+<div class="box"><div class="big2">${g_('next',{n:m})}</div><div class="pbar" role="img" aria-label="${g_('next',{n:m})}">${Array.from({length:10},(_,i)=>`<i class="${i<m?'on':''}"></i>`).join('')}</div>
+<div>${left===1?t_('rfLeft1'):t_('rfLeft',{n:left})}</div></div>
+<div class="credit"><div class="main"><span>${g_('av')}</span><b>${eur(c.available)}</b></div>
+<div><b>${eur(c.earned)}</b><span>${g_('er')}</span></div><div><b>${eur(c.reserved)}</b><span>${g_('rs')}</span></div>
+<div><b>${eur(c.used)}</b><span>${g_('us')}</span></div><div><b>${eur(c.pending)}</b><span>${g_('pe')}</span></div></div>
+<p style="margin:6px 0"><b>♾️ ${g_('inf')}</b></p>
+<div class="row"><button type="button" class="btn pri" id="gcc" style="flex:1">${SHOWB?g_('hide'):g_('choose')}</button></div>`;
+  if(SHOWB){
+    h+=c.open?'':`<p class="am" style="color:#fff">${g_('soon')}</p>`;
+    h+='<div class="bcards">'+c.catalog.map(k=>`<div class="bcard${c.open&&!k.can_request?' off':''}"><img src="premi/${esc(k.id)}.jpg" alt="${esc(k.brand)}" loading="lazy" width="96" height="96"><div><h4>${esc(k.brand)} · ${eur(k.value_cents)}</h4><p>${esc(k.description||'')}</p>${c.open&&k.can_request?`<button type="button" class="btn pri" data-gc="${esc(k.id)}">${g_('req')}</button>`:(c.open?`<small>${g_('miss',{m:eur(k.missing_cents)})}</small>`:'')}</div></div>`).join('')+'</div>';
   }
-  h+=`<div class="box"><b>${t_('rfCondT')}</b><p style="margin:6px 0">${t_('rfCondB',{g:d.verify_days||15})}</p><a class="plk" href="termini.html" target="_blank" rel="noopener" style="color:inherit">${t_('rfCondL')}</a></div>`;
+  h+=`<h3>${g_('histT')}</h3>`;
+  if(!c.requests.length)h+=`<p class="am" style="color:#fff">${g_('histN')}</p>`;
+  for(const r of c.requests){const st=stPill(r.status);
+    h+=`<div class="box"><b>${esc(r.brand)} · ${eur(r.amount_cents)}</b> <span class="pill ${st[1]}">${g_(st[0])}</span><br><small>${g_('code')}: <b>${esc(r.code)}</b><br>${g_('reqOn',{d:fdate(r.created_at)})}${r.delivered_at?'<br>'+g_('delOn',{d:fdate(r.delivered_at)}):''}<br>${g_('sentTo')}: ${esc(r.email||c.email||'')}</small></div>`;}
+  const leg=d.rewards.filter(r=>r.status==='available'||r.status==='delivered');
+  if(leg.length){h+=`<h3>${g_('legT')}</h3>`;
+    for(const r of leg)h+=`<div class="cp" data-rid="${esc(r.id)}"><b>${t_('rwItem',{v:money(r.currency)})}</b><div class="rcode"></div><div class="row"><button type="button" class="btn pri" data-rv>${t_('rwShow')}</button></div><p class="sub" style="margin:8px 0 0;color:#fff;text-shadow:none;font-size:14px">${t_('rwDate',{d:fdate(r.assigned_at)})}<br>${t_('rwHow')}</p></div>`;}
+  h+=`<div class="box"><b>📄 ${g_('guide')}</b><p style="margin:6px 0">${g_('guideD')}</p><div class="row"><a class="btn pri" href="guida-referral.pdf" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">${g_('guideV')}</a><a class="btn" href="guida-referral.pdf" download="DayMarck-Guida-Referral.pdf" style="text-decoration:none;text-align:center">${g_('guideDl')}</a></div></div>`;
+  const rules=(c.rules||'').trim();
+  h+=`<div class="box"><b>${g_('rulesT')}</b><p style="margin:6px 0;white-space:pre-wrap">${rules?esc(rules):g_('rulesNone')}</p></div>
+<div class="box"><b>${t_('rfCondT')}</b><p style="margin:6px 0">${t_('rfCondB',{g:d.verify_days||15})}</p><a class="plk" href="termini.html" target="_blank" rel="noopener" style="color:inherit">${t_('rfCondL')}</a><p style="margin:8px 0 0"><small>${g_('indep')}</small></p></div>`;
   $('#rfb2').innerHTML=h;
   $('#rfc').onclick=()=>copyText(link);
   const sh=$('#rfs');if(sh)sh.onclick=()=>navigator.share({title:'DayMarck',text:'DayMarck',url:link}).catch(()=>{});
 }
+let GCK=null,GCI=null;
+function openConfirm(id){
+  const k=CR.catalog.find(x=>x.id===id);if(!k)return;
+  GCI=k;GCK=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2));
+  $('#gcft').textContent=g_('cTit');
+  $('#gcfb').innerHTML=`<img src="premi/${esc(k.id)}.jpg" alt="" width="96" height="96" style="border-radius:10px;float:right;margin:0 0 8px 10px"><p>${g_('cBody',{b:esc(k.brand),v:eur(k.value_cents),e:esc(CR.email||''),r:eur(CR.available-k.value_cents)})}</p>`;
+  $('#gcfm').textContent='';$('#gcfn').textContent=g_('cNo');$('#gcfy').textContent=g_('cYes');$('#gcfy').hidden=false;$('#gcfy').disabled=false;
+  $('#gcf').classList.add('on');
+}
+$('#gcfn').onclick=()=>shut('#gcf');
+$('#gcf').onclick=e=>{if(e.target===$('#gcf'))shut('#gcf')};
+$('#gcfy').onclick=async()=>{
+  const k=GCI;if(!k)return;
+  $('#gcfy').disabled=true;$('#gcfm').textContent=g_('cWait');
+  try{
+    const {data,error}=await sb.rpc('request_reward',{p_brand:k.id,p_key:GCK});if(error)throw error;
+    $('#gcft').textContent=g_('rfr');
+    $('#gcfb').innerHTML=`<p>${esc(g_('ok',{b:k.brand,v:eur(k.value_cents)}))}</p>${data&&data.code?`<p><small>${g_('code')}: <b>${esc(data.code)}</b></small></p>`:''}`;
+    $('#gcfm').textContent='';$('#gcfy').hidden=true;$('#gcfn').textContent=g_('cClose');GCI=null;
+    loadRef();
+  }catch(err){$('#gcfm').textContent=String(err.message||g_('err'));$('#gcfy').disabled=false}
+};
 $('#rfb2').onclick=async e=>{
+  if(e.target.closest('#gcc')){SHOWB=!SHOWB;renderRef();return}
+  const gc=e.target.closest('[data-gc]');if(gc){openConfirm(gc.dataset.gc);return}
   const b=e.target.closest('[data-rv],[data-cc]');if(!b)return;
   const box=b.closest('[data-rid]');
   if(b.dataset.cc!==undefined){copyText(box.querySelector('.code').textContent);return}
@@ -1387,7 +1480,6 @@ function renderAdmin(){
 <div class="kv"><div><b>${r.registered}</b><span>${t_('adReg')}</span></div><div><b>${r.valid}</b><span>${t_('adVal')}</span></div><div><b>${r.earned}</b><span>${t_('adEarn')}</span></div><div><b>${r.delivered}</b><span>${t_('adDel')}</span></div><div><b>${r.verifying}</b><span>${t_('adVer')}</span></div><div><b>${r.review}</b><span>${t_('adRevN')}</span></div><div><b>${r.to_deliver}</b><span>${t_('adTo')}</span></div></div>
 ${r.rewards.map(w=>{const stl={verifying:['adVer','wa'],review:['adRevN','wa'],to_deliver:['rwAppr','wa'],available:['rwAvail','ok'],delivered:['rwDel','ok'],void:['rwVoid','wa']}[w.status]||['rwVer','wa'];
 return `<div class="rw" data-id="${esc(w.id)}" style="margin-top:6px">#${w.seq} · ${esc(w.currency)} · ${fdate(w.earned_at)} <span class="pill ${stl[1]}">${t_(stl[0])}</span>${w.status==='verifying'?` <small>${t_('adUntil')} ${fdate(w.verify_until)}</small>`:''}${w.reason?`<div style="font-size:13px;margin-top:4px">${esc(w.reason)}</div>`:''}${(w.flags||[]).length?`<div style="font-size:13px;margin-top:4px">⚠ ${w.flags.map(f=>esc(f.code)).join(', ')}</div>`:''}
-${w.status==='to_deliver'?`<div class="row" style="margin-top:6px"><input type="text" class="ac" placeholder="${t_('adCode')}" autocomplete="off" autocapitalize="none" spellcheck="false" style="flex:1 1 160px"><button type="button" class="btn pri" data-as>${t_('adAssign')}</button></div>`:''}
 ${['verifying','review','to_deliver'].includes(w.status)?`<div class="row" style="margin-top:6px"><input type="text" class="rs" placeholder="${t_('adReason')}" autocomplete="off" style="flex:1 1 160px">${w.status==='review'?`<button type="button" class="sm" data-dc="approve">${t_('adApprove')}</button>`:''}<button type="button" class="sm" data-dc="reject" style="color:#c0392b">${t_('adReject')}</button></div>`:(w.status==='void'?'':`<div class="sub" style="margin:2px 0 0;color:#fff;text-shadow:none;font-size:14px">${t_('adWho',{a:esc(w.assigned_by||'?'),d:fdate(w.assigned_at)})}</div>`)}
 <div class="row" style="margin-top:6px"><button type="button" class="sm" data-dt>${t_('adDet')}</button></div><div class="dt" hidden></div></div>`}).join('')}</div>`).join(''):`<p class="am" style="color:#fff">${t_('adNone')}</p>`;
 }
@@ -1413,13 +1505,6 @@ $('#adbd').onclick=async e=>{
     }catch(err){box.textContent=String(err.message||err)}
     return;
   }
-  const b=e.target.closest('[data-as]');if(!b)return;
-  const w=b.closest('.rw'),box=b.closest('.box'),code=w.querySelector('.ac').value.trim();
-  if(code.length<6){toast(t_('adNeed'));return}
-  if(!confirm(t_('adSure',{e:box.dataset.em})))return;
-  b.disabled=true;
-  try{const {error}=await sb.rpc('admin_assign_reward',{p_id:w.dataset.id,p_code:code});if(error)throw error;toast(t_('adDone'));loadAdmin();pendingBadge()}
-  catch(err){toast(String(err.message||err));b.disabled=false}
 };
 $('#adf').onclick=()=>{ADF=!ADF;renderAdmin()};
 $('#adb').onclick=()=>{shut('#usr');$('#adr').classList.add('on');loadAdmin()};
@@ -1436,6 +1521,60 @@ $('#pmf').onclick=async()=>{
   try{const {error}=await sb.rpc('admin_refund_purchase',{p_external:id});if(error)throw error;toast(t_('pmRf'));loadAdmin();pendingBadge()}
   catch(err){toast(String(err.message||err))}
 };
+let GO=null,GF='all';
+const gcMsg=m=>{$('#gcrm').textContent=m};
+async function loadGC(){
+  $('#gcrt').textContent=g_('aT');$('#gcrk').textContent=t_('back');$('#gcrx').textContent=t_('close');
+  gcMsg(t_('usLoad'));
+  try{const {data,error}=await sb.rpc('admin_rewards_overview');if(error)throw error;GO=data;gcMsg('');renderGC()}
+  catch(e){gcMsg(String(e.message||e))}
+}
+function renderGC(){
+  const o=GO,fl=['all','pending','in_progress','delivered','cancelled'];
+  const fn={all:g_('aAll'),pending:g_('sPending'),in_progress:g_('sProg'),delivered:g_('sDel'),cancelled:g_('sCan')};
+  const L=o.requests.filter(r=>GF==='all'||r.status===GF);
+  let h=`<div class="box"><b>${g_('aOpen')}</b>: <span class="pill ${o.open?'ok':'wa'}">${o.open?g_('aOn'):g_('aOff')}</span><div class="row" style="margin-top:8px"><button type="button" class="btn" id="gct">${g_('aToggle')}</button></div></div>
+<h3>${g_('aReq')} (${o.pending})</h3><div class="tabs" style="margin:6px 0">${fl.map(f=>`<button type="button" data-gf="${f}" aria-pressed="${GF===f}">${fn[f]}</button>`).join('')}</div>`;
+  h+=L.length?L.map(r=>{const st=stPill(r.status);
+    return `<div class="box" data-gid="${esc(r.id)}"><b>${esc(r.code)}</b> <span class="pill ${st[1]}">${g_(st[0])}</span><br>${esc(r.name||'')} · ${esc(r.email)}<br>${esc(r.brand)} · ${eur(r.amount_cents)} · ${r.valid_referrals} ${g_('aValid')}<br><small>${g_('reqOn',{d:fdate(r.created_at)})}${r.delivered_at?' · '+g_('delOn',{d:fdate(r.delivered_at)}):''}${r.delivery_ref?'<br>'+esc(r.delivery_ref):''}${r.cancel_reason?'<br>'+esc(r.cancel_reason):''}</small>
+${r.status==='pending'?`<div class="row" style="margin-top:6px"><button type="button" class="btn pri" data-ga="take">${g_('aTake')}</button></div>`:''}
+${r.status==='in_progress'?`<div class="row" style="margin-top:6px"><input type="text" class="gn" maxlength="120" placeholder="${g_('aRef')}" autocomplete="off" style="flex:1 1 160px"><button type="button" class="btn pri" data-ga="deliver">${g_('aDeliver')}</button></div>`:''}
+${r.status==='pending'||r.status==='in_progress'?`<div class="row" style="margin-top:6px"><input type="text" class="gw" placeholder="${g_('aWhy')}" autocomplete="off" style="flex:1 1 160px"><button type="button" class="sm" data-ga="cancel" style="color:#c0392b">${g_('aCancel')}</button></div>`:''}</div>`}).join(''):`<p class="am" style="color:#fff">${g_('aNoReq')}</p>`;
+  h+=`<h3>${g_('aCat')}</h3>`+o.catalog.map(k=>`<div class="box" data-cid="${esc(k.id)}"><b>${esc(k.brand)}</b>
+<label>${g_('aV')}</label><input type="number" min="1" step="1" class="cv" value="${k.value_cents/100}"><label>${g_('aM')}</label><input type="number" min="1" step="1" class="cm" value="${k.min_credit_cents/100}">
+<label>${g_('aD')}</label><input type="text" class="cd" value="${esc(k.description||'')}"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="ca" ${k.active?'checked':''}> ${g_('aAct')}</label>
+<div class="row" style="margin-top:8px"><button type="button" class="btn pri" data-cs>${g_('aSave')}</button></div></div>`).join('');
+  h+=`<div class="box"><b>${g_('aRules')}</b><p class="sub" style="color:#fff;text-shadow:none;margin:4px 0">${g_('aRulesH')}</p><textarea id="gcru" rows="8" style="width:100%">${esc(o.rules||'')}</textarea><div class="row" style="margin-top:8px"><button type="button" class="btn pri" id="gcrs">${g_('aSave')}</button></div></div>`;
+  $('#gcrb').innerHTML=h;
+}
+$('#gcrb').onclick=async e=>{
+  const f=e.target.closest('[data-gf]');if(f){GF=f.dataset.gf;renderGC();return}
+  try{
+    if(e.target.closest('#gct')){
+      if(!confirm(g_('aSure')))return;
+      const {error}=await sb.rpc('admin_rewards_config',{p_open:!GO.open,p_rules:null});if(error)throw error;toast(g_('aDone'));loadGC();return}
+    if(e.target.closest('#gcrs')){
+      const {error}=await sb.rpc('admin_rewards_config',{p_open:GO.open,p_rules:$('#gcru').value});if(error)throw error;toast(g_('aSaved'));loadGC();return}
+    const cs=e.target.closest('[data-cs]');
+    if(cs){const b=cs.closest('[data-cid]');
+      const {error}=await sb.rpc('admin_catalog_set',{p_id:b.dataset.cid,p_value:Math.round(+b.querySelector('.cv').value*100),p_min:Math.round(+b.querySelector('.cm').value*100),p_active:b.querySelector('.ca').checked,p_desc:b.querySelector('.cd').value});
+      if(error)throw error;toast(g_('aSaved'));loadGC();return}
+    const a=e.target.closest('[data-ga]');if(!a)return;
+    const box=a.closest('[data-gid]'),act=a.dataset.ga;let note=null;
+    if(act==='cancel'){note=box.querySelector('.gw').value.trim();if(note.length<5){toast(g_('aNeedWhy'));return}if(!confirm(g_('aSureC')))return}
+    if(act==='deliver'){note=box.querySelector('.gn').value.trim()||null;if(!confirm(g_('aSureD')))return}
+    a.disabled=true;
+    const {error}=await sb.rpc('admin_reward_request_action',{p_id:box.dataset.gid,p_action:act,p_note:note});
+    if(error){a.disabled=false;throw error}
+    toast(g_('aDone'));loadGC();pendingBadge();
+  }catch(err){toast(String(err.message||err))}
+};
+$('#gcb').onclick=()=>{shut('#usr');$('#gcr').classList.add('on');loadGC()};
+$('#gcbl').textContent=g_('gcb');
+$('#gcx')&&0;
+$('#gcrx').onclick=()=>shut('#gcr');
+$('#gcr').onclick=e=>{if(e.target===$('#gcr'))shut('#gcr')};
+
 const ADMIN_REFERRAL_UI=true; // pagamenti Stripe collegati
 async function flags(){
   if(isAdmin()&&!ADMIN_REFERRAL_UI){$('#rfb').hidden=true;return}
@@ -1448,6 +1587,7 @@ async function pendingBadge(){
     const n=+a.data||0,r=+b.data||0;
     $('#adn').hidden=!n;$('#adn').textContent=n;$('#adn').classList.add('blink');
     $('#rqn').hidden=!r;$('#rqn').textContent=r;
+    try{const o=await sb.rpc('admin_rewards_overview');const g=+(o.data&&o.data.pending)||0;$('#gcn').hidden=!g;$('#gcn').textContent=g}catch(_){}
     $('#ubtn').textContent=(n||r)?'👤•':'👤';$('#ubtn').classList.toggle('blink',!!n);
   }catch(e){}
 }
