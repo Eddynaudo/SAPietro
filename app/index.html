@@ -463,7 +463,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
   <div id="uls"></div>
   <div id="ulp" hidden></div>
   <div class="box" id="acb" style="margin-bottom:10px"><b>📒 Resoconto contabile (per il commercialista)</b>
-    <div class="row" style="margin-top:8px;align-items:end"><label style="flex:1 1 130px">Dal<input type="date" id="acf"></label><label style="flex:1 1 130px">Al<input type="date" id="act"></label><label style="flex:1 1 110px">Valuta<select id="acc"><option value="">€ e $</option><option value="EUR">Solo €</option><option value="USD">Solo $</option></select></label><button type="button" class="btn pri" id="acd">Scarica CSV</button></div>
+    <div class="row" style="margin-top:8px;align-items:end"><label style="flex:1 1 130px">Dal<input type="date" id="axf"></label><label style="flex:1 1 130px">Al<input type="date" id="axt"></label><label style="flex:1 1 110px">Valuta<select id="axc"><option value="">€ e $</option><option value="EUR">Solo €</option><option value="USD">Solo $</option></select></label><button type="button" class="btn pri" id="axd">Scarica CSV</button></div>
     <small>Nome, email, data e ora del pagamento, importo, rimborsi, valuta e totali per valuta. Si apre con Excel.</small></div>
   <div id="aab" class="box" style="margin-bottom:10px"></div>
   <div id="rqb"></div>
@@ -1358,11 +1358,11 @@ $('#rqb').onclick=async e=>{
     toast(t_('rqOk'));loadUsers();
   }catch(err){toast(String(err.message||err))}
 };
-$('#acd').onclick=async()=>{
-  const b=$('#acd');b.disabled=true;
+$('#axd').onclick=async()=>{
+  const b=$('#axd');b.disabled=true;
   try{
-    const {data,error}=await sb.rpc('admin_accounting_report',{p_from:$('#acf').value||null,p_to:$('#act').value||null});if(error)throw error;
-    const cur=$('#acc').value,rows=(data||[]).filter(r=>!cur||r.currency===cur);
+    const {data,error}=await sb.rpc('admin_accounting_report',{p_from:$('#axf').value||null,p_to:$('#axt').value||null});if(error)throw error;
+    const cur=$('#axc').value,rows=(data||[]).filter(r=>!cur||r.currency===cur);
     const num=c=>(c/100).toFixed(2).replace('.',','),q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
     const dt=v=>new Date(v).toLocaleString('it-IT',{timeZone:'Europe/Rome',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
     const L=[['Data e ora (Italia)','Nome','Email','Mercato','Valuta','Importo','Rimborsato','Netto','Stato','Contestato','Provider','Riferimento pagamento'].map(q).join(';')];
