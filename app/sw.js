@@ -1,4 +1,4 @@
-const V='daymarck-v71',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html','./termini.html','./premi/amazon.jpg','./premi/zalando.jpg','./premi/apple.jpg','./guida-referral.pdf','./guida-referral-us.pdf','./guida-referral-en.pdf','./premi/amazon_us.jpg','./premi/apple_us.jpg'];
+const V='daymarck-v72',FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./favicon-32.png','./favicon.ico','./avatar.png','./bg.webp','./privacy.html','./termini.html','./premi/amazon.jpg','./premi/zalando.jpg','./premi/apple.jpg','./guida-referral.pdf','./guida-referral-us.pdf','./guida-referral-en.pdf','./premi/amazon_us.jpg','./premi/apple_us.jpg'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));

@@ -130,6 +130,20 @@ audio{width:100%;margin-top:8px;height:36px}
   #ulb>.hold,#adbd>.hold,#gcrb>.hold,#gcrb>h3,#gcrb>.tabs,#gcrb>.row,#rqb>h3,#ulb>h3,#adbd>p{grid-column:1/-1}
 }
 @media(min-width:820px){.hold .kv{grid-template-columns:repeat(5,1fr)}}
+/* Impostazioni / Area utente e altre finestre: a tutto schermo su PC e tablet */
+@media(min-width:820px){
+  #usr,#rf,#sup{align-items:center;padding:2vh 2vw}
+  #usr.ov .sheet,#rf .sheet,#sup .sheet{max-width:min(1180px,96vw);max-height:96vh;border-radius:20px;padding:24px 30px}
+  #usr .sheet{display:grid;grid-template-columns:1fr 1fr;column-gap:32px;align-content:start}
+  #usr .sheet>*{grid-column:1/-1}
+  #usr .sheet>.xw{grid-row:1;grid-column:1/-1}#usr .sheet>h2{grid-row:1}#usr .sheet>.ur:has(#uem){grid-row:2}#usr .sheet>.ur:has(#sy){grid-row:3}
+  #usr .sheet>.stack{grid-row:4}
+  #usr .sheet:has(#adm:not([hidden]))>.stack{grid-column:1;grid-row:4;align-self:start}
+  #usr .sheet:has(#adm:not([hidden]))>#adm{grid-column:2;grid-row:4;align-self:start}
+  #usr .sheet:not(:has(#adm:not([hidden])))>.stack{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  #usr #adm>hr:first-child{display:none}
+  #rf .sheet,#sup .sheet{max-width:min(980px,96vw)}
+}
 @media(min-width:1200px){#ulb,#adbd,#gcrb,#rqb{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}}
 .sheet{background:var(--glass2);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
 .sheet h2{margin:0 0 4px;font-size:22px}
