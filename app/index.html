@@ -130,6 +130,7 @@ audio{width:100%;margin-top:8px;height:36px}
   #ulb>.hold,#adbd>.hold,#gcrb>.hold,#gcrb>h3,#gcrb>.tabs,#gcrb>.row,#rqb>h3,#ulb>h3,#adbd>p{grid-column:1/-1}
 }
 @media(min-width:820px){.hold .kv{grid-template-columns:repeat(5,1fr)}}
+.spin{display:inline-block;width:11px;height:11px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-1px;margin-left:4px;animation:spn .8s linear infinite}@keyframes spn{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
 /* Impostazioni / Area utente e altre finestre: a tutto schermo su PC e tablet */
 @media(min-width:820px){
   #usr,#rf,#sup{align-items:center;padding:2vh 2vw}
@@ -1312,9 +1313,19 @@ function consentHtml(id){const x=ACX&&ACX[id];if(!x)return'<div style="font-size
   return x.consent?`<div style="font-size:13px">Consenso scadenza: <b>✅ dato il ${fdate(x.consent_at)}</b></div>`:'<div style="font-size:13px">Consenso scadenza: <b>non ancora dato</b></div>'}
 function userCreditHtml(id){const k=ACO&&ACO.users&&ACO.users[id];if(!k)return consentHtml(id);
   return `<div class="kv"><div><b>${eur(k.earned,k.cur)}</b><span>Accumulato</span></div><div><b>${eur(k.avail,k.cur)}</b><span>Disponibile</span></div><div><b>${eur(k.reserved,k.cur)}</b><span>Richiesto</span></div><div><b>${eur(k.expired,k.cur)}</b><span>Scaduto</span></div></div><div style="font-size:13px;margin:2px 0 4px">⏳ ${(k.lots&&k.lots.length)?k.lots.map(l=>eur(l.cents,k.cur)+' scadono il '+fdate(l.exp)).join(' · '):'nessuna quota in scadenza'}${k.pending?` · in verifica ${eur(k.pending,k.cur)}`:''}</div>${consentHtml(id)}`}
-async function loadUsers(){
+let MAILPEND=false,MAILT=null;
+function mailWatch(){
+  clearInterval(MAILT);
+  if(!MAILPEND)return;
+  MAILT=setInterval(async()=>{
+    if(!$('#usl').classList.contains('on')){clearInterval(MAILT);return}
+    try{await sb.rpc('admin_mail_refresh')}catch(_){}
+    loadUsers(true);
+  },15000);
+}
+async function loadUsers(quiet){
   loadAuto();
-  $('#ulm').textContent=t_('usLoad');
+  if(!quiet)$('#ulm').textContent=t_('usLoad');
   try{
     const [d,,rq,mkm]=await Promise.all([callFn('admin-users',{action:'list'}),acoLoad().then(()=>0),sb.rpc('admin_list_requests').then(r=>r.data||[],()=>[]),sb.rpc('admin_user_markets').then(r=>r.data||{},()=>({}))]);
     window.MKM=mkm;
@@ -1322,13 +1333,13 @@ async function loadUsers(){
     $('#rqb').innerHTML=rq.length?`<h3 style="margin:6px 0">${t_('rqT')} (${rq.length})</h3>`+rq.map(q=>`<div class="box rq" data-rq="${esc(q.id)}" data-em="${esc(q.email)}"><b>${esc(q.email)}</b>${q.name?' · '+esc(q.name):''} <small>${fdate(q.created_at)}</small>${q.ref_code?`<div><span class="pill">${t_('rqBy')} ${esc(q.referrer||q.ref_code)}</span></div>`:''}
 <div class="row" style="margin-top:8px"><button type="button" class="sm" data-q="1">${t_('rqAppR')}</button><button type="button" class="sm" data-q="0">${t_('rqAppN')}</button><button type="button" class="sm" data-q="x" style="color:#c0392b">${t_('rqRej')}</button></div></div>`).join(''):'';
     const eur=p=>(p.amount_cents/100).toLocaleString(LOC(),{minimumFractionDigits:2,maximumFractionDigits:2})+' '+(p.currency==='USD'?'$':'€');
-    usersData=d.users;renderSummary();
+    usersData=d.users;renderSummary();MAILPEND=d.users.some(u=>u.pay_mail&&['accepted','sent','delayed'].includes(u.pay_mail.status));mailWatch();
     $('#ulb').innerHTML=holdHtml()+d.users.sort((x,y)=>(x.email||'')<(y.email||'')?-1:1).map(u=>{
       const ac=u.access||'active',self=u.id===user.id;
       const pill=ac==='payment'?`<span class="pill wa">${t_('stPay')}</span>`:ac==='code'?`<span class="pill wa">${t_('stCode')}</span>`:`<span class="pill">${t_(u.referral?'usRefOn':'usRefOff')}</span>`;
       const paid=u.paid?` <span class="pill ok">${t_('stPaid')} ${eur(u.paid)} · ${fdate(u.paid.created_at)}</span>`:'';
       const pm=u.pay_mail,mk={accepted:['mAcc','wa'],sent:['mSent','wa'],delivered:['mDel','ok'],delayed:['mDelay','wa'],bounced:['mBad','er'],complained:['mBad','er'],failed:['mBad','er'],suppressed:['mBad','er']}[pm&&pm.status];
-      const mailp=(ac==='payment'||pm)?(pm&&mk?` <span class="pill ${mk[1]}" title="${esc(pm.detail||'')}">${t_(mk[0])}</span>`:ac==='payment'?` <span class="pill">${t_('mNone')}</span>`:''):'';
+      const mailp=(ac==='payment'||pm)?(pm&&mk?` <span class="pill ${mk[1]}" title="${esc(pm.detail||'')}">${t_(mk[0])}${['accepted','sent','delayed'].includes(pm.status)?' <i class="spin" aria-label="in attesa di conferma di consegna"></i>':''}</span>`:ac==='payment'?` <span class="pill">${t_('mNone')}</span>`:''):'';
       const by=u.referred_by?` <span class="pill">${t_('rqBy')} ${esc(u.referred_by)}</span>`:'';
       const rf=self?'':ac!=='active'?`<button type="button" class="sm" data-u="rf" data-v="0">${t_('usRefF')}</button>`:`<button type="button" class="sm" data-u="rf" data-v="${u.referral?0:1}">${t_(u.referral?'usRefF':'usRefT')}</button>`;
       const pay=self?'':ac==='payment'?`<button type="button" class="sm" data-u="rp">${t_('usRPay')}</button><button type="button" class="sm" data-u="gm">${t_('usManual')}</button>`:ac==='code'?`<button type="button" class="sm" data-u="gc">${t_('usGrant')}</button>`:'';
