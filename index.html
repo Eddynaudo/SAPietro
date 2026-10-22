@@ -57,6 +57,11 @@ ul{margin:6px 0;padding-left:20px}li{margin:4px 0}
 .pbt button.o{background:#fff;color:#2F5BFF;border:2px solid #2F5BFF}
 .pfq{margin:6px 20px 0}.pfq details{border-bottom:1px solid #e1e7fb;padding:10px 0}.pfq summary{cursor:pointer;font-weight:700;color:#0b1636}.pfq p{margin:6px 0 0;font-size:14.5px;color:#33406a}
 .pdi{margin:16px 20px 20px;font-size:13px;color:#4a5578}
+.mkt{display:flex;gap:8px;margin:14px 20px 0}
+.mkt button{flex:1;border:2px solid #2F5BFF;background:#fff;color:#2F5BFF;border-radius:12px;font:800 15px inherit;font-family:inherit;padding:11px 6px;cursor:pointer}
+.mkt button[aria-pressed=true]{background:#2F5BFF;color:#fff}
+.pen{margin:14px 20px 0;padding:12px 14px;border-radius:12px;background:#f3f6ff;border:1px dashed #9db2ff;font-size:14px;color:#33406a}
+.pnz{margin:14px 20px 0;padding:12px 14px;border-radius:12px;background:#fff6e0;border:1px solid #ffd98a;font-size:14.5px;color:#5a4300;font-weight:600}
 @media(max-width:480px){.pc{grid-template-columns:84px 1fr}.pc img{width:84px;height:84px}}
 form{display:grid;gap:10px;margin-top:10px}
 .fl{font-weight:700;margin:2px 0 -4px}.why{color:#4a5578;font-size:13px;line-height:1.4;margin:-4px 0 2px}input[type=email],input[type=text]{width:100%;padding:13px 12px;border-radius:10px;border:1px solid #c6cde0;font:inherit;font-size:16px}
@@ -102,7 +107,9 @@ footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}f
   </section>
 
   <section class="card prm" id="premi" hidden>
-    <div class="prh"><h2 data-i="pT"></h2><p data-i="pS"></p></div>
+    <div class="prh"><h2 data-i="pT"></h2><p id="pSub"></p></div>
+    <div class="mkt"><button type="button" id="mkE" aria-pressed="true">🇪🇺 EUROPA / EUROPE</button><button type="button" id="mkU" aria-pressed="false">🇺🇸 USA / AMERICA</button></div>
+    <div id="mkEU">
     <div class="pcs" id="pcs">
       <div class="pc"><img src="app/premi/amazon.jpg" alt="Amazon" loading="lazy" width="104" height="104"><div><h3>AMAZON</h3><p data-i="pA"></p></div></div>
       <div class="pc"><img src="app/premi/zalando.jpg" alt="Zalando" loading="lazy" width="104" height="104"><div><h3>ZALANDO</h3><p data-i="pZ"></p></div></div>
@@ -115,7 +122,23 @@ footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}f
     <h3 class="ph" data-i="pQT"></h3>
     <div class="pfq" id="pfq"></div>
     <p class="pfree" style="margin-top:14px"><a href="app/guida-referral.pdf" target="_blank" rel="noopener" data-i="pG"></a></p>
-    <p class="pdi" data-i="pD"></p>
+    <p class="pen" id="pEn" hidden></p>
+    </div>
+    <div id="mkUS" hidden>
+      <div class="pcs">
+        <div class="pc"><img src="app/premi/amazon.jpg" alt="Amazon.com" loading="lazy" width="104" height="104"><div><h3>AMAZON.COM</h3><p>Shopping, technology and much more. From $10.</p></div></div>
+        <div class="pc"><img src="app/premi/apple_us.jpg" alt="Apple" loading="lazy" width="104" height="104"><div><h3>APPLE</h3><p>Apps, services and Apple products. From $10.</p></div></div>
+      </div>
+      <p class="pnz">🇺🇸 For U.S. users, available reward gift cards are Amazon.com and Apple. Zalando is available only in Europe.</p>
+      <p class="pfree">You don’t have to request your reward right away. Build up your credit, choose the gift card you prefer and request it whenever you like, according to the program rules. <b>Unlimited rewards: no cap, credit builds up endlessly.</b></p>
+      <h3 class="ph">HOW IT WORKS</h3>
+      <ol class="steps"><li>Buy and activate DayMarck for $9.89.</li><li>Get your personal referral link and share it with your contacts.</li><li>Every group of 10 valid purchases through your link adds $10 to your reward credit.</li><li>Accumulate credit or choose the available gift card you prefer.</li><li>Request your reward in the Referral section: after verification, it is purchased and sent by email.</li></ol>
+      <h3 class="ph">FAQ</h3>
+      <div class="pfq"><details><summary>How much do I earn by inviting friends?</summary><p>For every 10 new friends who buy and pay for DayMarck through your link, you earn $10 of reward credit. It repeats for every further group of 10, with no cap.</p></details><details><summary>Can I receive cash?</summary><p>No. Rewards are granted only as gift cards (Amazon.com and Apple for U.S. users).</p></details><details><summary>When do I receive the gift card?</summary><p>After your request, DayMarck checks it and buys the card manually. Delivery is by email and the status is visible in your account. It is not instant.</p></details><details><summary>What if a friend asks for a refund?</summary><p>A refunded or cancelled purchase does not count for referrals; credit not yet definitively awarded is recalculated.</p></details></div>
+      <p class="pfree" style="margin-top:14px"><a href="app/guida-referral-us.pdf" target="_blank" rel="noopener">📄 Download the U.S. referral program guide (PDF)</a></p>
+      <p class="pdi">Independent rewards program. Amazon and Apple are not sponsors or organizers of this initiative. Reward credit is not money and cannot be converted into cash.</p>
+    </div>
+    <p class="pdi" id="pDiEU" data-i="pD"></p>
   </section>
 
   <section class="card" id="dl">
@@ -165,14 +188,14 @@ inT:'How to install',inP:'After completing the payment and activating your accou
 };
 
 Object.assign(TX.it,{pG:'📄 Scarica la guida al programma referral (PDF)',pT:'INVITA I TUOI AMICI. ACCUMULA PREMI. SCEGLI COME SPENDERLI.',pS:'Con DayMarck organizzare le tue giornate diventa ancora più conveniente! Per ogni 10 amici che acquistano l’app tramite il tuo invito, ricevi 10 € di credito premio. <b>Premi illimitati: nessun tetto massimo, il credito si accumula all’infinito.</b>',
-pA:'Shopping, tecnologia e molto altro. Riscatta il tuo premio da 10 €.',pZ:'Moda, scarpe e accessori. Riscatta il tuo premio da 10 €.',pP:'App, servizi e prodotti Apple. Accumula almeno 25 € e scegli una Apple Gift Card.',
+pA:'Shopping, tecnologia e molto altro. Riscatta il tuo premio da 10 €.',pZ:'Moda, scarpe e accessori. Riscatta il tuo premio da 10 €. Disponibile solo in Europa.',pP:'App, servizi e prodotti Apple. Accumula almeno 25 € e scegli una Apple Gift Card.',
 pF:'Non sei obbligato a richiedere subito il premio. Accumula il credito, scegli il buono che preferisci e richiedilo quando vuoi, secondo le condizioni del programma.',
 pHT:'COME FUNZIONA',pHS:'<li>Acquista e attiva DayMarck a soli 9,89 €.</li><li>Condividi il tuo link personale con gli amici.</li><li>Ogni 10 nuovi amici paganti ti fanno maturare 10 € di credito premio.</li><li>Scegli fra Amazon, Zalando e Apple quando hai raggiunto il credito necessario.</li><li>Invia la richiesta e ricevi il tuo premio via email dopo la verifica e la gestione da parte dell’amministratore.</li>',
 pB1:'SCOPRI DAYMARCK',pB2:'ATTIVA L’APP',pB3:'SCOPRI I PREMI',pQT:'DOMANDE FREQUENTI',
 pD:'Programma premi indipendente. Amazon, Zalando e Apple non sono sponsor né organizzatori dell’iniziativa.',
 pQ:[['Devo acquistare DayMarck per partecipare?','Sì, il programma è riservato agli utenti con un acquisto valido di DayMarck.'],['Quanto guadagno invitando amici?','Ogni 10 nuovi amici che acquistano e pagano regolarmente DayMarck tramite il tuo link maturi 10 € di credito premio.'],['Posso accumulare più premi?','Sì. Non c’è un limite massimo: il credito si accumula all’infinito, non deve essere riscattato subito e può essere conservato per richiedere premi di valore superiore.'],['Posso scegliere un premio diverso ogni volta?','Sì. Puoi scegliere liberamente fra i premi disponibili, purché il tuo credito sia sufficiente.'],['Posso ricevere il premio in contanti?','No. I premi vengono riconosciuti esclusivamente tramite Gift Card disponibili nel programma.'],['Quando ricevo la Gift Card?','Dopo la richiesta, DayMarck procede con la verifica e l’acquisto manuale del buono. La consegna avviene tramite email e lo stato è visibile nell’account.'],['Se un amico richiede un rimborso?','Un acquisto rimborsato o annullato non viene considerato valido ai fini dei referral. Il sistema ricalcola correttamente i crediti non ancora definitivamente assegnati.']]});
 Object.assign(TX.en,{pG:'📄 Download the referral programme guide (PDF)',pT:'INVITE YOUR FRIENDS. EARN REWARDS. CHOOSE HOW TO SPEND THEM.',pS:'With DayMarck, organising your days gets even more rewarding! For every 10 friends who buy the app through your invitation, you get €10 of reward credit. <b>Unlimited rewards: no cap, credit builds up endlessly.</b>',
-pA:'Shopping, technology and much more. Redeem your €10 reward.',pZ:'Fashion, shoes and accessories. Redeem your €10 reward.',pP:'Apps, services and Apple products. Earn at least €25 and choose an Apple Gift Card.',
+pA:'Shopping, technology and much more. Redeem your €10 reward.',pZ:'Fashion, shoes and accessories. Redeem your €10 reward. Available in Europe only.',pP:'Apps, services and Apple products. Earn at least €25 and choose an Apple Gift Card.',
 pF:'You don’t have to request your reward right away. Build up your credit, choose the voucher you prefer and request it whenever you like, according to the programme terms.',
 pHT:'HOW IT WORKS',pHS:'<li>Buy and activate DayMarck for just €9.89.</li><li>Share your personal link with your friends.</li><li>Every 10 new paying friends earn you €10 of reward credit.</li><li>Choose between Amazon, Zalando and Apple once you have the credit needed.</li><li>Send your request and receive your reward by email after the administrator’s check and handling.</li>',
 pB1:'DISCOVER DAYMARCK',pB2:'ACTIVATE THE APP',pB3:'DISCOVER THE REWARDS',pQT:'FAQ',
@@ -185,6 +208,7 @@ try{const r=new URLSearchParams(location.search).get('ref');if(r&&/^[A-Za-z0-9]{
 function apply(){
   document.documentElement.lang=L;$('#lang').textContent=L==='en'?'IT':'EN';
   document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=TX[L][e.dataset.i]});
+  mkRender();
   $('#pfq').innerHTML=TX[L].pQ.map(q=>'<details><summary>'+q[0]+'</summary><p>'+q[1]+'</p></details>').join('');
   document.querySelectorAll('[data-ph]').forEach(e=>{e.placeholder=TX[L][e.dataset.ph]});
   const r=$('#rf');r.hidden=!REF;if(REF)r.textContent=TX[L].ref+' '+REF;
@@ -207,6 +231,19 @@ $('#f').onsubmit=async ev=>{
     m.className='msg ok';m.textContent=j.sent===true?TX[L].ok:TX[L].okn;$('#f').querySelectorAll('input').forEach(i=>i.disabled=true);
   }catch(_){m.className='msg er';m.textContent=TX[L].er;$('#sb').disabled=false}
 };
+let MKT='eu';
+const US_SUB='With DayMarck, organizing your days gets even more rewarding! For every 10 friends who buy the app through your invitation, you get $10 of reward credit. Unlimited rewards, no cap.';
+const EN_NOTE='🇬🇧 English summary: for every 10 friends who buy DayMarck through your link you earn €10 of reward credit, with no cap — credit builds up endlessly. Choose an Amazon, Zalando or Apple gift card (€10 / €10 / €25). Zalando is available in Europe only. Credit is not money; gift cards are bought and emailed by our team after verification.';
+function mkRender(){
+  const us=MKT==='us';
+  $('#mkEU').hidden=us;$('#mkUS').hidden=!us;$('#pDiEU').hidden=us;
+  $('#mkE').setAttribute('aria-pressed',!us);$('#mkU').setAttribute('aria-pressed',us);
+  $('#pSub').innerHTML=us?US_SUB:TX[L].pS;
+  document.querySelector('[data-i="pT"]').textContent=us?TX.en.pT:TX[L].pT;
+  const n=$('#pEn');n.textContent=EN_NOTE;n.hidden=L==='en'||us;
+}
+$('#mkE').onclick=()=>{MKT='eu';mkRender()};
+$('#mkU').onclick=()=>{MKT='us';mkRender()};
 $('#pb1').onclick=()=>($('#wh')||document.body).scrollIntoView({behavior:'smooth'});
 $('#pb2').onclick=()=>$('#go').click();
 $('#pb3').onclick=()=>$('#pcs').scrollIntoView({behavior:'smooth'});
