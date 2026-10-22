@@ -57,6 +57,13 @@ ul{margin:6px 0;padding-left:20px}li{margin:4px 0}
 .pbt button.o{background:#fff;color:#2F5BFF;border:2px solid #2F5BFF}
 .pfq{margin:6px 20px 0}.pfq details{border-bottom:1px solid #e1e7fb;padding:10px 0}.pfq summary{cursor:pointer;font-weight:700;color:#0b1636}.pfq p{margin:6px 0 0;font-size:14.5px;color:#33406a}
 .pdi{margin:16px 20px 20px;font-size:13px;color:#4a5578}
+.mdl{position:fixed;inset:0;background:rgba(6,11,32,.72);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:16px}
+.mdl[hidden]{display:none}
+.mbx{background:#fff;border-radius:18px;max-width:460px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);max-height:92vh;overflow:auto}
+.mbx h2{margin:0 0 6px}.mbx p{margin:0 0 12px;font-size:14.5px;color:#33406a}
+.mop{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:2px solid #d5e0ff;background:#f6f8ff;border-radius:14px;padding:13px 14px;margin:8px 0;font:inherit;cursor:pointer;color:#0b1636}
+.mop:hover,.mop:focus{border-color:#2F5BFF;outline:0}.mop .fl2{font-size:30px;line-height:1}.mop b{display:block;font-size:17px}.mop small{color:#4a5578;font-size:13px;display:block;line-height:1.3}
+.mcx{width:100%;border:0;background:none;color:#4a5578;font:inherit;padding:10px;cursor:pointer;text-decoration:underline}
 .mkt{display:flex;gap:8px;margin:14px 20px 0}
 .mkt button{flex:1;border:2px solid #2F5BFF;background:#fff;color:#2F5BFF;border-radius:12px;font:800 15px inherit;font-family:inherit;padding:11px 6px;cursor:pointer}
 .mkt button[aria-pressed=true]{background:#2F5BFF;color:#fff}
@@ -162,6 +169,13 @@ footer{text-align:center;color:#fff;opacity:.85;font-size:13px;margin-top:18px}f
     <p data-i="inP"></p>
   </section>
 
+  <div class="mdl" id="mdl" hidden><div class="mbx" role="dialog" aria-modal="true" aria-labelledby="mdt">
+    <h2 id="mdt"></h2><p id="mdp"></p>
+    <button type="button" class="mop" data-m="IT"><span class="fl2">🇮🇹</span><span><b data-i="mIT"></b><small data-i="mITd"></small></span></button>
+    <button type="button" class="mop" data-m="EU"><span class="fl2">🇪🇺</span><span><b data-i="mEU"></b><small data-i="mEUd"></small></span></button>
+    <button type="button" class="mop" data-m="US"><span class="fl2">🇺🇸</span><span><b data-i="mUS"></b><small data-i="mUSd"></small></span></button>
+    <button type="button" class="mcx" id="mcx" data-i="mCx"></button>
+  </div></div>
   <footer><a href="app/privacy.html" data-i="pv"></a> · <a href="app/termini.html" data-i="tm"></a><br>© 2026 DayMarck · MBL &amp; MBLab · <span data-i="rr"></span></footer>
 </div>
 <script>
@@ -173,7 +187,7 @@ hwT:'Come funziona',hwS:'<li><b>Compila il modulo</b> con nome, cognome ed email
 rfT:'Invita gli amici e ricevi buoni Amazon',rfP:'Dopo l’attivazione trovi nell’app il tuo link personale. Ogni 10 amici che completano un acquisto valido tramite il tuo link, ricevi un buono Amazon da 10 €.',rfL:'buono Amazon ogni 10 amici',
 rfS:'',
 rfB:'Ogni 10 amici = buono Amazon da 10 €. Senza limiti: 20 amici = 20 €, 30 amici = 30 €…',rfN:'Contano solo gli acquisti validi: clic e semplici registrazioni non valgono. Il buono viene consegnato dopo 15 giorni di verifica degli acquisti, secondo le condizioni del programma. Invitare amici è facoltativo.',
-dlT:'Acquista e attiva DayMarck',dlP:'Compila il modulo: riceverai automaticamente via email il link per pagare 9,89 € e acquistare DayMarck. L’invio del modulo non comporta alcun addebito.',phN:'Nome e cognome',phE:'La tua email',dlB:'RICEVI IL LINK DI PAGAMENTO',lbN:'Nome e cognome *',lbE:'Email *',whyN:'Il nome e cognome è obbligatorio: serve per assegnare correttamente i buoni Amazon previsti dal programma referral.',needN:'Inserisci nome e cognome (obbligatorio).',
+dlT:'Acquista e attiva DayMarck',dlP:'Compila il modulo: riceverai automaticamente via email il link per pagare 9,89 € e acquistare DayMarck. L’invio del modulo non comporta alcun addebito.',phN:'Nome e cognome',phE:'La tua email',dlB:'RICEVI IL LINK DI PAGAMENTO',lbN:'Nome e cognome *',lbE:'Email *',whyN:'Il nome e cognome è obbligatorio: serve per assegnare correttamente i premi previsti dal programma referral.',needN:'Inserisci nome e cognome (obbligatorio).',
 ref:'Sei stato invitato con il codice',sending:'Invio…',ok:'Ti abbiamo inviato il link di pagamento via email. Controlla anche la cartella spam. Dopo la conferma del pagamento riceverai il link e il codice per attivare DayMarck.',okn:'Abbiamo ricevuto i tuoi dati, ma non possiamo ancora confermarti l’invio dell’email. Controlla la posta (anche lo spam) tra qualche minuto; se non arriva, riprova più tardi o scrivici.',er:'Non sono riuscito a inviare. Riprova tra poco.',bad:'Inserisci un’email valida.',lim:'Troppe richieste. Riprova più tardi.',
 inT:'Come si installa',inP:'Dopo aver completato il pagamento e attivato l’account, puoi aggiungere DayMarck alla schermata Home del telefono. Su iPhone apri il link in Safari → Condividi → “Aggiungi alla schermata Home”. Su Android in Chrome → menu ⋮ → “Installa app”.',pv:'Informativa sulla privacy',tm:'Condizioni di acquisto',rr:'Tutti i diritti riservati'},
 en:{login:'Open the app',sub:'Reminders you never forget: the alert arrives, you confirm, and it’s done.',cta:'BUY DAYMARCK',ctp:'€9.89 one-time · Lifetime access · No subscription',cts:'Enter your details to automatically receive the payment link by email.',
@@ -182,19 +196,19 @@ hwT:'How it works',hwS:'<li><b>Fill in the form</b> with your first name, last n
 rfT:'Invite friends and get Amazon vouchers',rfP:'After activation you will find your personal link in the app. For every 10 friends who complete a valid purchase through your link, you get a €10 Amazon voucher.',rfL:'Amazon voucher every 10 friends',
 rfS:'',
 rfB:'Every 10 friends = €10 Amazon voucher. No limit: 20 friends = €20, 30 friends = €30…',rfN:'Only valid purchases count: clicks and sign-ups alone don’t. The voucher is handed over after a 15-day verification of the purchases, according to the program terms. Inviting friends is optional.',
-dlT:'Buy and activate DayMarck',dlP:'Fill in the form: you will automatically receive by email the link to pay €9.89 and buy DayMarck. Submitting the form does not charge you anything.',phN:'Full name',phE:'Your email',dlB:'GET THE PAYMENT LINK',lbN:'Full name *',lbE:'Email *',whyN:'Your full name is required: we need it to assign the Amazon vouchers of the referral program correctly.',needN:'Enter your full name (required).',
+dlT:'Buy and activate DayMarck',dlP:'Fill in the form: you will automatically receive by email the link to pay €9.89 and buy DayMarck. Submitting the form does not charge you anything.',phN:'Full name',phE:'Your email',dlB:'GET THE PAYMENT LINK',lbN:'Full name *',lbE:'Email *',whyN:'Your full name is required: we need it to assign the rewards of the referral program correctly.',needN:'Enter your full name (required).',
 ref:'You were invited with code',sending:'Sending…',ok:'We have emailed you the payment link. Please check your spam folder too. After the payment is confirmed you will receive the link and the code to activate DayMarck.',okn:'We received your details, but we cannot confirm yet that the email was sent. Check your inbox (and spam) in a few minutes; if it does not arrive, try again later or contact us.',er:'Could not send. Please try again shortly.',bad:'Enter a valid email.',lim:'Too many requests. Try again later.',
 inT:'How to install',inP:'After completing the payment and activating your account, you can add DayMarck to your phone’s Home Screen. On iPhone open the link in Safari → Share → “Add to Home Screen”. On Android in Chrome → menu ⋮ → “Install app”.',pv:'Privacy policy',tm:'Terms of purchase',rr:'All rights reserved'}
 };
 
-Object.assign(TX.it,{pG:'📄 Scarica la guida al programma referral (PDF)',pT:'INVITA I TUOI AMICI. ACCUMULA PREMI. SCEGLI COME SPENDERLI.',pS:'Con DayMarck organizzare le tue giornate diventa ancora più conveniente! Per ogni 10 amici che acquistano l’app tramite il tuo invito, ricevi 10 € di credito premio. <b>Premi illimitati: nessun tetto massimo, il credito si accumula all’infinito.</b>',
+Object.assign(TX.it,{mT:'Conferma il tuo mercato',mP:'Scegli dove usi DayMarck: il link di pagamento che riceverai dipende da questa scelta e non potrai cambiarlo dopo il pagamento.',mIT:'Italia',mITd:'Si paga in euro: 9,89 €. Premi: Amazon, Zalando e Apple. Email in italiano.',mEU:'Europa',mEUd:'Si paga in euro: 9,89 €. Premi: Amazon, Zalando e Apple. Email e guida in inglese.',mUS:'America (USA)',mUSd:'Si paga in dollari: 9,89 $. Premi: Amazon.com e Apple (niente Zalando). Email e guida in inglese.',mCx:'Annulla',pG:'📄 Scarica la guida al programma referral (PDF)',pT:'INVITA I TUOI AMICI. ACCUMULA PREMI. SCEGLI COME SPENDERLI.',pS:'Con DayMarck organizzare le tue giornate diventa ancora più conveniente! Per ogni 10 amici che acquistano l’app tramite il tuo invito, ricevi 10 € di credito premio. <b>Premi illimitati: nessun tetto massimo, il credito si accumula all’infinito.</b>',
 pA:'Shopping, tecnologia e molto altro. Riscatta il tuo premio da 10 €.',pZ:'Moda, scarpe e accessori. Riscatta il tuo premio da 10 €. Disponibile solo in Europa.',pP:'App, servizi e prodotti Apple. Accumula almeno 25 € e scegli una Apple Gift Card.',
 pF:'Non sei obbligato a richiedere subito il premio. Accumula il credito, scegli il buono che preferisci e richiedilo quando vuoi, secondo le condizioni del programma.',
 pHT:'COME FUNZIONA',pHS:'<li>Acquista e attiva DayMarck a soli 9,89 €.</li><li>Condividi il tuo link personale con gli amici.</li><li>Ogni 10 nuovi amici paganti ti fanno maturare 10 € di credito premio.</li><li>Scegli fra Amazon, Zalando e Apple quando hai raggiunto il credito necessario.</li><li>Invia la richiesta e ricevi il tuo premio via email dopo la verifica e la gestione da parte dell’amministratore.</li>',
 pB1:'SCOPRI DAYMARCK',pB2:'ATTIVA L’APP',pB3:'SCOPRI I PREMI',pQT:'DOMANDE FREQUENTI',
 pD:'Programma premi indipendente. Amazon, Zalando e Apple non sono sponsor né organizzatori dell’iniziativa.',
 pQ:[['Devo acquistare DayMarck per partecipare?','Sì, il programma è riservato agli utenti con un acquisto valido di DayMarck.'],['Quanto guadagno invitando amici?','Ogni 10 nuovi amici che acquistano e pagano regolarmente DayMarck tramite il tuo link maturi 10 € di credito premio.'],['Posso accumulare più premi?','Sì. Non c’è un limite massimo: il credito si accumula all’infinito, non deve essere riscattato subito e può essere conservato per richiedere premi di valore superiore.'],['Posso scegliere un premio diverso ogni volta?','Sì. Puoi scegliere liberamente fra i premi disponibili, purché il tuo credito sia sufficiente.'],['Posso ricevere il premio in contanti?','No. I premi vengono riconosciuti esclusivamente tramite Gift Card disponibili nel programma.'],['Quando ricevo la Gift Card?','Dopo la richiesta, DayMarck procede con la verifica e l’acquisto manuale del buono. La consegna avviene tramite email e lo stato è visibile nell’account.'],['Se un amico richiede un rimborso?','Un acquisto rimborsato o annullato non viene considerato valido ai fini dei referral. Il sistema ricalcola correttamente i crediti non ancora definitivamente assegnati.']]});
-Object.assign(TX.en,{pG:'📄 Download the referral programme guide (PDF)',pT:'INVITE YOUR FRIENDS. EARN REWARDS. CHOOSE HOW TO SPEND THEM.',pS:'With DayMarck, organising your days gets even more rewarding! For every 10 friends who buy the app through your invitation, you get €10 of reward credit. <b>Unlimited rewards: no cap, credit builds up endlessly.</b>',
+Object.assign(TX.en,{mT:'Confirm your market',mP:'Choose where you use DayMarck: the payment link you receive depends on this choice and cannot be changed after payment.',mIT:'Italy',mITd:'Pay in euro: €9.89. Rewards: Amazon, Zalando and Apple. Emails in Italian.',mEU:'Europe',mEUd:'Pay in euro: €9.89. Rewards: Amazon, Zalando and Apple. Emails and guide in English.',mUS:'America (USA)',mUSd:'Pay in dollars: $9.89. Rewards: Amazon.com and Apple (no Zalando). Emails and guide in English.',mCx:'Cancel',pG:'📄 Download the referral programme guide (PDF)',pT:'INVITE YOUR FRIENDS. EARN REWARDS. CHOOSE HOW TO SPEND THEM.',pS:'With DayMarck, organising your days gets even more rewarding! For every 10 friends who buy the app through your invitation, you get €10 of reward credit. <b>Unlimited rewards: no cap, credit builds up endlessly.</b>',
 pA:'Shopping, technology and much more. Redeem your €10 reward.',pZ:'Fashion, shoes and accessories. Redeem your €10 reward. Available in Europe only.',pP:'Apps, services and Apple products. Earn at least €25 and choose an Apple Gift Card.',
 pF:'You don’t have to request your reward right away. Build up your credit, choose the voucher you prefer and request it whenever you like, according to the programme terms.',
 pHT:'HOW IT WORKS',pHS:'<li>Buy and activate DayMarck for just €9.89.</li><li>Share your personal link with your friends.</li><li>Every 10 new paying friends earn you €10 of reward credit.</li><li>Choose between Amazon, Zalando and Apple once you have the credit needed.</li><li>Send your request and receive your reward by email after the administrator’s check and handling.</li>',
@@ -209,6 +223,7 @@ function apply(){
   document.documentElement.lang=L;$('#lang').textContent=L==='en'?'IT':'EN';
   document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=TX[L][e.dataset.i]});
   mkRender();
+  $('#mdt').textContent=TX[L].mT;$('#mdp').textContent=TX[L].mP;
   $('#pfq').innerHTML=TX[L].pQ.map(q=>'<details><summary>'+q[0]+'</summary><p>'+q[1]+'</p></details>').join('');
   document.querySelectorAll('[data-ph]').forEach(e=>{e.placeholder=TX[L][e.dataset.ph]});
   const r=$('#rf');r.hidden=!REF;if(REF)r.textContent=TX[L].ref+' '+REF;
@@ -221,9 +236,11 @@ $('#f').onsubmit=async ev=>{
   const nm=$('#n').value.trim().replace(/\s+/g,' ');
   if(nm.length<2||!/\p{L}/u.test(nm)){m.className='msg er';m.textContent=TX[L].needN;$('#n').focus();return}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){m.className='msg er';m.textContent=TX[L].bad;return}
+  const MK=await askMarket();
+  if(!MK){return}
   $('#sb').disabled=true;m.textContent=TX[L].sending;
   try{
-    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,name:nm,ref:REF,lang:L,hp:$('#hp').value})});
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,name:nm,ref:REF,lang:L,hp:$('#hp').value,market:MK})});
     if(r.status===400){const j=await r.json().catch(()=>({}));m.className='msg er';m.textContent=j.error==='name_required'?TX[L].needN:TX[L].bad;$('#sb').disabled=false;return}
     if(r.status===429){m.className='msg er';m.textContent=TX[L].lim;$('#sb').disabled=false;return}
     if(!r.ok)throw 0;
@@ -231,6 +248,13 @@ $('#f').onsubmit=async ev=>{
     m.className='msg ok';m.textContent=j.sent===true?TX[L].ok:TX[L].okn;$('#f').querySelectorAll('input').forEach(i=>i.disabled=true);
   }catch(_){m.className='msg er';m.textContent=TX[L].er;$('#sb').disabled=false}
 };
+function askMarket(){
+  return new Promise(res=>{
+    const d=$('#mdl');d.hidden=false;
+    const done=v=>{d.hidden=true;d.onclick=null;res(v)};
+    d.onclick=e=>{const b=e.target.closest('[data-m]');if(b){done(b.dataset.m);return}if(e.target.id==='mcx'||e.target===d)done(null)};
+  });
+}
 let MKT='eu';
 const US_SUB='With DayMarck, organizing your days gets even more rewarding! For every 10 friends who buy the app through your invitation, you get $10 of reward credit. Unlimited rewards, no cap.';
 const EN_NOTE='🇬🇧 English summary: for every 10 friends who buy DayMarck through your link you earn €10 of reward credit, with no cap — credit builds up endlessly. Choose an Amazon, Zalando or Apple gift card (€10 / €10 / €25). Zalando is available in Europe only. Credit is not money; gift cards are bought and emailed by our team after verification.';
