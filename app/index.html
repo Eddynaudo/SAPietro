@@ -1874,6 +1874,7 @@ function parseVoice(raw,lg){
       +(r.note?'<br>📝 '+E(r.note):'')
       +'<br><span style="opacity:.7">«'+E(raw)+'»</span>'
       +'<br><span style="opacity:.7">'+V().chk+'</span>',true);
+    if(ai){const ob=document.createElement('button');ob.type='button';ob.textContent='✔ OK';ob.style.cssText='display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:12px;background:#16a34a;color:#fff;font-weight:700;font-size:17px';ob.onclick=()=>{ob.disabled=true;$('#ok').click()};msg.appendChild(ob)}
     msg.scrollIntoView({block:'nearest'});
   }
   b.onclick=()=>{
