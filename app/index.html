@@ -322,6 +322,7 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
 
 <div class="ov" id="ov"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ft">
   <h2 id="ft">New task</h2>
+  <button type="button" class="btn" id="bdic" hidden style="width:100%;margin-top:4px"></button><p class="sub" id="vdm" hidden style="margin:6px 0 2px"></p>
   <label for="title" data-i="lTitle">Titolo</label><input type="text" id="title" maxlength="120" data-ph="phTitle" placeholder="Cosa devi fare?">
   <label for="note" data-i="lNote">Note</label><textarea id="note" data-ph="phNote" placeholder="Dettagli (facoltativo)"></textarea>
   <label for="due" data-i="lMain">Activity date and time</label>
@@ -1787,6 +1788,81 @@ window.dmInstall=async function(){
 $('#instb').onclick=()=>window.dmInstall();
 $('#ins_x').onclick=()=>$('#ins').classList.remove('on');
 insRefresh();
+/* ---------- dettatura vocale dell'attività (prova: solo account admin) ---------- */
+const VD={
+ it:{b:'🗣️ Detta l’attività',on:'🔴 Ti ascolto… tocca per fermare',heard:'Ho capito: ',none:'Non ho sentito nulla, riprova.',deny:'Consenti il microfono nelle impostazioni del browser.',nosup:'Questo browser non supporta il dettato vocale (prova con Chrome su Android o Safari).',err:'Dettato non riuscito: ',hint:'Esempio: «Chiamare il dentista domani alle 15».',set:'Impostato: '},
+ en:{b:'🗣️ Dictate the task',on:'🔴 Listening… tap to stop',heard:'I heard: ',none:'I heard nothing, try again.',deny:'Allow the microphone in the browser settings.',nosup:'This browser does not support voice dictation (try Chrome on Android or Safari).',err:'Dictation failed: ',hint:'Example: “Call the dentist tomorrow at 3 pm”.',set:'Set: '}
+};
+function parseVoice(raw,lg){
+  let t=' '+raw.trim()+' ',low=t.toLowerCase(),d=null,hh=null,mm=0,found=[];
+  const now=new Date(),base=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const cut=re=>{const m=low.match(re);if(m){found.push(m[0]);t=t.slice(0,m.index)+' '+t.slice(m.index+m[0].length);low=t.toLowerCase()}return m};
+  const add=n=>{const x=new Date(base);x.setDate(x.getDate()+n);return x};
+  const WD=lg==='en'?['sunday','monday','tuesday','wednesday','thursday','friday','saturday']:['domenica','lunedì|lunedi','martedì|martedi','mercoledì|mercoledi','giovedì|giovedi','venerdì|venerdi','sabato'];
+  const MO=lg==='en'?['january','february','march','april','may','june','july','august','september','october','november','december']:['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+  let m;
+  if(lg==='en'){
+    if(m=cut(/\b(the )?day after tomorrow\b/))d=add(2);
+    else if(m=cut(/\btomorrow\b/))d=add(1);
+    else if(m=cut(/\btoday\b/))d=add(0);
+    else for(let i=0;i<7&&!d;i++){if(m=cut(new RegExp('\\b(on |next |this )?('+WD[i]+')\\b')))d=add(((i-now.getDay()+6)%7)+1)}
+    if(!d&&(m=cut(new RegExp('\\b(on )?('+MO.join('|')+') (\\d{1,2})(st|nd|rd|th)?\\b')))){const mi=MO.indexOf(m[2]);d=new Date(now.getFullYear(),mi,+m[3]);if(d<base)d.setFullYear(d.getFullYear()+1)}
+    if(m=cut(/\bat (\d{1,2})(?:[:.](\d{2}))?\s*(a\.?m\.?|p\.?m\.?)?/)){hh=+m[1];mm=+(m[2]||0);const ap=(m[3]||'').replace(/\./g,'');if(ap==='pm'&&hh<12)hh+=12;if(ap==='am'&&hh===12)hh=0}
+    else if(m=cut(/\bnoon\b/)){hh=12}
+  }else{
+    if(m=cut(/\bdopodomani\b/))d=add(2);
+    else if(m=cut(/\bdomani\b/))d=add(1);
+    else if(m=cut(/\boggi\b/))d=add(0);
+    else for(let i=0;i<7&&!d;i++){if(m=cut(new RegExp('\\b(?:(?:il|per|di|prossimo) )?('+WD[i]+')(?: prossimo)?(?=[\\s,.]|$)')))d=add(((i-now.getDay()+6)%7)+1)}
+    if(!d&&(m=cut(new RegExp('\\b(?:il |per il )?(\\d{1,2}) ('+MO.join('|')+')\\b')))){const mi=MO.indexOf(m[2]);d=new Date(now.getFullYear(),mi,+m[1]);if(d<base)d.setFullYear(d.getFullYear()+1)}
+    if(m=cut(/\b(?:alle|alle ore|all'|all’|ore|per le)\s*(\d{1,2})(?:\s*(?:[:.]|e)\s*(\d{2}|mezza|mezzo|un quarto|quarto))?(?:\s*(?:del|di|della|nel)\s*(mattina|mattino|pomeriggio|sera|notte))?/)){
+      hh=+m[1];const x=m[2];mm=!x?0:/mezz/.test(x)?30:/quarto/.test(x)?15:+x;
+      if(/pomeriggio|sera|notte/.test(m[3]||'')&&hh<12)hh+=12}
+    else if(m=cut(/\ba mezzogiorno\b|\bmezzogiorno\b/)){hh=12}
+    else if(m=cut(/\ba mezzanotte\b|\bmezzanotte\b/)){hh=0}
+  }
+  let at=null;
+  if(d||hh!==null){
+    let day=d;
+    if(!day){day=new Date(base);if(new Date(base.getFullYear(),base.getMonth(),base.getDate(),hh,mm)<now)day.setDate(day.getDate()+1)}
+    if(hh===null){hh=9;mm=0}
+    const p=x=>String(x).padStart(2,'0');
+    at=day.getFullYear()+'-'+p(day.getMonth()+1)+'-'+p(day.getDate())+'T'+p(Math.min(hh,23))+':'+p(Math.min(mm,59));
+  }
+  let title=t.replace(/\s+/g,' ').trim();
+  title=title.replace(lg==='en'?/^(please |remind me to |remember to |i need to |i have to )/i:/^(per favore |ricordami di |ricordami che |ricordati di |devo |bisogna )/i,'').replace(/[\s,.;:-]+$/,'').replace(/^[\s,.;:-]+/,'');
+  if(title)title=title[0].toUpperCase()+title.slice(1);
+  return {title,at,found};
+}
+(function(){
+  const b=$('#bdic'),msg=$('#vdm'),ov=$('#ov');if(!b||!ov)return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  let rec=null,live=false;
+  const V=()=>VD[(typeof LANG!=='undefined'&&LANG==='en')?'en':'it'];
+  const say=(x)=>{msg.textContent=x;msg.hidden=!x};
+  const show=()=>{const ok=ov.classList.contains('on')&&typeof isAdmin==='function'&&isAdmin();b.hidden=!ok;if(ok){b.textContent=live?V().on:V().b;if(!live&&!msg.textContent)say(V().hint)}else{say('')}};
+  new MutationObserver(show).observe(ov,{attributes:true,attributeFilter:['class']});
+  function apply(raw){
+    const lg=(typeof LANG!=='undefined'&&LANG==='en')?'en':'it';
+    const r=parseVoice(raw,lg),tt=$('#title');
+    let t=r.title||raw;
+    if(!tt.value.trim()){tt.value=t.slice(0,120);if(t.length>120)$('#note').value=t.slice(120)}
+    else{const n=$('#note');n.value=(n.value?n.value+'\n':'')+t}
+    if(r.at){const du=$('#due');du.value=r.at;du.dispatchEvent(new Event('input',{bubbles:true}));du.dispatchEvent(new Event('change',{bubbles:true}))}
+    say(V().heard+'«'+raw+'»'+(r.at?' · '+V().set+r.at.replace('T',' '):''));
+  }
+  b.onclick=()=>{
+    if(live&&rec){try{rec.stop()}catch(e){}return}
+    if(!SR){say(V().nosup);return}
+    rec=new SR();rec.lang=(typeof LANG!=='undefined'&&LANG==='en')?'en-US':'it-IT';rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
+    let fin='',gotErr=false;
+    rec.onstart=()=>{live=true;say('');show()};
+    rec.onresult=e=>{let tmp='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript+' ';else tmp+=r[0].transcript}say('… '+(fin+tmp).trim())};
+    rec.onerror=e=>{gotErr=true;const c=e.error;say(c==='not-allowed'||c==='service-not-allowed'?V().deny:c==='no-speech'?V().none:V().err+c)};
+    rec.onend=()=>{live=false;show();if(!gotErr){if(fin.trim())apply(fin.trim());else say(V().none)}};
+    try{rec.start()}catch(e){say(V().err+(e.message||e))}
+  };
+})();
 const actQ=new URLSearchParams(location.search).get('activate');
 function openAct(em){$('#ace').value=em||'';$('#acm').textContent='';$('#act').classList.add('on')}
 $('#acl').onclick=e=>{e.preventDefault();$('#act').classList.remove('on')};
