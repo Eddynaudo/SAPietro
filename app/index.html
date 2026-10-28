@@ -1790,8 +1790,8 @@ $('#ins_x').onclick=()=>$('#ins').classList.remove('on');
 insRefresh();
 /* ---------- dettatura vocale dell'attività (prova: solo account admin) ---------- */
 const VD={
- it:{b:'🗣️ Detta l’attività',on:'🔴 Ti ascolto… tocca per fermare',heard:'Ho capito: ',none:'Non ho sentito nulla, riprova.',deny:'Consenti il microfono nelle impostazioni del browser.',nosup:'Questo browser non supporta il dettato vocale (prova con Chrome su Android o Safari).',err:'Dettato non riuscito: ',hint:'Esempio: «Chiamare il dentista domani alle 15».',set:'Impostato: ',think:'🤖 Sto interpretando…',ai:'🤖 Interpretato:',simple:'Lettore semplice',rem:'Promemoria: '},
- en:{b:'🗣️ Dictate the task',on:'🔴 Listening… tap to stop',heard:'I heard: ',none:'I heard nothing, try again.',deny:'Allow the microphone in the browser settings.',nosup:'This browser does not support voice dictation (try Chrome on Android or Safari).',err:'Dictation failed: ',hint:'Example: “Call the dentist tomorrow at 3 pm”.',set:'Set: ',think:'🤖 Interpreting…',ai:'🤖 Interpreted:',simple:'Simple reader',rem:'Reminders: '}
+ it:{b:'🗣️ Detta l’attività',on:'🔴 Ti ascolto… tocca per fermare',heard:'Ho capito: ',none:'Non ho sentito nulla, riprova.',deny:'Consenti il microfono nelle impostazioni del browser.',nosup:'Questo browser non supporta il dettato vocale (prova con Chrome su Android o Safari).',err:'Dettato non riuscito: ',hint:'Esempio: «Chiamare il dentista domani alle 15».',set:'Impostato: ',think:'🤖 Sto interpretando…',lt:'Attività:',lw:'Quando:',lr:'Promemoria:',none2:'nessuno',chk:'Controlla i campi qui sotto e premi Salva.',ai:'🤖 Interpretato:',simple:'Lettore semplice',rem:'Promemoria: '},
+ en:{b:'🗣️ Dictate the task',on:'🔴 Listening… tap to stop',heard:'I heard: ',none:'I heard nothing, try again.',deny:'Allow the microphone in the browser settings.',nosup:'This browser does not support voice dictation (try Chrome on Android or Safari).',err:'Dictation failed: ',hint:'Example: “Call the dentist tomorrow at 3 pm”.',set:'Set: ',think:'🤖 Interpreting…',lt:'Task:',lw:'When:',lr:'Reminders:',none2:'none',chk:'Check the fields below and press Save.',ai:'🤖 Interpreted:',simple:'Simple reader',rem:'Reminders: '}
 };
 function parseVoice(raw,lg){
   let t=' '+raw.trim()+' ',low=t.toLowerCase(),d=null,hh=null,mm=0,found=[];
@@ -1839,7 +1839,7 @@ function parseVoice(raw,lg){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   let rec=null,live=false;
   const V=()=>VD[(typeof LANG!=='undefined'&&LANG==='en')?'en':'it'];
-  const say=(x)=>{msg.textContent=x;msg.hidden=!x};
+  const say=(x,html)=>{if(html)msg.innerHTML=x;else msg.textContent=x;msg.hidden=!x};
   const show=()=>{const ok=ov.classList.contains('on')&&typeof isAdmin==='function'&&isAdmin();b.hidden=!ok;if(ok){b.textContent=live?V().on:V().b;if(!live&&!msg.textContent)say(V().hint)}else{say('')}};
   new MutationObserver(show).observe(ov,{attributes:true,attributeFilter:['class']});
   async function apply(raw){
@@ -1851,13 +1851,30 @@ function parseVoice(raw,lg){
       const j=await callFn('parse-task',{text:raw,lang:lg,now:n.getFullYear()+'-'+p2(n.getMonth()+1)+'-'+p2(n.getDate())+'T'+p2(n.getHours())+':'+p2(n.getMinutes())});
       if(j&&j.title){r={title:j.title,note:j.note||'',at:j.due||null,rem:j.reminders||[]};ai=true}
     }catch(e){why=String(e&&e.message||e)}
-    if(!r){const q=parseVoice(raw,lg);r={title:q.title||raw,note:'',at:q.at,rem:[]}}
+    if(!r){
+      let txt=raw,mins=[];
+      const re=/(?:,?\s*(?:e\s+)?(?:ricordamelo|ricordamele|avvisami|ricordami|notificami|remind me|alert me)\s+)?(mezz['’]?\s?ora|half an hour|(?:\d+|un|una|an|a|one|due|tre)\s*(?:minut[oi]|minutes?|or[ae]|hours?|giorn[oi]|days?))\s+(?:prima|before)/gi;
+      txt=txt.replace(re,(m0,q)=>{const l=q.toLowerCase();let n=/mezz|half/.test(l)?30:(+((l.match(/\d+/)||[])[0])||({un:1,una:1,an:1,a:1,one:1,due:2,tre:3}[l.split(/\s+/)[0]]||1));
+        mins.push(n*(/minut/.test(l)?1:/or[ae]|hour/.test(l)?60:/giorn|day/.test(l)?1440:1));return ' '});
+      const q=parseVoice(txt,lg);r={title:q.title||raw,note:'',at:q.at,rem:[]};
+      if(r.at)for(const m of mins){const d=new Date(r.at+':00');d.setMinutes(d.getMinutes()-m);const p2=x=>String(x).padStart(2,'0');r.rem.push(d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'T'+p2(d.getHours())+':'+p2(d.getMinutes()))}
+    }
     const tt=$('#title');
     if(!tt.value.trim()){tt.value=r.title.slice(0,120);if(r.note||r.title.length>120)$('#note').value=((r.note||'')+(r.title.length>120?' '+r.title.slice(120):'')).trim()}
     else{const n=$('#note');n.value=(n.value?n.value+'\n':'')+r.title+(r.note?' - '+r.note:'')}
     if(r.at){const du=$('#due');du.value=r.at;du.dispatchEvent(new Event('input',{bubbles:true}));du.dispatchEvent(new Event('change',{bubbles:true}))}
     if(r.rem.length){const cur=rlVals().filter(x=>x.at);for(const x of r.rem)if(!cur.some(c=>c.at===x))cur.push({id:null,at:x});drawRl(cur.slice(0,5))}
-    say((ai?V().ai:V().simple+(why?' ('+why+')':''))+' «'+raw+'»'+(r.at?' · '+V().set+r.at.replace('T',' '):'')+(r.rem.length?' · '+V().rem+r.rem.map(x=>x.replace('T',' ')).join(', '):''));
+    const fmt=x=>{const d=new Date(x+':00'),lg2=lg==='en'?'en-GB':'it-IT';return d.toLocaleDateString(lg2,{weekday:'long',day:'numeric',month:'long'})+' · '+x.slice(11)};
+    const E=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const fv=r.title+(r.note?'':'');
+    say('<b>'+(ai?V().ai:V().simple+(why?' ('+E(why)+')':''))+'</b><br>'
+      +'✅ '+V().lt+' <b>'+E(fv)+'</b><br>'
+      +'📅 '+V().lw+' <b>'+(r.at?E(fmt(r.at)):V().none2)+'</b><br>'
+      +'🔔 '+V().lr+' <b>'+(r.rem.length?r.rem.map(x=>E(fmt(x))).join('<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'):V().none2)+'</b>'
+      +(r.note?'<br>📝 '+E(r.note):'')
+      +'<br><span style="opacity:.7">«'+E(raw)+'»</span>'
+      +'<br><span style="opacity:.7">'+V().chk+'</span>',true);
+    msg.scrollIntoView({block:'nearest'});
   }
   b.onclick=()=>{
     if(live&&rec){try{rec.stop()}catch(e){}return}
