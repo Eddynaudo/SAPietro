@@ -1837,7 +1837,9 @@ function parseVoice(raw,lg){
 (function(){
   const b=$('#bdic'),msg=$('#vdm'),ov=$('#ov');if(!b||!ov)return;
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  let rec=null,live=false;
+  let rec=null,live=false,sil=0,mic=null;
+  const relMic=()=>{if(mic){try{mic.getTracks().forEach(t=>t.stop())}catch(e){}mic=null}};
+  new MutationObserver(()=>{if(!ov.classList.contains('on')){clearTimeout(sil);if(live&&rec){try{rec.abort()}catch(e){}}relMic()}}).observe(ov,{attributes:true,attributeFilter:['class']});
   const V=()=>VD[(typeof LANG!=='undefined'&&LANG==='en')?'en':'it'];
   const say=(x,html)=>{if(html)msg.innerHTML=x;else msg.textContent=x;msg.hidden=!x};
   const show=()=>{const ok=ov.classList.contains('on')&&typeof isAdmin==='function'&&isAdmin();b.hidden=!ok;if(ok){b.textContent=live?V().on:V().b;if(!live&&!msg.textContent)say(V().hint)}else{say('')}};
@@ -1875,7 +1877,6 @@ function parseVoice(raw,lg){
       +'<br><span style="opacity:.7">«'+E(raw)+'»</span>'
       +(ai?'<br><button type="button" id="vok" style="margin-top:8px;width:100%;padding:12px;border:0;border-radius:12px;background:#22c55e;color:#04210f;font-weight:800;font-size:17px">✔ OK</button>':'<br><span style="opacity:.7">'+V().chk+'</span>'),true);
     const vk=$('#vok');if(vk)vk.onclick=()=>{say('');$('#ok').click()};
-    if(ai){const ob=document.createElement('button');ob.type='button';ob.textContent='✔ OK';ob.style.cssText='display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:12px;background:#16a34a;color:#fff;font-weight:700;font-size:17px';ob.onclick=()=>{ob.disabled=true;$('#ok').click()};msg.appendChild(ob)}
     msg.scrollIntoView({block:'nearest'});
   }
   b.onclick=()=>{
@@ -1883,11 +1884,12 @@ function parseVoice(raw,lg){
     if(!SR){say(V().nosup);return}
     rec=new SR();rec.lang=(typeof LANG!=='undefined'&&LANG==='en')?'en-US':'it-IT';rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
     let fin='',gotErr=false;
-    rec.onstart=()=>{live=true;say('');show()};
-    rec.onresult=e=>{let tmp='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript+' ';else tmp+=r[0].transcript}say('… '+(fin+tmp).trim())};
+    rec.onstart=()=>{live=true;say('');show();clearTimeout(sil);sil=setTimeout(()=>{try{rec.stop()}catch(x){}},9000)};
+    rec.onresult=e=>{clearTimeout(sil);sil=setTimeout(()=>{try{rec.stop()}catch(x){}},1600);let tmp='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript+' ';else tmp+=r[0].transcript}say('… '+(fin+tmp).trim())};
     rec.onerror=e=>{gotErr=true;const c=e.error;say(c==='not-allowed'||c==='service-not-allowed'?V().deny:c==='no-speech'?V().none:V().err+c)};
-    rec.onend=()=>{live=false;show();if(!gotErr){if(fin.trim())apply(fin.trim());else say(V().none)}};
-    try{rec.start()}catch(e){say(V().err+(e.message||e))}
+    rec.onend=()=>{clearTimeout(sil);live=false;show();if(!gotErr){if(fin.trim())apply(fin.trim());else say(V().none)}};
+    const go=()=>{try{rec.start()}catch(e){say(V().err+(e.message||e))}};
+    if(!mic&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){navigator.mediaDevices.getUserMedia({audio:true}).then(st=>{mic=st;go()},()=>go())}else go();
   };
 })();
 const actQ=new URLSearchParams(location.search).get('activate');
