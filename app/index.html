@@ -537,6 +537,11 @@ input[type=datetime-local]::-webkit-date-and-time-value{text-align:left;min-widt
     <h2 id="nvt" tabindex="-1"></h2>
     <p id="nvd"></p>
     <button type="button" class="btn pri big" id="nvok">Completa</button>
+    <div id="nvrl" hidden style="margin:6px 0 14px;text-align:left"></div>
+    <div class="nvr" id="nvea" hidden>
+      <button type="button" class="btn wht" id="nved"></button>
+      <button type="button" class="btn wht" id="nvdl"></button>
+    </div>
     <div class="nvr" id="nvx2" hidden>
       <button type="button" class="btn wht" id="nvsn" data-i="snzB">Snooze</button>
       <button type="button" class="btn wht" id="nvcl" data-i="clsB">Close</button>
@@ -1015,6 +1020,14 @@ function renderNote(){
   $('#nvt').textContent=t.title;
   $('#nvd').textContent=t.note||'';$('#nvd').hidden=!t.note;
   $('#nvx2').hidden=!(nvKind==='main'&&!t.done);$('#nvcl').hidden=nvKind!=='main';$('#nvsz').hidden=true;
+  const view=!nvKind;
+  $('#nvok').hidden=view;$('#nvea').hidden=!view;$('#nvrl').hidden=!view;
+  if(view){
+    const lc=(typeof LANG!=='undefined'&&LANG==='en')?'en-GB':'it-IT',f=x=>{const d=new Date(x+':00');return d.toLocaleDateString(lc,{weekday:'short',day:'numeric',month:'short'})+' · '+x.slice(11)};
+    const m=mainOf(t),rs=remOf(t).slice().sort((x,y)=>x.at<y.at?-1:1);
+    $('#nvrl').innerHTML=(m?'<div style="margin:4px 0">📅 <b>'+f(m.at)+'</b></div>':'')+rs.map(a=>'<div style="margin:4px 0">🔔 '+f(a.at)+'</div>').join('');
+    $('#nved').textContent=t_('edit');const dl=$('#nvdl');dl.textContent=t_('del');dl.dataset.arm='';
+  }
   const ok=$('#nvok');ok.disabled=false;ok.classList.toggle('grn',nvKind==='main');
   if(nvKind==='remind')ok.textContent=t_('ok');else if(nvKind==='main')ok.textContent='✅ '+t_('confirmed');else ok.textContent=t.done?t_('done'):t_('complete')
 }
@@ -1031,6 +1044,10 @@ $('#nvok').onclick=()=>{
   pendingNote=null;pendingKind=null;
 };
 
+$('#nved').onclick=()=>{const t=items.find(x=>x.id===nvId);closeNote();if(t&&!t.done)openF(t)};
+$('#nvdl').onclick=()=>{const b=$('#nvdl'),t=items.find(x=>x.id===nvId);if(!t)return;
+  if(b.dataset.arm){closeNote();items=items.filter(x=>x!==t);tomb.push({id:t.id,paths:[...(t.srv||[])]});commit();toast(t_('delToast'))}
+  else{b.dataset.arm=1;b.textContent=t_('sure');setTimeout(()=>{if(b.isConnected&&b.dataset.arm){b.dataset.arm='';b.textContent=t_('del')}},3000)}};
 $('#nvsn').onclick=()=>{$('#nvx2').hidden=true;$('#nvsz').hidden=false};
 $('#nvsz').onclick=e=>{
   const b=e.target.closest('[data-m]');if(!b)return;
