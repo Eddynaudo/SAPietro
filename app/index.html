@@ -1853,8 +1853,8 @@ function parseVoice(raw,lg){
     }catch(e){why=String(e&&e.message||e)}
     if(!r){
       let txt=raw,mins=[];
-      const re=/(?:,?\s*(?:e\s+)?(?:ricordamelo|ricordamele|avvisami|ricordami|notificami|remind me|alert me)\s+)?(mezz['’]?\s?ora|half an hour|(?:\d+|un|una|an|a|one|due|tre)\s*(?:minut[oi]|minutes?|or[ae]|hours?|giorn[oi]|days?))\s+(?:prima|before)/gi;
-      txt=txt.replace(re,(m0,q)=>{const l=q.toLowerCase();let n=/mezz|half/.test(l)?30:(+((l.match(/\d+/)||[])[0])||({un:1,una:1,an:1,a:1,one:1,due:2,tre:3}[l.split(/\s+/)[0]]||1));
+      const re=/(?:,?\s*(?:e\s+)?(?:ricordamelo|ricordamele|avvisami|ricordami|notificami|remind me|alert me)\s+)?(mezz['’]?\s?ora|half an hour|(?:\d+|un|una|an|a|one|due|tre)['’]?\s*(?:minut[oi]|minutes?|or[ae]|hours?|giorn[oi]|days?))\s+(?:prima|before)/gi;
+      txt=txt.replace(re,(m0,q)=>{const l=q.toLowerCase();let n=/mezz|half/.test(l)?30:(+((l.match(/\d+/)||[])[0])||({un:1,una:1,an:1,a:1,one:1,due:2,tre:3}[(l.match(/^[a-z]+/)||[''])[0]]||1));
         mins.push(n*(/minut/.test(l)?1:/or[ae]|hour/.test(l)?60:/giorn|day/.test(l)?1440:1));return ' '});
       const q=parseVoice(txt,lg);r={title:q.title||raw,note:'',at:q.at,rem:[]};
       if(r.at)for(const m of mins){const d=new Date(r.at+':00');d.setMinutes(d.getMinutes()-m);const p2=x=>String(x).padStart(2,'0');r.rem.push(d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'T'+p2(d.getHours())+':'+p2(d.getMinutes()))}
