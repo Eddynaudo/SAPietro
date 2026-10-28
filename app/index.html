@@ -1790,8 +1790,8 @@ $('#ins_x').onclick=()=>$('#ins').classList.remove('on');
 insRefresh();
 /* ---------- dettatura vocale dell'attività (prova: solo account admin) ---------- */
 const VD={
- it:{b:'🗣️ Detta l’attività',on:'🔴 Ti ascolto… tocca per fermare',heard:'Ho capito: ',none:'Non ho sentito nulla, riprova.',deny:'Consenti il microfono nelle impostazioni del browser.',nosup:'Questo browser non supporta il dettato vocale (prova con Chrome su Android o Safari).',err:'Dettato non riuscito: ',hint:'Esempio: «Chiamare il dentista domani alle 15».',set:'Impostato: '},
- en:{b:'🗣️ Dictate the task',on:'🔴 Listening… tap to stop',heard:'I heard: ',none:'I heard nothing, try again.',deny:'Allow the microphone in the browser settings.',nosup:'This browser does not support voice dictation (try Chrome on Android or Safari).',err:'Dictation failed: ',hint:'Example: “Call the dentist tomorrow at 3 pm”.',set:'Set: '}
+ it:{b:'🗣️ Detta l’attività',on:'🔴 Ti ascolto… tocca per fermare',heard:'Ho capito: ',none:'Non ho sentito nulla, riprova.',deny:'Consenti il microfono nelle impostazioni del browser.',nosup:'Questo browser non supporta il dettato vocale (prova con Chrome su Android o Safari).',err:'Dettato non riuscito: ',hint:'Esempio: «Chiamare il dentista domani alle 15».',set:'Impostato: ',think:'🤖 Sto interpretando…',ai:'🤖 Interpretato:',simple:'Lettore semplice',rem:'Promemoria: '},
+ en:{b:'🗣️ Dictate the task',on:'🔴 Listening… tap to stop',heard:'I heard: ',none:'I heard nothing, try again.',deny:'Allow the microphone in the browser settings.',nosup:'This browser does not support voice dictation (try Chrome on Android or Safari).',err:'Dictation failed: ',hint:'Example: “Call the dentist tomorrow at 3 pm”.',set:'Set: ',think:'🤖 Interpreting…',ai:'🤖 Interpreted:',simple:'Simple reader',rem:'Reminders: '}
 };
 function parseVoice(raw,lg){
   let t=' '+raw.trim()+' ',low=t.toLowerCase(),d=null,hh=null,mm=0,found=[];
@@ -1842,14 +1842,22 @@ function parseVoice(raw,lg){
   const say=(x)=>{msg.textContent=x;msg.hidden=!x};
   const show=()=>{const ok=ov.classList.contains('on')&&typeof isAdmin==='function'&&isAdmin();b.hidden=!ok;if(ok){b.textContent=live?V().on:V().b;if(!live&&!msg.textContent)say(V().hint)}else{say('')}};
   new MutationObserver(show).observe(ov,{attributes:true,attributeFilter:['class']});
-  function apply(raw){
+  async function apply(raw){
     const lg=(typeof LANG!=='undefined'&&LANG==='en')?'en':'it';
-    const r=parseVoice(raw,lg),tt=$('#title');
-    let t=r.title||raw;
-    if(!tt.value.trim()){tt.value=t.slice(0,120);if(t.length>120)$('#note').value=t.slice(120)}
-    else{const n=$('#note');n.value=(n.value?n.value+'\n':'')+t}
+    let r=null,ai=false,why='';
+    try{
+      const n=new Date(),p2=x=>String(x).padStart(2,'0');
+      say(V().think);
+      const j=await callFn('parse-task',{text:raw,lang:lg,now:n.getFullYear()+'-'+p2(n.getMonth()+1)+'-'+p2(n.getDate())+'T'+p2(n.getHours())+':'+p2(n.getMinutes())});
+      if(j&&j.title){r={title:j.title,note:j.note||'',at:j.due||null,rem:j.reminders||[]};ai=true}
+    }catch(e){why=String(e&&e.message||e)}
+    if(!r){const q=parseVoice(raw,lg);r={title:q.title||raw,note:'',at:q.at,rem:[]}}
+    const tt=$('#title');
+    if(!tt.value.trim()){tt.value=r.title.slice(0,120);if(r.note||r.title.length>120)$('#note').value=((r.note||'')+(r.title.length>120?' '+r.title.slice(120):'')).trim()}
+    else{const n=$('#note');n.value=(n.value?n.value+'\n':'')+r.title+(r.note?' - '+r.note:'')}
     if(r.at){const du=$('#due');du.value=r.at;du.dispatchEvent(new Event('input',{bubbles:true}));du.dispatchEvent(new Event('change',{bubbles:true}))}
-    say(V().heard+'«'+raw+'»'+(r.at?' · '+V().set+r.at.replace('T',' '):''));
+    if(r.rem.length){const cur=rlVals().filter(x=>x.at);for(const x of r.rem)if(!cur.some(c=>c.at===x))cur.push({id:null,at:x});drawRl(cur.slice(0,5))}
+    say((ai?V().ai:V().simple+(why?' ('+why+')':''))+' «'+raw+'»'+(r.at?' · '+V().set+r.at.replace('T',' '):'')+(r.rem.length?' · '+V().rem+r.rem.map(x=>x.replace('T',' ')).join(', '):''));
   }
   b.onclick=()=>{
     if(live&&rec){try{rec.stop()}catch(e){}return}
